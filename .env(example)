@@ -1,0 +1,21 @@
+SECRET_KEY="<secret_key>"
+# TODO: keep debug mode false in production
+DEBUG=True
+
+#database
+POSTGRES_USER="<user>"
+POSTGRES_PASSWORD="<password>"
+POSTGRES_DB="<db>"
+POSTGRES_HOST="<host>"
+POSTGRES_PORT=<port>
+
+# jwt signing key
+JWT_SIGNING_KEY="<secret_key>"
+
+# hashing salt key
+SALT_KEY="<salt_key>"
+
+#smtp configuration
+EMAIL_HOST_USERNAME="<sender_email>"
+EMAIL_HOST_PASSWORD="<app_password>"
+EMAIL_PORT="<email_port>"
