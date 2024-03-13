@@ -12,9 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
-    def create(self, validated_data):
-        validated_data['password'] = hash_raw_password(validated_data['password'])
-        return super(UserSerializer, self).create(validated_data)
 
 
 class UserLoginSerializer(serializers.Serializer):

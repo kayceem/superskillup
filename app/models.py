@@ -1,5 +1,6 @@
 from django.db import models
 from app.utils import get_char_uuid
+from app.utils.hashing import make_password
 
 
 class BaseModel(models.Model):
@@ -27,6 +28,18 @@ class UserProfile(BaseModel):
     otp_sent_date = models.DateTimeField(null = True, blank = True)
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        author = UserProfile.objects.filter(pk=self.pk).first()
+        if not author:
+            self.password = make_password(self.password)
+            return super().save(*args, **kwargs)
+        password_changed = self.password != author.password
+        if not password_changed:
+            return super().save(*args, **kwargs)
+        self.password = make_password(self.password)
+        return super().save(*args, **kwargs)
+
 
 
 class Course(BaseModel):
