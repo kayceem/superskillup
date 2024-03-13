@@ -1,9 +1,11 @@
 from rest_framework.decorators import api_view
 from app.api.response_builder import ResponseBuilder
-from app.user.serializers import UserLoginSerializer, UserSerializer
+from app.user.serializers import UserLoginSerializer, UserSerializer, OTPSerializer
 from app.api import api
 from app.utils import utils
 from app.user.user import User
+from app.services import email_service
+from django.utils import timezone
 
 
 @api_view(['POST'])
@@ -17,9 +19,10 @@ def register_user(request):
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
+    user = User.get_user_by_email(email=serializer.validated_data["email"])
+    email_service.send_otp_mail(user)
     result = {
-        "borrower": serializer.data,
-        "access_token": User(serializer.instance).generate_auth_token()
+        "Message": "Please check you email."
     }
 
     return response_builder.get_201_success_response("User registered successfully", result)
@@ -50,3 +53,30 @@ def login_user(request):
 
     return response_builder.get_200_success_response("User logged in successfully", result)
 
+
+
+@api_view(["POST"])
+def check_otp(request):
+    response_builder = ResponseBuilder()
+    otp_serializer = OTPSerializer(data=request.data)
+    if not otp_serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+    user = User.get_user_by_email(otp_serializer.validated_data["email"])
+    otp =otp_serializer.validated_data["otp"]
+    if user.is_verified:
+        return response_builder.get_201_success_response("User is already verified")
+    if user.otp != otp:
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
+    if user.otp_sent_date + timezone.timedelta(minutes=10) <= timezone.now():
+        user.otp = None
+        user.save()
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
+    user.otp = None
+    user.is_verified = True
+    user.save()
+    serializer = UserSerializer(user)
+    result = {
+        "user": serializer.data,
+        "access_token": User(serializer.instance).generate_auth_token()
+    }
+    return response_builder.get_201_success_response("User successfully verified", result)

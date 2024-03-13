@@ -25,7 +25,8 @@ class User:
         user = cls.get_user_by_email(email)
         if not user:
             return api.USER_NOT_FOUND, None
-
+        if not user.is_verified:
+            return api.USER_NOT_VERIFIED, None
         borrower_obj = cls(user)
 
         if not check_password(raw_password, user.password):
