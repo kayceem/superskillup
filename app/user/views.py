@@ -60,7 +60,7 @@ def check_otp(request):
     response_builder = ResponseBuilder()
     otp_serializer = OTPSerializer(data=request.data)
     if not otp_serializer.is_valid():
-        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, otp_serializer.errors)
     user = User.get_user_by_email(otp_serializer.validated_data["email"])
     otp =otp_serializer.validated_data["otp"]
     if user.is_verified:
