@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from app.utils import utils
 from app.api.response_builder import ResponseBuilder
-from app.admin.admin import Admin
+from app.app_admin.app_admin import Admin
 from app.api import api
 
 

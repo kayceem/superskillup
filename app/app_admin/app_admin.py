@@ -1,5 +1,5 @@
 from app.api import api
-from app.admin.accessor import AdminAccessor
+from app.app_admin.accessor import AdminAccessor
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 

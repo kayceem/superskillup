@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 
-from app.admin.admin import Admin
+from app.app_admin.app_admin import Admin
 from app.user.user import User
 
 
