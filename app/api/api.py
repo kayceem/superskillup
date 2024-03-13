@@ -1,0 +1,29 @@
+SUCCESS = 1
+
+# Invalid input
+INVALID_INPUT = 100
+TOO_MANY_REQUEST = 101
+
+# User
+INVALID_LOGIN_TOKEN = 300
+UNAUTHORIZED = 301
+USER_NOT_FOUND = 302
+INVALID_PASSWORD = 303
+ADMIN_USER_NOT_FOUND = 304
+EMAIL_ALREADY_EXISTS = 308
+
+# OTP
+OTP_VERIFICATION_FAILED = 600
+
+
+error_messages = {
+    INVALID_INPUT: 'Invalid input',
+    TOO_MANY_REQUEST: 'Too many requests',
+    INVALID_LOGIN_TOKEN: 'Invalid token for login',
+    UNAUTHORIZED: "Unauthorized",
+    USER_NOT_FOUND: "User not found",
+    INVALID_PASSWORD: "Invalid password",
+    ADMIN_USER_NOT_FOUND: "Admin user not found",
+    OTP_VERIFICATION_FAILED: "OTP verification failed",
+    EMAIL_ALREADY_EXISTS: "User already exists with this email",
+}
