@@ -11,7 +11,7 @@ from app.services.email_service import send_otp_mail
 @api_view(['POST'])
 def register_user(request):
     """
-    Register a borrower.
+    Register a User.
     """
     response_builder = ResponseBuilder()
 
@@ -31,7 +31,7 @@ def register_user(request):
 @api_view(['POST'])
 def login_user(request):
     """
-    Login borrower and generate auth token.
+    Login User and generate auth token.
     """
 
     response_builder = ResponseBuilder()

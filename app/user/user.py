@@ -28,12 +28,12 @@ class User:
             return api.USER_NOT_FOUND, None
         if not user.is_verified:
             return api.USER_NOT_VERIFIED, None
-        borrower_obj = cls(user)
+        user_obj = cls(user)
 
         if not check_password(raw_password, user.password):
             return api.INVALID_PASSWORD, None
 
-        return api.SUCCESS, borrower_obj.generate_auth_token()
+        return api.SUCCESS, user_obj.generate_auth_token()
     
 
     @staticmethod
