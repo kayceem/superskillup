@@ -1,6 +1,6 @@
 from django.db import models
 from app.utils import get_char_uuid
-from app.utils.hashing import make_password
+from app.utils.hashing import hash_raw_password
 
 
 class BaseModel(models.Model):
@@ -30,14 +30,14 @@ class UserProfile(BaseModel):
     is_verified = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        author = UserProfile.objects.filter(pk=self.pk).first()
-        if not author:
-            self.password = make_password(self.password)
+        user = UserProfile.objects.filter(pk=self.pk).first()
+        if not user:
+            self.password = hash_raw_password(self.password)
             return super().save(*args, **kwargs)
-        password_changed = self.password != author.password
+        password_changed = self.password != user.password
         if not password_changed:
             return super().save(*args, **kwargs)
-        self.password = make_password(self.password)
+        self.password = hash_raw_password(self.password)
         return super().save(*args, **kwargs)
 
 

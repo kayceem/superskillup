@@ -11,10 +11,8 @@ def send_otp_mail(user):
     user.otp_sent_date = timezone.now()
     user.save()
     body = render_to_string("otp_email.html", context={"otp": generated_otp})
-    template = "otp_email.html"
     send_email(
         "OTP Verification",
         body,
-        [user.email],
-        template
+        [user.email]
     )
