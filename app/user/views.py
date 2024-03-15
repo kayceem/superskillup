@@ -4,8 +4,8 @@ from app.user.serializers import UserLoginSerializer, UserSerializer, OTPSeriali
 from app.api import api
 from app.utils import utils
 from app.user.user import User
-from app.services import email_service
 from django.utils import timezone
+from app.services.send_otp import send_otp_mail
 
 
 @api_view(['POST'])
@@ -20,7 +20,7 @@ def register_user(request):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
     user = User.get_user_by_email(email=serializer.validated_data["email"])
-    email_service.send_otp_mail(user)
+    send_otp_mail(user)
     result = {
         "Message": "Please check you email."
     }
@@ -77,6 +77,5 @@ def check_otp(request):
     serializer = UserSerializer(user)
     result = {
         "user": serializer.data,
-        "access_token": User(serializer.instance).generate_auth_token()
     }
     return response_builder.get_201_success_response("User successfully verified", result)

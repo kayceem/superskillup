@@ -1,16 +1,14 @@
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from random import randint
 from django.utils import timezone
+from django.conf import settings
+from django.utils.html import strip_tags
 
-def send_otp_mail(author):
-    generated_otp = "".join([str(randint(0,9)) for _ in range(0, 6) ])
-    author.otp = generated_otp
-    author.otp_sent_date = timezone.now()
-    author.save()
-    send_mail(
-        "OTP Varification",
-        f"Your otp for verification is {generated_otp}. Please verify as soon as possible. OTP is valid for 10 minutes only.",
-        "tamangnaresh386@gmail.com",
-        [author.email],
-        fail_silently=True
-    )
+def send_email(subject, old_body, receiver, template = None):
+    sender = settings.EMAIL_HOST_USER
+    body = strip_tags(old_body)
+    email = EmailMultiAlternatives(subject, body, sender, receiver)
+    email.attach_alternative(old_body, "text/html")    
+    email.fail_silently = True
+    email.send()
+
