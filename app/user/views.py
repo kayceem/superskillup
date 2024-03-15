@@ -5,7 +5,7 @@ from app.api import api
 from app.utils import utils
 from app.user.user import User
 from django.utils import timezone
-from app.services.send_otp import send_otp_mail
+from app.services.email_service import send_otp_mail
 
 
 @api_view(['POST'])
