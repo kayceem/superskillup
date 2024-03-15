@@ -2,6 +2,7 @@ from app.user.accessor import UserAccessor
 from rest_framework_simplejwt.tokens import RefreshToken
 from app.api import api
 from app.utils.hashing import check_password
+from django.utils import timezone
 
 class User:
 
@@ -33,3 +34,14 @@ class User:
             return api.INVALID_PASSWORD, None
 
         return api.SUCCESS, borrower_obj.generate_auth_token()
+    
+
+    @staticmethod
+    def check_otp_expired(email):
+        user = User.get_user_by_email(email)
+        if user.otp_sent_date + timezone.timedelta(minutes=10) <= timezone.now():
+            user.otp = None
+            user.save()
+            return True
+        return False
+        

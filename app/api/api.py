@@ -12,6 +12,8 @@ INVALID_PASSWORD = 303
 ADMIN_USER_NOT_FOUND = 304
 EMAIL_ALREADY_EXISTS = 308
 USER_NOT_VERIFIED = 305
+USER_VERIFIED = 201
+OTP_ALREADY_SENT = 202
 # OTP
 OTP_VERIFICATION_FAILED = 600
 
@@ -26,5 +28,7 @@ error_messages = {
     ADMIN_USER_NOT_FOUND: "Admin user not found",
     OTP_VERIFICATION_FAILED: "OTP verification failed",
     EMAIL_ALREADY_EXISTS: "User already exists with this email",
-    USER_NOT_VERIFIED: "User is not verified"
+    USER_NOT_VERIFIED: "User is not verified",
+    USER_VERIFIED: "User is already verified",
+    OTP_ALREADY_SENT: "OTP was already sent. Please check your mail"
 }

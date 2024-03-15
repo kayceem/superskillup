@@ -23,3 +23,6 @@ class UserLoginSerializer(serializers.Serializer):
 class OTPSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp = serializers.CharField()
+
+class ResendOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField()
