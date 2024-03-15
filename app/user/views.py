@@ -63,8 +63,6 @@ def check_otp(request):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, otp_serializer.errors)
     user = User.get_user_by_email(otp_serializer.validated_data["email"])
     otp =otp_serializer.validated_data["otp"]
-    if user.is_verified:
-        return response_builder.get_201_success_response("User is already verified")
     if user.otp != otp:
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
     if user.otp_sent_date + timezone.timedelta(minutes=10) <= timezone.now():

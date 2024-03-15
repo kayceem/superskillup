@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.utils.html import strip_tags
 
-def send_email(subject, old_body, receiver, template = None):
+def send_email(subject, old_body, receiver):
     sender = settings.EMAIL_HOST_USER
     body = strip_tags(old_body)
     email = EmailMultiAlternatives(subject, body, sender, receiver)
