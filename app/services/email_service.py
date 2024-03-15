@@ -5,11 +5,10 @@ from django.conf import settings
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 
-def send_email(subject, old_body, receiver):
+def send_email(subject, body, receiver):
     sender = settings.EMAIL_HOST_USER
-    body = strip_tags(old_body)
-    email = EmailMultiAlternatives(subject, body, sender, receiver)
-    email.attach_alternative(old_body, "text/html")    
+    email = EmailMultiAlternatives(subject, strip_tags(body), sender, receiver)
+    email.attach_alternative(body, "text/html")    
     email.fail_silently = True
     email.send()
 
