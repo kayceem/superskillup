@@ -44,25 +44,21 @@ class UserProfile(BaseModel):
 
 class Course(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
 
 
 class Topic(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
-    document = models.FileField(upload_to='documents/topic/', null=True, blank=True)
     url = models.URLField(null=True, blank=True)
 
 
 class SubTopic(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(null=True, blank=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
-    document = models.FileField(upload_to='documents/sub_topic/', null=True, blank=True)
     url = models.URLField(null=True, blank=True)
 
 
@@ -72,12 +68,12 @@ class Question(BaseModel):
     ADVANCE = 'advance'
     LEVEL_CHOICES = ((BEGINNER, BEGINNER), (INTERMEDIATE, INTERMEDIATE), (ADVANCE, ADVANCE))
     question = models.CharField(max_length=255)
-    slug = models.SlugField(null=True, blank=True)
     helping_text = models.TextField(null=True, blank=True)
     level = models.CharField(max_length=255, choices=LEVEL_CHOICES, null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
     sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
 
 
 class UserAssignment(BaseModel):
