@@ -4,6 +4,7 @@ from app.course.serializers import CourseSerializer
 from app.api import api
 from app.course.course import Course
 from app.shared.authentication import AdminAuthentication
+from app.shared.pagination import paginate
 
 
 @api_view(['POST'])
@@ -59,11 +60,12 @@ def get_course_by_id(request, id):
 @authentication_classes([AdminAuthentication])
 def get_all_courses(request):
     """
-    Get the course by id
+    Get all courses
     """
     response_builder = ResponseBuilder()
     courses = Course.filter_course({})
+    paginated_courses, page_info = paginate(courses, request)
     if not courses:
         return response_builder.get_404_not_found_response(api.COURSE_NOT_FOUND)
-    serializer = CourseSerializer(courses, many=True)
-    return response_builder.get_200_success_response("Courses found", serializer.data)
+    serializer = CourseSerializer(paginated_courses, many=True)
+    return response_builder.get_200_success_response("Courses found", serializer.data, page_info)

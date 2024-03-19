@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view, authentication_classes
 from app.api.response_builder import ResponseBuilder
+from app.shared.pagination import paginate
 from app.topic.serializers import TopicSerializer
 from app.api import api
 from app.topic.topic import Topic
@@ -59,11 +60,12 @@ def get_topic_by_id(request, id):
 @authentication_classes([AdminAuthentication])
 def get_topics_by_course(request, id):
     """
-    Get the topic by id
+    Get topics of course
     """
     response_builder = ResponseBuilder()
     topics = Topic.get_topics_by_course(course_id=id)
+    paginated_topics, page_info = paginate(topics, request)
     if not topics:
         return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
-    serializer = TopicSerializer(topics, many=True)
-    return response_builder.get_200_success_response("Topics found", serializer.data)
+    serializer = TopicSerializer(paginated_topics, many=True)
+    return response_builder.get_200_success_response("Topics found", serializer.data, page_info)
