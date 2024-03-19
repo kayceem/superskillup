@@ -18,6 +18,8 @@ OTP_ALREADY_SENT = 202
 OTP_VERIFICATION_FAILED = 600
 # Course
 COURSE_NOT_FOUND = 700
+# Topic
+TOPIC_NOT_FOUND = 705
 
 error_messages = {
     INVALID_INPUT: 'Invalid input',
@@ -33,4 +35,5 @@ error_messages = {
     USER_VERIFIED: "User is already verified",
     OTP_ALREADY_SENT: "OTP was already sent. Please check your mail",
     COURSE_NOT_FOUND: "Course not found",
+    TOPIC_NOT_FOUND: "Topic not found",
 }
