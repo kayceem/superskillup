@@ -9,3 +9,7 @@ class UserAnswer:
     @staticmethod
     def get_answer_by_answer_id(id):
         return UserAnswerAccessor.get_answer_by_answer_id(id)
+    
+    @staticmethod
+    def get_answer_by_question(question):
+        return UserAnswerAccessor.get_answer_by_question(question)

@@ -23,6 +23,10 @@ def add_answer(request):
     response_builder = ResponseBuilder()
     data = request.data
     data["user"] = request.user.id
+    question = data["question"]
+    answer_obj = UserAnswer.get_answer_by_question(question)
+    if answer_obj:
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Answer already submitted")
     serializer = UserAnswerSerializer(data = data)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
