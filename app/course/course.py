@@ -9,8 +9,8 @@ class Course:
 
     @staticmethod
     def get_course_by_id(course_id):
-        return CourseAccessor.get_course(id=course_id)
+        return CourseAccessor.get_course_by_id(id=course_id)
 
     @staticmethod
-    def filter_course(query: dict):
-        return CourseAccessor.filter_course(query)
+    def get_all_courses():
+        return CourseAccessor.get_all_courses()

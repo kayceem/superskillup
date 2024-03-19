@@ -1,13 +1,12 @@
-from app.utils.utils import get_or_none
 from app.models import Course
 
 
 class CourseAccessor:
 
     @classmethod
-    def get_course(cls, **kwargs) -> Course | None:
-        return get_or_none(Course, **kwargs)
+    def get_course_by_id(cls, id) -> Course | None:
+        return Course.objects.filter(id=id).first()
 
     @classmethod
-    def filter_course(cls, filters: dict) -> list[Course] | None:
-        return Course.objects.filter(**filters)
+    def get_all_courses(cls) -> list[Course] | None:
+        return Course.objects.all()
