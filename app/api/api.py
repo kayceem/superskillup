@@ -20,7 +20,7 @@ OTP_VERIFICATION_FAILED = 600
 
 #Question
 QUESTION_NOT_FOUND = 400
-
+USER_ANSWER_NOT_FOUND = 401
 error_messages = {
     INVALID_INPUT: 'Invalid input',
     TOO_MANY_REQUEST: 'Too many requests',
@@ -34,5 +34,6 @@ error_messages = {
     USER_NOT_VERIFIED: "User is not verified",
     USER_VERIFIED: "User is already verified",
     OTP_ALREADY_SENT: "OTP was already sent. Please check your mail",
-    QUESTION_NOT_FOUND: "Question doesn't exists"
+    QUESTION_NOT_FOUND: "Question doesn't exists",
+    USER_ANSWER_NOT_FOUND: "User answer not found",
 }
