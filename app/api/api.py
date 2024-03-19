@@ -18,6 +18,9 @@ OTP_ALREADY_SENT = 202
 OTP_VERIFICATION_FAILED = 600
 
 
+#Question
+QUESTION_NOT_FOUND = 400
+
 error_messages = {
     INVALID_INPUT: 'Invalid input',
     TOO_MANY_REQUEST: 'Too many requests',
@@ -30,5 +33,6 @@ error_messages = {
     EMAIL_ALREADY_EXISTS: "User already exists with this email",
     USER_NOT_VERIFIED: "User is not verified",
     USER_VERIFIED: "User is already verified",
-    OTP_ALREADY_SENT: "OTP was already sent. Please check your mail"
+    OTP_ALREADY_SENT: "OTP was already sent. Please check your mail",
+    QUESTION_NOT_FOUND: "Question doesn't exists"
 }
