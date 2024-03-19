@@ -19,13 +19,19 @@ class UserProfile(BaseModel):
     HUMAN_RESOURCE = 'human-resource'
     DEVOPS = 'devops'
     PROJECT_MANAGER = 'project-manager'
-    DOMAINS = ((FRONTEND, FRONTEND), (BACKEND, BACKEND), (HUMAN_RESOURCE, HUMAN_RESOURCE), (DEVOPS, DEVOPS), (PROJECT_MANAGER, PROJECT_MANAGER))
+    DOMAINS = (
+        (FRONTEND, FRONTEND),
+        (BACKEND, BACKEND),
+        (HUMAN_RESOURCE, HUMAN_RESOURCE),
+        (DEVOPS, DEVOPS),
+        (PROJECT_MANAGER, PROJECT_MANAGER),
+    )
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     domain = models.CharField(max_length=255, choices=DOMAINS, null=True, blank=True)
-    otp = models.CharField(max_length = 10, null = True, blank = True)
-    otp_sent_date = models.DateTimeField(null = True, blank = True)
+    otp = models.CharField(max_length=10, null=True, blank=True)
+    otp_sent_date = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
 
@@ -41,11 +47,13 @@ class UserProfile(BaseModel):
         return super().save(*args, **kwargs)
 
 
-
 class Course(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class Topic(BaseModel):
@@ -54,12 +62,18 @@ class Topic(BaseModel):
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
 
 class SubTopic(BaseModel):
     name = models.CharField(max_length=255)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class Question(BaseModel):
@@ -74,6 +88,9 @@ class Question(BaseModel):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
     sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class UserAssignment(BaseModel):
@@ -90,6 +107,7 @@ class UserAssignment(BaseModel):
 
     class Meta:
         unique_together = ['user', 'question']
+        ordering = ['-created_at']
 
 
 class UserAnswer(BaseModel):
