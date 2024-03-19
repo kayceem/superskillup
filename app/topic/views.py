@@ -7,6 +7,36 @@ from app.topic.topic import Topic
 from app.shared.authentication import AdminAuthentication
 
 
+@api_view(['GET'])
+@authentication_classes([AdminAuthentication])
+def get_topics_by_course(request, id):
+    """
+    Get topics of course
+    """
+    response_builder = ResponseBuilder()
+    topics = Topic.get_topics_by_course(course_id=id)
+    if not topics:
+        return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
+    paginated_topics, page_info = paginate(topics, request)
+    serializer = TopicSerializer(paginated_topics, many=True)
+    return response_builder.get_200_success_response("Topics found", serializer.data, page_info)
+
+
+@api_view(['GET'])
+@authentication_classes([AdminAuthentication])
+def get_topic_by_id(request, id):
+    """
+    Get the topic by id
+    """
+
+    response_builder = ResponseBuilder()
+    topic = Topic.get_topic_by_id(topic_id=id)
+    if not topic:
+        return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
+    serializer = TopicSerializer(topic)
+    return response_builder.get_200_success_response("Topic found", serializer.data)
+
+
 @api_view(['POST'])
 @authentication_classes([AdminAuthentication])
 def create_topic(request):
@@ -39,33 +69,3 @@ def update_topic(request, id):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
     return response_builder.get_201_success_response("Topic updated successfully", serializer.data)
-
-
-@api_view(['GET'])
-@authentication_classes([AdminAuthentication])
-def get_topic_by_id(request, id):
-    """
-    Get the topic by id
-    """
-
-    response_builder = ResponseBuilder()
-    topic = Topic.get_topic_by_id(topic_id=id)
-    if not topic:
-        return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
-    serializer = TopicSerializer(topic)
-    return response_builder.get_200_success_response("Topic found", serializer.data)
-
-
-@api_view(['GET'])
-@authentication_classes([AdminAuthentication])
-def get_topics_by_course(request, id):
-    """
-    Get topics of course
-    """
-    response_builder = ResponseBuilder()
-    topics = Topic.get_topics_by_course(course_id=id)
-    paginated_topics, page_info = paginate(topics, request)
-    if not topics:
-        return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
-    serializer = TopicSerializer(paginated_topics, many=True)
-    return response_builder.get_200_success_response("Topics found", serializer.data, page_info)

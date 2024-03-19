@@ -5,9 +5,9 @@ from app.models import Topic
 class TopicAccessor:
 
     @classmethod
-    def get_topic(cls, **kwargs) -> Topic | None:
-        return get_or_none(Topic, **kwargs)
+    def get_topic_by_id(cls, id) -> Topic | None:
+        return Topic.objects.filter(id=id).first()
 
     @classmethod
-    def filter_topic(cls, filters: dict) -> list[Topic] | None:
-        return Topic.objects.filter(**filters)
+    def get_topics_by_course(cls, course_id) -> list[Topic] | None:
+        return Topic.objects.filter(course_id=course_id).all()
