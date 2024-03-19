@@ -8,10 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['name', 'email', 'password']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 class UserLoginSerializer(serializers.Serializer):
@@ -19,10 +16,10 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
 
-
 class OTPSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp = serializers.CharField()
+
 
 class ResendOTPSerializer(serializers.Serializer):
     email = serializers.EmailField()
