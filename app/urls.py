@@ -4,6 +4,8 @@ from app.user import views as user_views
 from app.course import views as course_views
 from app.topic import views as topic_views
 from app.sub_topic import views as sub_topic_views
+from app.UserAnswer import views as user_answer_views
+from app.question import views as question_views
 
 urlpatterns = [
     # login
@@ -27,4 +29,14 @@ urlpatterns = [
     path("v1/update_sub_topic/<str:id>", sub_topic_views.update_sub_topic, name='update-sub-topic'),
     path("v1/sub_topic/topic/<str:id>", sub_topic_views.get_sub_topics_by_topic, name='get-sub-topics-by-topic'),
     path("v1/sub_topic/<str:id>", sub_topic_views.get_sub_topic_by_id, name='get-sub-topic-by-id'),
+    # question
+    path("v1/questions/<str:course_id>/", question_views.get_all_questions, name = "question-by-course"),
+    path("v1/create_question/", question_views.create_question, name = "create-question"),
+    path("v1/update_question/<str:question_id>/", question_views.update_question, name = "update-question"),
+    path("v1/question/<str:id>/", question_views.get_question_by_question_id, name = "question"),
+    # user-answer
+    path("v1/add_answer/", user_answer_views.add_answer, name = "add-answer"),
+    path("v1/answer_by_user/", user_answer_views.get_answer_by_user_id, name = "user-answer-by-user-id"),
+    path("v1/update_answer/<str:id>/", user_answer_views.update_answer, name = "update-answer"),
+    path("v1/answer_by_id/<str:id>/", user_answer_views.get_answer_by_answer_id, name = 'answer-by-id')
 ]
