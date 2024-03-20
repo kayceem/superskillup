@@ -4,6 +4,7 @@ from app.api import api
 from app.utils.hashing import check_password
 from django.utils import timezone
 
+
 class User:
 
     def __init__(self, user):
@@ -11,11 +12,11 @@ class User:
 
     @staticmethod
     def get_user_by_id(user_id):
-        return UserAccessor.get_user(id=user_id)
+        return UserAccessor.get_user_by_id(id=user_id)
 
     @staticmethod
     def get_user_by_email(email):
-        return UserAccessor.get_user(email=email)
+        return UserAccessor.get_user_by_email(email=email)
 
     def generate_auth_token(self):
         refresh = RefreshToken.for_user(self.user)
@@ -34,7 +35,6 @@ class User:
             return api.INVALID_PASSWORD, None
 
         return api.SUCCESS, user_obj.generate_auth_token()
-    
 
     @staticmethod
     def check_otp_expired(email):
@@ -44,4 +44,3 @@ class User:
             user.save()
             return True
         return False
-        
