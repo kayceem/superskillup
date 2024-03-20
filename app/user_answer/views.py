@@ -1,9 +1,9 @@
 from rest_framework.decorators import api_view, authentication_classes
 from app.shared.authentication import AdminAuthentication, UserAuthentication
-from app.UserAnswer.UserAnswer import UserAnswer
+from app.user_answer.user_answer import UserAnswer
 from app.api.response_builder import ResponseBuilder
 from app.user.user import User
-from app.UserAnswer.serializer import UserAnswerSerializer
+from app.user_answer.serializer import UserAnswerSerializer
 from app.api import api
 
 @api_view(["GET"])
@@ -38,7 +38,7 @@ def add_answer(request):
 def update_answer(request, id):
     response_builder = ResponseBuilder()
     user = request.user
-    answer_obj = UserAnswer.get_answer_by_answer_id(id)
+    answer_obj = UserAnswer.get_answer_by_id(id)
     if answer_obj:
         if answer_obj.user == user:
             serializer = UserAnswerSerializer(answer_obj,data = request.data,partial = True)
@@ -51,9 +51,9 @@ def update_answer(request, id):
 
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
-def get_answer_by_answer_id(request, id):
+def get_answer_by_id(request, id):
     response_builder = ResponseBuilder()
-    data = UserAnswer.get_answer_by_answer_id(id)
+    data = UserAnswer.get_answer_by_id(id)
     if data:
         serializer = UserAnswerSerializer(data)
         return response_builder.get_200_success_response("Data fetched", serializer.data)

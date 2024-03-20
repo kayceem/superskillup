@@ -7,7 +7,7 @@ class UserAnswerAccessor:
         return UserAnswer.objects.filter(user = user_id).all()
     
     @staticmethod
-    def get_answer_by_answer_id(id):
+    def get_answer_by_id(id):
         return UserAnswer.objects.filter(id = id).first()
     
     @staticmethod
