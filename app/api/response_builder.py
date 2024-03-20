@@ -13,6 +13,7 @@ class ResponseBuilder(object):
     def __init__(self):
         self.results = {}
         self.errors = {}
+        self.page = {}
         self.status_code = 1
         self.status_message = ""
         self.status = status.HTTP_200_OK
@@ -61,6 +62,10 @@ class ResponseBuilder(object):
         self.status = status.HTTP_403_FORBIDDEN
         return self
 
+    def page_object(self, page):
+        self.page = page
+        return self
+
     def result_object(self, result):
         self.results = result
         return self
@@ -82,7 +87,8 @@ class ResponseBuilder(object):
             'status_code': self.status_code,
             'status_message': status_message,
             'data': self.results,
-            'error': self.errors
+            'page': self.page,
+            'error': self.errors,
         }
 
     def get_400_bad_request_response(self, error_code, errors):
@@ -97,5 +103,5 @@ class ResponseBuilder(object):
     def get_201_success_response(self, message, result):
         return self.success().created_201().message(message).result_object(result).get_response()
 
-    def get_200_success_response(self, message, result={}):
-        return self.success().ok_200().message(message).result_object(result).get_response()
+    def get_200_success_response(self, message, result={}, page_info={}):
+        return self.success().ok_200().message(message).result_object(result).page_object(page_info).get_response()

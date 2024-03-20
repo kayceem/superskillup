@@ -1,13 +1,12 @@
-from app.utils.utils import get_or_none
 from app.models import UserProfile
 
 
 class UserAccessor:
 
     @classmethod
-    def get_user(cls, **kwargs) -> UserProfile | None:
-        return get_or_none(UserProfile, **kwargs)
+    def get_user_by_id(cls, id) -> UserProfile | None:
+        return UserProfile.objects.filter(id=id).first()
 
     @classmethod
-    def filter_user(cls, filters: dict) -> list[UserProfile]:
-        return UserProfile.objects.filter(**filters)
+    def get_user_by_email(cls, email) -> UserProfile | None:
+        return UserProfile.objects.filter(email=email).first()

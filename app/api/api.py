@@ -16,7 +16,12 @@ USER_VERIFIED = 201
 OTP_ALREADY_SENT = 202
 # OTP
 OTP_VERIFICATION_FAILED = 600
-
+# Course
+COURSE_NOT_FOUND = 700
+# Topic
+TOPIC_NOT_FOUND = 705
+# Sub Topic
+SUB_TOPIC_NOT_FOUND = 715
 
 #Question
 QUESTION_NOT_FOUND = 400
@@ -36,4 +41,7 @@ error_messages = {
     OTP_ALREADY_SENT: "OTP was already sent. Please check your mail",
     QUESTION_NOT_FOUND: "Question doesn't exists",
     USER_ANSWER_NOT_FOUND: "User answer not found",
+    COURSE_NOT_FOUND: "Course not found",
+    TOPIC_NOT_FOUND: "Topic not found",
+    SUB_TOPIC_NOT_FOUND: "Sub topic not found",
 }

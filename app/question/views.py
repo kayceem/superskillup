@@ -4,6 +4,7 @@ from app.shared.authentication import AdminAuthentication, UserAuthentication
 from app.api.response_builder import ResponseBuilder
 from app.question.serializer import QuestionSerilizer
 from app.api import api
+from app.shared.pagination import paginate
 
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
@@ -11,7 +12,8 @@ def get_all_questions(request, course_id):
     response_builder = ResponseBuilder()
     data = Question.get_all_questions(course_id)
     if data:
-        serializer = QuestionSerilizer(data, many = True)
+        paginated_data, page_info = paginate(data, request)
+        serializer = QuestionSerilizer(paginated_data, many = True)
         return response_builder.get_200_success_response("Data fetched", serializer.data)
     return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND)
 
