@@ -1,5 +1,7 @@
 import uuid
 from app.api.api import SUCCESS
+from django.contrib.auth.models import User
+
 
 def get_char_uuid(length: int = None) -> str:
     id = uuid.uuid4().hex
@@ -16,3 +18,6 @@ def get_or_none(model, *args, **kwargs):
 def is_status_failed(status: int) -> bool:
     return status != SUCCESS
 
+
+def is_user_admin(user) -> bool:
+    return isinstance(user, User)

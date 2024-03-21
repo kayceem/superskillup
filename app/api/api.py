@@ -23,9 +23,17 @@ TOPIC_NOT_FOUND = 705
 # Sub Topic
 SUB_TOPIC_NOT_FOUND = 715
 
-#Question
+# Question
 QUESTION_NOT_FOUND = 400
 USER_ANSWER_NOT_FOUND = 401
+
+# User Assignment
+USER_ASSIGNMENT_NOT_FOUND = 402
+USER_ASSIGNED_COURSE_NOT_FOUND = 410
+USER_ASSIGNED_TOPIC_NOT_FOUND = 411
+USER_ASSIGNED_SUB_TOPIC_NOT_FOUND = 412
+USER_ASSIGNED_QUESTION_NOT_FOUND = 413
+
 error_messages = {
     INVALID_INPUT: 'Invalid input',
     TOO_MANY_REQUEST: 'Too many requests',
@@ -44,4 +52,9 @@ error_messages = {
     COURSE_NOT_FOUND: "Course not found",
     TOPIC_NOT_FOUND: "Topic not found",
     SUB_TOPIC_NOT_FOUND: "Sub topic not found",
+    USER_ASSIGNMENT_NOT_FOUND: "Assignment not found",
+    USER_ASSIGNED_COURSE_NOT_FOUND: "Assigned courses not found",
+    USER_ASSIGNED_TOPIC_NOT_FOUND: "Assigned topics not found",
+    USER_ASSIGNED_SUB_TOPIC_NOT_FOUND: "Assigned sub topics not found",
+    USER_ASSIGNED_QUESTION_NOT_FOUND: "Assigned questions not found",
 }
