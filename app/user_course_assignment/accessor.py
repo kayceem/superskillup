@@ -17,6 +17,10 @@ class UserCourseAssignmentAcessor:
     def get_user_assigned_courses(user_id) -> UserCourseAssignment | None:
         return UserCourseAssignment.objects.filter(user_id=user_id).all().values('course')
 
+    @staticmethod
+    def get_assignments_of_user(user_id) -> UserCourseAssignment | None:
+        return UserCourseAssignment.objects.filter(user_id=user_id).all()
+
     # @staticmethod
     # def get_user_assigned_topics(id) -> UserCourseAssignment | None:
     #     return UserCourseAssignment.objects.filter(id=id).first().course.topics.all()
