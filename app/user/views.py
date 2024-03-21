@@ -53,6 +53,8 @@ def check_otp(request):
     if not otp_serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, otp_serializer.errors)
     user = User.get_user_by_email(otp_serializer.validated_data["email"])
+    if not user:
+        return response_builder.get_400_bad_request_response(api.USER_NOT_FOUND, "User is not registered")
     otp = otp_serializer.validated_data["otp"]
     if user.otp != otp:
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
@@ -74,6 +76,8 @@ def resend_otp(request):
     if not resend_serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, resend_serializer.errors)
     user = User.get_user_by_email(resend_serializer.validated_data["email"])
+    if not user:
+        return response_builder.get_400_bad_request_response(api.USER_NOT_FOUND, "User is not registered")
     if user.is_verified:
         return response_builder.get_200_fail_response(api.USER_VERIFIED)
     otp_expired = User.check_otp_expired(user.email)
