@@ -43,3 +43,15 @@ class UserAuthentication(JWTAuthentication):
 class AdminAuthentication(JWTAuthentication):
     def get_user_by_id(self, id):
         return Admin.get_user_by_id(id)
+
+
+class CombinedAuthentication(JWTAuthentication):
+    def get_user_by_id(self, id):
+        admin = None
+        user = None
+        if isinstance(id, int):
+            admin = Admin.get_user_by_id(id)
+        else:
+            user = User.get_user_by_id(id)
+
+        return admin if admin else user
