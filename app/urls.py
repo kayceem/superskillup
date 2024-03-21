@@ -7,6 +7,7 @@ from app.sub_topic import views as sub_topic_views
 from app.user_answer import views as user_answer_views
 from app.question import views as question_views
 from app.user_course_assignment import admin_views as admin_assignment_views
+from app.user_course_assignment import user_views as user_assignment_views
 
 urlpatterns = [
     # login
@@ -41,13 +42,20 @@ urlpatterns = [
     path("v1/update_answer/<str:id>/", user_answer_views.update_answer, name="update-answer"),
     path("v1/answer_by_id/<str:id>/", user_answer_views.get_answer_by_id, name='answer-by-id'),
     # user-course-assignment for admin
-    path("v1/assign_course/", admin_assignment_views.assign_course, name="assign-course"),
-    path("v1/assignments/", admin_assignment_views.get_all_assignments, name="assignments"),
-    path("v1/assignment/<str:id>/", admin_assignment_views.get_assignment_by_id, name="assignment-by-id"),
-    path("v1/assignment/courses/<str:user_id>/", admin_assignment_views.get_user_assigned_courses, name="assigned-courses"),
-    path("v1/assignment/topics/<str:assign_id>/", admin_assignment_views.get_assigned_topics, name="assigned-topics"),
-    path("v1/update_assign_course/<str:id>/", admin_assignment_views.update_assigned_course, name="update-assign-course"),
-    path("v1/assignments/<str:user_id>/", admin_assignment_views.get_assignments_of_user, name='user-assignments'),
-    path("v1/assignment/<str:assign_id>/sub_topics/<str:topic_id>/", admin_assignment_views.get_assigned_sub_topic, name="assigned-sub-topics"),
-    path("v1/assignment/questions/<str:assign_id>/", admin_assignment_views.get_user_assigned_questions, name="assigned-questions"),
+    path("v1/admin/assignments/", admin_assignment_views.get_all_assignments, name="admin-assignments"),
+    path("v1/admin/assign_course/", admin_assignment_views.assign_course, name="admin-assign-course"),
+    path("v1/admin/update_assign_course/<str:id>/", admin_assignment_views.update_assigned_course, name="admin-update-assign-course"),
+    path("v1/admin/assignment/<str:id>/", admin_assignment_views.get_assignment_by_id, name="admin-assignment-by-id"),
+    path("v1/admin/assignments/<str:user_id>/", admin_assignment_views.get_assignments_of_user, name='admin-user-assignments'),
+    path("v1/admin/assignment/courses/<str:user_id>/", admin_assignment_views.get_user_assigned_courses, name="admin-assigned-courses"),
+    path("v1/admin/assignment/<str:assign_id>/topics/", admin_assignment_views.get_assigned_topics, name="admin-assigned-topics"),
+    path("v1/admin/assignment/<str:assign_id>/topic/<str:topic_id>/sub_topics/", admin_assignment_views.get_assigned_sub_topic, name="admin-assigned-sub-topics"),
+    path("v1/admin/assignment/<str:assign_id>/questions/", admin_assignment_views.get_user_assigned_questions, name="admin-assigned-questions"),
+    # user-course-assignment for user
+    path("v1/user/assignments/", user_assignment_views.get_all_assignments, name="user-assignments"),
+    path("v1/user/assignment/courses/", user_assignment_views.get_assigned_courses, name="user-assigned-courses"),
+    path("v1/user/assignment/<str:assign_id>/", user_assignment_views.get_assignment_by_id, name="user-assignment-by-id"),
+    path("v1/user/assignment/<str:assign_id>/topics/", user_assignment_views.get_assigned_topics_by_course, name="user-assigned-topics-by-course"),
+    path("v1/user/assignment/<str:assign_id>/topic/<str:topic_id>/sub_topics/", user_assignment_views.get_assigned_sub_topics_by_topic, name="user-assigned-sub-topics-by-topic"),
+    path("v1/user/assignment/<str:assign_id>/questions/", user_assignment_views.get_assigned_questions, name="user-assigned-questions"),
 ]
