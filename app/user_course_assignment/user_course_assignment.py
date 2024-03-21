@@ -29,7 +29,7 @@ class UserCourseAssignment:
     def get_user_assigned_topics_by_course(assign_id):
         assignment = UserCourseAssignmentAcessor.get_assignment_by_id(assign_id)
         if not assignment:
-            return None, None
+            return "Assignment not found", None
         topics = assignment.course.topics.all()
         return assignment.user, topics
 
@@ -37,7 +37,10 @@ class UserCourseAssignment:
     def get_user_assigned_sub_topics(assign_id, topic_id):
         assignment = UserCourseAssignmentAcessor.get_assignment_by_id(assign_id)
         if not assignment:
-            return None, None
+            return "Assignment not found", None
+        topics = assignment.course.topics.filter(id=topic_id).first()
+        if not topics:
+            return "Topics not Found", None
         sub_topics = assignment.course.topics.filter(id=topic_id).first().sub_topics.all()
         return assignment.user, sub_topics
 
@@ -45,6 +48,6 @@ class UserCourseAssignment:
     def get_user_assigned_questions(assign_id):
         assignment = UserCourseAssignmentAcessor.get_assignment_by_id(assign_id)
         if not assignment:
-            return None, None
+            return "Assignment not found", None
         questions = assignment.course.course_questions.all()
         return assignment.user, questions

@@ -82,7 +82,7 @@ def get_assigned_topics(request, assign_id):
     response_builder = ResponseBuilder()
     user, data = UserCourseAssignment.get_user_assigned_topics_by_course(assign_id)
     if data is None:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user)
     serializer = TopicSerializer(data, many=True)
     result = {"user": user.email, "topics": serializer.data}
     return response_builder.get_200_success_response("Data Fetched", result)
@@ -109,7 +109,7 @@ def get_assigned_sub_topic(request, assign_id, topic_id):
     try:
         user, sub_topics = UserCourseAssignment.get_user_assigned_sub_topics(assign_id, topic_id)
         if sub_topics is None:
-            return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
+            return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user)
         serializer = SubTopicSerializer(sub_topics, many=True)
         result = {"user": user.email, "sub_topics": serializer.data}
         return response_builder.get_200_success_response("Data Fetched", result)
@@ -123,7 +123,7 @@ def get_user_assigned_questions(request, assign_id):
     response_builder = ResponseBuilder()
     user, data = UserCourseAssignment.get_user_assigned_questions(assign_id)
     if data is None:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user)
     serializer = QuestionSerilizer(data, many=True)
     result = {"user": user.email, "questions": serializer.data}
     return response_builder.get_200_success_response("Data Fetched", result)
