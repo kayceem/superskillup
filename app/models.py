@@ -1,6 +1,7 @@
 from django.db import models
 from app.utils import get_char_uuid
 from app.utils.hashing import hash_raw_password
+from django.contrib.auth.models import User
 
 
 class BaseModel(models.Model):
@@ -19,13 +20,7 @@ class UserProfile(BaseModel):
     HUMAN_RESOURCE = 'human-resource'
     DEVOPS = 'devops'
     PROJECT_MANAGER = 'project-manager'
-    DOMAINS = (
-        (FRONTEND, FRONTEND),
-        (BACKEND, BACKEND),
-        (HUMAN_RESOURCE, HUMAN_RESOURCE),
-        (DEVOPS, DEVOPS),
-        (PROJECT_MANAGER, PROJECT_MANAGER),
-    )
+    DOMAINS = ((FRONTEND, FRONTEND), (BACKEND, BACKEND), (HUMAN_RESOURCE, HUMAN_RESOURCE), (DEVOPS, DEVOPS), (PROJECT_MANAGER, PROJECT_MANAGER))
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
@@ -58,7 +53,7 @@ class Course(BaseModel):
 
 class Topic(BaseModel):
     name = models.CharField(max_length=255)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='topics')
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
 
@@ -68,7 +63,7 @@ class Topic(BaseModel):
 
 class SubTopic(BaseModel):
     name = models.CharField(max_length=255)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='sub_topics')
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
 
@@ -83,39 +78,44 @@ class Question(BaseModel):
     LEVEL_CHOICES = ((BEGINNER, BEGINNER), (INTERMEDIATE, INTERMEDIATE), (ADVANCE, ADVANCE))
     question = models.CharField(max_length=255)
     helping_text = models.TextField(null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True, related_name='course_questions')
+    topic = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True, related_name='topic_questions')
+    sub_topic = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True, related_name='sub_topic_questions')
     level = models.CharField(max_length=255, choices=LEVEL_CHOICES, null=True, blank=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
-    sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, null=True, blank=True)
     url = models.URLField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
 
 
-class UserAssignment(BaseModel):
+class UserCourseAssignment(BaseModel):
     IN_PROGRESS = 'in-progess'
     COMPLETED = 'completed'
     STATUS = ((IN_PROGRESS, IN_PROGRESS), (COMPLETED, COMPLETED))
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
-    sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, null=True, blank=True)
-    deadline = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=255, choices=STATUS, default=IN_PROGRESS)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='assignments')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned')
+    deadline = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        unique_together = ['user', 'question']
+        unique_together = ['user', 'course']
         ordering = ['-created_at']
 
 
 class UserAnswer(BaseModel):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    IN_PROGRESS = 'in-progess'
+    COMPLETED = 'completed'
+    STATUS = ((IN_PROGRESS, IN_PROGRESS), (COMPLETED, COMPLETED))
+    user_course_assignment = models.ForeignKey(UserCourseAssignment, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.TextField(null=True, blank=True)
     is_reviewed_by_gpt = models.BooleanField(default=False)
     is_reviewed_by_manager = models.BooleanField(default=False)
+    status = models.CharField(max_length=255, choices=STATUS, default=IN_PROGRESS)
+
+    class Meta:
+        unique_together = ['user_course_assignment', 'question']
 
 
 class GptReview(BaseModel):
@@ -125,7 +125,7 @@ class GptReview(BaseModel):
     score = models.PositiveIntegerField(null=True, blank=True)
 
 
-class ManageFeedback(BaseModel):
+class ManagerFeedback(BaseModel):
     gpt_review = models.ForeignKey(GptReview, on_delete=models.CASCADE)
     remarks = models.TextField(null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True)
