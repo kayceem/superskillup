@@ -6,5 +6,5 @@ class UserAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAnswer
-        fields = ["id", "user", "question", "answer"]
+        fields = ["id", "user_course_assignment", "question", "answer"]
         extra_kwargs = {'id': {'read_only': True}}
