@@ -79,8 +79,8 @@ class Question(BaseModel):
     question = models.CharField(max_length=255)
     helping_text = models.TextField(null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True, related_name='course_questions')
-    topic = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True, related_name='topic_questions')
-    sub_topic = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True, related_name='sub_topic_questions')
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True, related_name='topic_questions')
+    sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, null=True, blank=True, related_name='sub_topic_questions')
     level = models.CharField(max_length=255, choices=LEVEL_CHOICES, null=True, blank=True)
     url = models.URLField(null=True, blank=True)
 
