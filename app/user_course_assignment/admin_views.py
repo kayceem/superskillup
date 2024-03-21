@@ -11,6 +11,7 @@ from app.user_course_assignment.serializer import UserCourseAssignmentSerializer
 from app.shared.pagination import paginate
 from app.api import api
 from app.user.user import User
+from app.services import email_service
 
 
 @api_view(["GET"])
@@ -73,6 +74,8 @@ def assign_course(request):
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
+    assignment = UserCourseAssignment.get_assignment_by_id(serializer.data.get('id'))
+    email_service.send_course_assigned_mail(assignment)
     return response_builder.get_200_success_response("Course Assigned Successfully", serializer.data)
 
 
