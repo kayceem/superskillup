@@ -7,6 +7,7 @@ class QuestionSerilizer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ["id", "question", "helping_text", "level", "course", "topic", "sub_topic", "url"]
+        extra_kwargs = {'id': {'read_only': True}}
 
     def validate(self, attrs):
         if attrs.get('sub_topic'):
