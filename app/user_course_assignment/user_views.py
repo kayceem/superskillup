@@ -57,10 +57,10 @@ def get_assigned_topics_by_course(request, assign_id):
     user = request.user
     response_builder = ResponseBuilder()
     assigned_user, topics = UserCourseAssignment.get_user_assigned_topics_by_course(assign_id)
-    if user != assigned_user:
-        return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     if not topics:
         return response_builder.get_404_not_found_response(api.USER_ASSIGNED_TOPIC_NOT_FOUND)
+    if user != assigned_user:
+        return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     serializer = TopicSerializer(topics, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
@@ -71,10 +71,10 @@ def get_assigned_sub_topics_by_topic(request, assign_id, topic_id):
     user = request.user
     response_builder = ResponseBuilder()
     assigned_user, sub_topics = UserCourseAssignment.get_user_assigned_sub_topics(assign_id, topic_id)
-    if user != assigned_user:
-        return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     if not sub_topics:
         return response_builder.get_404_not_found_response(api.USER_ASSIGNED_SUB_TOPIC_NOT_FOUND)
+    if user != assigned_user:
+        return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     serializer = SubTopicSerializer(sub_topics, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
@@ -85,9 +85,9 @@ def get_assigned_questions(request, assign_id):
     user = request.user
     response_builder = ResponseBuilder()
     assigned_user, questions = UserCourseAssignment.get_user_assigned_questions(assign_id)
-    if user != assigned_user:
-        return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     if not questions:
         return response_builder.get_404_not_found_response(api.USER_ASSIGNED_QUESTION_NOT_FOUND)
+    if user != assigned_user:
+        return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     serializer = QuestionSerilizer(questions, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
