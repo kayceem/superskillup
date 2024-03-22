@@ -8,6 +8,7 @@ from app.user_answer import views as user_answer_views
 from app.question import views as question_views
 from app.user_course_assignment import admin_views as admin_assignment_views
 from app.user_course_assignment import user_views as user_assignment_views
+from app.user_course_assignment import search as search_views
 
 urlpatterns = [
     # login
@@ -58,4 +59,6 @@ urlpatterns = [
     path("v1/user/assignment/<str:assign_id>/topics/", user_assignment_views.get_assigned_topics_by_course, name="user-assigned-topics-by-course"),
     path("v1/user/assignment/<str:assign_id>/topic/<str:topic_id>/sub_topics/", user_assignment_views.get_assigned_sub_topics_by_topic, name="user-assigned-sub-topics-by-topic"),
     path("v1/user/assignment/<str:assign_id>/questions/", user_assignment_views.get_assigned_questions, name="user-assigned-questions"),
+    # search
+    path("v1/search/", search_views.search, name='search'),
 ]
