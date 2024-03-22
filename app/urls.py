@@ -38,9 +38,7 @@ urlpatterns = [
     path("v1/question/<str:id>/", question_views.get_question_by_id, name="question"),
     # user-answer
     path("v1/add_answer/", user_answer_views.add_answer, name="add-answer"),
-    path("v1/answer_by_user/", user_answer_views.get_answer_by_user_id, name="user-answer-by-user-id"),
     path("v1/update_answer/<str:id>/", user_answer_views.update_answer, name="update-answer"),
-    path("v1/answer_by_id/<str:id>/", user_answer_views.get_answer_by_id, name='answer-by-id'),
     # user-course-assignment for admin
     path("v1/admin/assignments/", admin_assignment_views.get_all_assignments, name="admin-assignments"),
     path("v1/admin/assign_course/", admin_assignment_views.assign_course, name="admin-assign-course"),
