@@ -4,10 +4,11 @@ from app.user import views as user_views
 from app.course import views as course_views
 from app.topic import views as topic_views
 from app.sub_topic import views as sub_topic_views
-from app.user_answer import views as user_answer_views
+from app.user_answer import user_views as user_answer_views
 from app.question import views as question_views
 from app.user_course_assignment import admin_views as admin_assignment_views
 from app.user_course_assignment import user_views as user_assignment_views
+from app.user_answer import admin_views as admin_answer_views
 
 urlpatterns = [
     # login
@@ -36,11 +37,17 @@ urlpatterns = [
     path("v1/create_question/", question_views.create_question, name="create-question"),
     path("v1/update_question/<str:question_id>/", question_views.update_question, name="update-question"),
     path("v1/question/<str:id>/", question_views.get_question_by_id, name="question"),
+    # admin answer
+    path("v1/admin/answers/", admin_answer_views.get_all_answer, name="admin-answers"),
+    path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-answer-by-id"),
+    path("v1/admin/answer/assignment/<str:assign_id>/", admin_answer_views.get_answers_by_assignment, name="admin-answer-by-assignment"),
+    path("v1/admin/answers/<str:user_id>/", admin_answer_views.get_answers_by_user, name="admin-users-answers"),
     # user-answer
     path("v1/add_answer/", user_answer_views.add_answer, name="add-answer"),
-    path("v1/answer_by_user/", user_answer_views.get_answer_by_user_id, name="user-answer-by-user-id"),
     path("v1/update_answer/<str:id>/", user_answer_views.update_answer, name="update-answer"),
-    path("v1/answer_by_id/<str:id>/", user_answer_views.get_answer_by_id, name='answer-by-id'),
+    path("v1/user/answer_by_id/<str:id>/", user_answer_views.get_answer_by_id, name="answer_by_id"),
+    path("v1/user/answers/", user_answer_views.get_answers_by_user, name="user-answers"),
+    path("v1/user/answer/assignment/<str:assign_id>/", user_answer_views.get_answers_by_assignment, name="user-answer-by-assignment"),
     # user-course-assignment for admin
     path("v1/admin/assignments/", admin_assignment_views.get_all_assignments, name="admin-assignments"),
     path("v1/admin/assign_course/", admin_assignment_views.assign_course, name="admin-assign-course"),
