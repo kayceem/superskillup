@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
@@ -66,25 +67,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+            ]
         },
-    },
+    }
 ]
 from datetime import timedelta
-SALT_KEY  = os.getenv("SALT_KEY")
+
+SALT_KEY = os.getenv("SALT_KEY")
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication', 'rest_framework_simplejwt.authentication.JWTAuthentication'],
+    'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer', 'rest_framework.renderers.BrowsableAPIRenderer'],
+    'DEFAULT_PARSER_CLASSES': ['rest_framework.parsers.JSONParser'],
 }
 
 SIMPLE_JWT = {
@@ -93,7 +87,7 @@ SIMPLE_JWT = {
     'SIGNING_KEY': os.getenv('JWT_SIGNING_KEY'),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'JTI_CLAIM': 'jti',
-    'USER_ID_CLAIM': 'id'
+    'USER_ID_CLAIM': 'id',
 }
 
 
