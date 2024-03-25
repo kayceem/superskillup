@@ -3,11 +3,11 @@ from app.shared.authentication import UserAuthentication
 from app.shared.pagination import paginate
 from app.user_answer.user_answer import UserAnswer
 from app.api.response_builder import ResponseBuilder
-from app.user.user import User
 from app.user_answer.serializer import UserAnswerSerializer
 from app.api import api
 from app.services.email_service import send_answer_submitted_mail
 from app.user_course_assignment.user_course_assignment import UserCourseAssignment
+from app.gpt_review.gpt_review import GptReview
 
 
 @api_view(["POST"])
@@ -19,6 +19,7 @@ def add_answer(request):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
     answer = UserAnswer.get_answer_by_id(serializer.data["id"])
+    GptReview.add_gpt_review(answer)
     send_answer_submitted_mail(answer)
     return response_builder.get_200_success_response("Answer successfully added", serializer.data)
 
@@ -37,6 +38,7 @@ def update_answer(request, id):
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
+    GptReview.update_gpt_review(answer)
     return response_builder.get_200_success_response("Answer successfully added", serializer.data)
 
 

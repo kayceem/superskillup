@@ -9,6 +9,8 @@ from app.question import views as question_views
 from app.user_course_assignment import admin_views as admin_assignment_views
 from app.user_course_assignment import user_views as user_assignment_views
 from app.user_answer import admin_views as admin_answer_views
+from app.gpt_review import admin_views as admin_gpt_views
+from app.gpt_review import user_views as user_gpt_views
 
 urlpatterns = [
     # login
@@ -65,4 +67,7 @@ urlpatterns = [
     path("v1/user/assignment/<str:assign_id>/topics/", user_assignment_views.get_assigned_topics_by_course, name="user-assigned-topics-by-course"),
     path("v1/user/assignment/<str:assign_id>/topic/<str:topic_id>/sub_topics/", user_assignment_views.get_assigned_sub_topics_by_topic, name="user-assigned-sub-topics-by-topic"),
     path("v1/user/assignment/<str:assign_id>/questions/", user_assignment_views.get_assigned_questions, name="user-assigned-questions"),
+    # gpt-review
+    path("v1/admin/gpt_review/<str:answer_id>", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
+    path("v1/user/gpt_review/<str:answer_id>", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),
 ]
