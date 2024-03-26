@@ -30,9 +30,7 @@ def get_sub_topic_by_id(request, id):
     """
 
     response_builder = ResponseBuilder()
-    print(id)
     sub_topic = SubTopic.get_sub_topic_by_id(sub_topic_id=id)
-    print(sub_topic)
     if not sub_topic:
         return response_builder.get_404_not_found_response(api.SUB_TOPIC_NOT_FOUND)
     serializer = SubTopicSerializer(sub_topic)

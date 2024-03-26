@@ -16,6 +16,8 @@ USER_VERIFIED = 201
 OTP_ALREADY_SENT = 202
 # OTP
 OTP_VERIFICATION_FAILED = 600
+# Search
+INVALID_SEARCH_QUERY = 605
 # Course
 COURSE_NOT_FOUND = 700
 # Topic
@@ -33,7 +35,11 @@ USER_ASSIGNED_COURSE_NOT_FOUND = 410
 USER_ASSIGNED_TOPIC_NOT_FOUND = 411
 USER_ASSIGNED_SUB_TOPIC_NOT_FOUND = 412
 USER_ASSIGNED_QUESTION_NOT_FOUND = 413
+# Gpt Review
+GPT_REVIEW_NOT_FOUND = 420
 
+# Manager Feedback
+MANAGER_FEEDBACK_NOT_FOUND = 403
 error_messages = {
     INVALID_INPUT: 'Invalid input',
     TOO_MANY_REQUEST: 'Too many requests',
@@ -57,4 +63,7 @@ error_messages = {
     USER_ASSIGNED_TOPIC_NOT_FOUND: "Assigned topics not found",
     USER_ASSIGNED_SUB_TOPIC_NOT_FOUND: "Assigned sub topics not found",
     USER_ASSIGNED_QUESTION_NOT_FOUND: "Assigned questions not found",
+    GPT_REVIEW_NOT_FOUND: "Gpt review not found",
+    MANAGER_FEEDBACK_NOT_FOUND: "Manager Feedback not found",
+    INVALID_SEARCH_QUERY: "Invalid search query",
 }

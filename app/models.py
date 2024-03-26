@@ -119,13 +119,12 @@ class UserAnswer(BaseModel):
 
 
 class GptReview(BaseModel):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user_answer = models.OneToOneField(UserAnswer, on_delete=models.CASCADE)
     remarks = models.TextField(null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True)
 
 
 class ManagerFeedback(BaseModel):
-    gpt_review = models.ForeignKey(GptReview, on_delete=models.CASCADE)
+    gpt_review = models.OneToOneField(GptReview, on_delete=models.CASCADE)
     remarks = models.TextField(null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True)
