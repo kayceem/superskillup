@@ -11,6 +11,7 @@ from app.user_course_assignment import user_views as user_assignment_views
 from app.user_answer import admin_views as admin_answer_views
 from app.gpt_review import admin_views as admin_gpt_views
 from app.gpt_review import user_views as user_gpt_views
+from app.user_course_assignment import search as search_views
 
 urlpatterns = [
     # login
@@ -70,4 +71,6 @@ urlpatterns = [
     # gpt-review
     path("v1/admin/gpt_review/<str:answer_id>", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
     path("v1/user/gpt_review/<str:answer_id>", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),
+    # search
+    path("v1/search/", search_views.search, name='search'),
 ]
