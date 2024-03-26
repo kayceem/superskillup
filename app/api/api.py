@@ -35,6 +35,8 @@ USER_ASSIGNED_COURSE_NOT_FOUND = 410
 USER_ASSIGNED_TOPIC_NOT_FOUND = 411
 USER_ASSIGNED_SUB_TOPIC_NOT_FOUND = 412
 USER_ASSIGNED_QUESTION_NOT_FOUND = 413
+# Gpt Review
+GPT_REVIEW_NOT_FOUND = 420
 
 error_messages = {
     INVALID_INPUT: 'Invalid input',
@@ -59,5 +61,6 @@ error_messages = {
     USER_ASSIGNED_TOPIC_NOT_FOUND: "Assigned topics not found",
     USER_ASSIGNED_SUB_TOPIC_NOT_FOUND: "Assigned sub topics not found",
     USER_ASSIGNED_QUESTION_NOT_FOUND: "Assigned questions not found",
+    GPT_REVIEW_NOT_FOUND: "Gpt review not found",
     INVALID_SEARCH_QUERY: "Invalid search query",
 }

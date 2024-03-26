@@ -26,3 +26,9 @@ def send_otp_mail(user):
 def send_course_assigned_mail(assignment):
     body = render_to_string("course_assigned.html", context={"user": assignment.user.name, "course": assignment.course.name, "manager": assignment.assigned_by.username})
     send_email(f"Course: {assignment.course.name}", body, [assignment.user.email])
+
+
+def send_answer_submitted_mail(answer):
+    body = render_to_string("answer_submitted.html", context={"user": answer.user_course_assignment.user.name, "admin": answer.user_course_assignment.assigned_by.username, "question": answer.question.question})
+    subject = "Answer Submission"
+    send_email(subject, body, [answer.user_course_assignment.assigned_by.email])
