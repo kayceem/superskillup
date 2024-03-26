@@ -11,6 +11,7 @@ from app.user_course_assignment import user_views as user_assignment_views
 from app.user_answer import admin_views as admin_answer_views
 from app.gpt_review import admin_views as admin_gpt_views
 from app.gpt_review import user_views as user_gpt_views
+from app.ManagerFeedback import views as manager_feedback
 
 urlpatterns = [
     # login
@@ -70,4 +71,10 @@ urlpatterns = [
     # gpt-review
     path("v1/admin/gpt_review/<str:answer_id>", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
     path("v1/user/gpt_review/<str:answer_id>", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),
+    # manager-review
+    path("v1/manager_reviews/", manager_feedback.get_all_feedback, name="manager-reviews"),
+    path("v1/manager_review/<str:id>/", manager_feedback.get_feedback_by_id, name='manager-review-by-id'),
+    path("v1/manager-review/answer/<str:answer_id>/", manager_feedback.get_feedback_by_answer, name="manager-feedback0by-answer"),
+    path("v1/add_manager_review/", manager_feedback.add_manager_feedback, name="add-manager-feedback"),
+    path("v1/update_manager_review/<str:id>/", manager_feedback.update_manager_feedback, name='update-manager-feedback'),
 ]
