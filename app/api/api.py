@@ -16,6 +16,8 @@ USER_VERIFIED = 201
 OTP_ALREADY_SENT = 202
 # OTP
 OTP_VERIFICATION_FAILED = 600
+# Search
+INVALID_SEARCH_QUERY = 605
 # Course
 COURSE_NOT_FOUND = 700
 # Topic
@@ -63,4 +65,5 @@ error_messages = {
     USER_ASSIGNED_QUESTION_NOT_FOUND: "Assigned questions not found",
     GPT_REVIEW_NOT_FOUND: "Gpt review not found",
     MANAGER_FEEDBACK_NOT_FOUND: "Manager Feedback not found",
+    INVALID_SEARCH_QUERY: "Invalid search query",
 }
