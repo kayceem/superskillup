@@ -29,7 +29,6 @@ class GptReview:
         if not serializer.is_valid():
             return None
         serializer.save()
-        print(serializer.data)
         return serializer.data
 
     @classmethod
