@@ -11,11 +11,8 @@ from app.user_course_assignment import user_views as user_assignment_views
 from app.user_answer import admin_views as admin_answer_views
 from app.gpt_review import admin_views as admin_gpt_views
 from app.gpt_review import user_views as user_gpt_views
-<<<<<<< HEAD
 from app.ManagerFeedback import views as manager_feedback
-=======
 from app.user_course_assignment import search as search_views
->>>>>>> dev
 
 urlpatterns = [
     # login
@@ -83,5 +80,4 @@ urlpatterns = [
     path("v1/update_manager_review/<str:id>/", manager_feedback.update_manager_feedback, name='update-manager-feedback'),
     # search
     path("v1/search/", search_views.search, name='search'),
-
 ]
