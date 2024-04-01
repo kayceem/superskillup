@@ -1,9 +1,9 @@
-from app.ManagerFeedback.ManagerFeedback import ManagerFeedback
+from app.manager_feedback.manager_feedback import ManagerFeedback
 from rest_framework.decorators import api_view, authentication_classes
 from app.api.response_builder import ResponseBuilder
 from app.api import api
 from app.shared.authentication import AdminAuthentication, CombinedAuthentication
-from app.ManagerFeedback.serializer import ManagerFeedbackSerializer
+from app.manager_feedback.serializer import ManagerFeedbackSerializer
 from app.shared.pagination import paginate
 from app.user.user import User
 from app.utils.utils import is_user_admin
