@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.models import UserCourseAssignment
+from app.models import UserCourseEnrollment
 from rest_framework.exceptions import ValidationError
 from app.course.serializers import CourseSerializer
 from app.topic.serializers import TopicSerializer
@@ -7,11 +7,11 @@ from app.sub_topic.serializers import SubTopicSerializer
 from app.question.serializer import QuestionSerilizer
 
 
-class UserCourseAssignmentSerializer(serializers.ModelSerializer):
+class UserCourseEnrollmentSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = UserCourseAssignment
-        fields = ["id", "user", "course", "status", "assigned_by", "deadline"]
+        model = UserCourseEnrollment
+        fields = ["id", "user", "course", "status", "assigned_by"]
         extra_kwargs = {'id': {'read_only': True}}
 
 

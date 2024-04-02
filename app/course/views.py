@@ -43,7 +43,7 @@ def create_course(request):
     """
     Create a Course.
     """
-
+    request.data['created_by'] = request.user.id
     response_builder = ResponseBuilder()
     serializer = CourseSerializer(data=request.data)
     if not serializer.is_valid():
@@ -58,7 +58,7 @@ def update_course(request, id):
     """
     Update the provided course
     """
-
+    request.data['created_by'] = request.user.id
     response_builder = ResponseBuilder()
     is_PATCH = request.method == 'PATCH'
     course = Course.get_course_by_id(course_id=id)
