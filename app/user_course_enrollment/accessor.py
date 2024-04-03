@@ -1,0 +1,34 @@
+from app.models import UserCourseEnrollment
+
+
+class UserCourseEnrollmentAcessor:
+
+    # Only admin
+    @staticmethod
+    def get_all_assignments() -> UserCourseEnrollment | None:
+        return UserCourseEnrollment.objects.all()
+
+    # Both admin and user
+    @staticmethod
+    def get_assignment_by_id(id) -> UserCourseEnrollment | None:
+        return UserCourseEnrollment.objects.filter(id=id).first()
+
+    @staticmethod
+    def get_user_assigned_courses(user_id) -> UserCourseEnrollment | None:
+        return UserCourseEnrollment.objects.filter(user_id=user_id).all().values('course')
+
+    @staticmethod
+    def get_assignments_of_user(user_id) -> UserCourseEnrollment | None:
+        return UserCourseEnrollment.objects.filter(user_id=user_id).all()
+
+    # @staticmethod
+    # def get_user_assigned_topics(id) -> UserCourseEnrollment | None:
+    #     return UserCourseEnrollment.objects.filter(id=id).first().course.topics.all()
+
+    # @staticmethod
+    # def get_user_assigned_sub_topics(user_id, topic_id) -> UserCourseEnrollment | None:
+    #     return UserCourseEnrollment.objects.filter(user_id=user_id, topic_id=topic_id).first().course..all()
+
+    # @staticmethod
+    # def get_user_assigned_questions(user) -> UserCourseEnrollment | None:
+    #     return UserCourseEnrollment.objects.filter(user_id=user).all().values('question')

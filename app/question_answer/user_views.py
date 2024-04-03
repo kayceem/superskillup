@@ -1,12 +1,12 @@
 from rest_framework.decorators import api_view, authentication_classes
 from app.shared.authentication import UserAuthentication
 from app.shared.pagination import paginate
-from app.user_answer.user_answer import UserAnswer
+from app.question_answer.question_answer import QuestionAnswer
 from app.api.response_builder import ResponseBuilder
-from app.user_answer.serializer import UserAnswerSerializer
+from app.question_answer.serializer import QuestionAnswerSerializer
 from app.api import api
 from app.services.email_service import send_answer_submitted_mail
-from app.user_course_assignment.user_course_assignment import UserCourseAssignment
+from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.gpt_review.gpt_review import GptReview
 
 
@@ -14,11 +14,11 @@ from app.gpt_review.gpt_review import GptReview
 @authentication_classes([UserAuthentication])
 def add_answer(request):
     response_builder = ResponseBuilder()
-    serializer = UserAnswerSerializer(data=request.data)
+    serializer = QuestionAnswerSerializer(data=request.data)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
-    answer = UserAnswer.get_answer_by_id(serializer.data["id"])
+    answer = QuestionAnswer.get_answer_by_id(serializer.data["id"])
     GptReview.add_gpt_review(answer)
     send_answer_submitted_mail(answer)
     return response_builder.get_200_success_response("Answer successfully added", serializer.data)
@@ -29,12 +29,12 @@ def add_answer(request):
 def update_answer(request, id):
     response_builder = ResponseBuilder()
     user = request.user
-    answer = UserAnswer.get_answer_by_id(id)
+    answer = QuestionAnswer.get_answer_by_id(id)
     if not answer:
-        return response_builder.get_404_not_found_response(api.USER_ANSWER_NOT_FOUND)
-    if user != answer.user_course_assignment.user:
+        return response_builder.get_404_not_found_response(api.QUESTION_ANSWER_NOT_FOUND)
+    if user != answer.user_course_enrollment.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User unauthorized")
-    serializer = UserAnswerSerializer(answer, data=request.data, partial=True)
+    serializer = QuestionAnswerSerializer(answer, data=request.data, partial=True)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
@@ -47,13 +47,13 @@ def update_answer(request, id):
 def get_answer_by_id(request, id):
     response_builder = ResponseBuilder()
     user = request.user
-    data = UserAnswer.get_answer_by_id(id)
+    data = QuestionAnswer.get_answer_by_id(id)
     if data:
-        if user == data.user_course_assignment.user:
-            serializer = UserAnswerSerializer(data)
+        if user == data.user_course_enrollment.user:
+            serializer = QuestionAnswerSerializer(data)
             return response_builder.get_200_success_response("Data Fetched", serializer.data)
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User unauthorized")
-    return response_builder.get_404_not_found_response(api.USER_ANSWER_NOT_FOUND)
+    return response_builder.get_404_not_found_response(api.QUESTION_ANSWER_NOT_FOUND)
 
 
 @api_view(["GET"])
@@ -61,15 +61,15 @@ def get_answer_by_id(request, id):
 def get_answers_by_assignment(request, assign_id):
     response_builder = ResponseBuilder()
     user = request.user
-    assignment = UserCourseAssignment.get_assignment_by_id(assign_id)
+    assignment = UserCourseEnrollment.get_assignment_by_id(assign_id)
     if assignment:
         if assignment.user == user:
-            data = UserAnswer.get_answers_by_assignment(assign_id)
+            data = QuestionAnswer.get_answers_by_assignment(assign_id)
             if data:
                 paginated_data, page_info = paginate(data, request)
-                serializer = UserAnswerSerializer(paginated_data, many=True)
+                serializer = QuestionAnswerSerializer(paginated_data, many=True)
                 return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
-            return response_builder.get_404_not_found_response(api.USER_ANSWER_NOT_FOUND)
+            return response_builder.get_404_not_found_response(api.QUESTION_ANSWER_NOT_FOUND)
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User unauthorized")
     return response_builder.get_404_not_found_response(api.USER_ASSIGNED_COURSE_NOT_FOUND)
 
@@ -79,9 +79,9 @@ def get_answers_by_assignment(request, assign_id):
 def get_answers_by_user(request):
     response_builder = ResponseBuilder()
     user = request.user
-    answer = UserAnswer.get_answers_by_user(user)
+    answer = QuestionAnswer.get_answers_by_user(user)
     if answer:
         paginated_data, page_info = paginate(answer, request)
-        serializer = UserAnswerSerializer(paginated_data, many=True)
+        serializer = QuestionAnswerSerializer(paginated_data, many=True)
         return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
-    return response_builder.get_404_not_found_response(api.USER_ANSWER_NOT_FOUND)
+    return response_builder.get_404_not_found_response(api.QUESTION_ANSWER_NOT_FOUND)

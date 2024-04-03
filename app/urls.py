@@ -4,15 +4,15 @@ from app.user import views as user_views
 from app.course import views as course_views
 from app.topic import views as topic_views
 from app.sub_topic import views as sub_topic_views
-from app.user_answer import user_views as user_answer_views
+from app.question_answer import user_views as user_answer_views
 from app.question import views as question_views
-from app.user_course_assignment import admin_views as admin_assignment_views
-from app.user_course_assignment import user_views as user_assignment_views
-from app.user_answer import admin_views as admin_answer_views
+from app.user_course_enrollment import admin_views as admin_assignment_views
+from app.user_course_enrollment import user_views as user_assignment_views
+from app.question_answer import admin_views as admin_answer_views
 from app.gpt_review import admin_views as admin_gpt_views
 from app.gpt_review import user_views as user_gpt_views
 from app.manager_feedback import views as manager_feedback
-from app.user_course_assignment import search as search_views
+from app.user_course_enrollment import search as search_views
 
 urlpatterns = [
     # login
