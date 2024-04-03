@@ -43,9 +43,9 @@ def get_question_by_id(request, id):
 
 @api_view(["PUT", "PATCH"])
 @authentication_classes([AdminAuthentication])
-def update_question(request, question_id):
+def update_question(request, id):
     response_builder = ResponseBuilder()
-    ques_obj = Question.get_question_by_id(question_id)
+    ques_obj = Question.get_question_by_id(id)
     if ques_obj is None:
         return response_builder.get_404_not_found_response(api.QUESTION_NOT_FOUND)
     serializer = QuestionSerilizer(ques_obj, data=request.data, partial=True)
