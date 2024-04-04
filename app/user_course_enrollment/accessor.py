@@ -18,6 +18,10 @@ class UserCourseEnrollmentAcessor:
         return UserCourseEnrollment.objects.filter(user_id=user_id).all().values('course')
 
     @staticmethod
+    def get_managers_of_user(user_id) -> dict | None:
+        return UserCourseEnrollment.objects.filter(user_id=user_id).all().values('enrolled_by')
+
+    @staticmethod
     def get_user_enrollments(user_id) -> list[UserCourseEnrollment] | None:
         return UserCourseEnrollment.objects.filter(user_id=user_id).all()
 

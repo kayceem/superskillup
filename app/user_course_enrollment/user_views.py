@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view, authentication_classes
+from app.app_admin.serializers import AdminSerializer
 from app.course.serializers import CourseSerializer
 from app.question.serializer import QuestionSerilizer
 from app.sub_topic.serializers import SubTopicSerializer
@@ -47,6 +48,18 @@ def get_enrolled_courses(request):
     if not courses:
         return response_builder.get_404_not_found_response(api.USER_ENROLLED_COURSE_NOT_FOUND)
     serializer = CourseSerializer(courses, many=True)
+    return response_builder.get_200_success_response("Data Fetched", serializer.data)
+
+
+@api_view(["GET"])
+@authentication_classes([UserAuthentication])
+def get_managers_of_user(request):
+    user = request.user
+    response_builder = ResponseBuilder()
+    managers = UserCourseEnrollment.get_managers_of_user(user.id)
+    if not managers:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLED_MANAGER_NOT_FOUND)
+    serializer = AdminSerializer(managers, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 

@@ -3,6 +3,7 @@ from app.app_admin.accessor import AdminAccessor
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 
+
 class Admin:
 
     def __init__(self, admin):
@@ -16,10 +17,13 @@ class Admin:
     def get_admin_by_username(username):
         return AdminAccessor.get_admin(username=username)
 
+    @staticmethod
+    def get_admins_from_ids(admin_ids):
+        return AdminAccessor.get_admins_from_ids(admin_ids)
+
     def generate_auth_token(self):
         refresh = RefreshToken.for_user(self.admin)
         return str(refresh.access_token)
-
 
     @classmethod
     def login(cls, username, raw_password):

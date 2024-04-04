@@ -57,6 +57,7 @@ urlpatterns = [
     path("v1/admin/enrollment/user/<str:user_id>/course/", admin_enrollment_views.get_user_enrolled_courses, name="admin-get-user-enrolled-courses"),
     # user-course-enrollment for user
     path("v1/user/enrollment/", user_enrollment_views.get_all_enrollments, name="user-get-all-enrollments"),
+    path("v1/user/enrollment/manager/", user_enrollment_views.get_managers_of_user, name="user-get-managers-of-user"),
     path("v1/user/enrollment/course/", user_enrollment_views.get_enrolled_courses, name="user-get-enrolled-courses"),
     path("v1/user/enrollment/<str:id>/", user_enrollment_views.get_enrollment_by_id, name="user-get-enrollment-by-id"),
     path("v1/user/enrollment/<str:id>/topic/", user_enrollment_views.get_enrolled_topics, name="user-get-enrolled-topics"),

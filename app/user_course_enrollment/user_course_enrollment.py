@@ -1,3 +1,4 @@
+from app.app_admin.app_admin import Admin
 from app.course.course import Course
 from app.question.question import Question
 from app.sub_topic.sub_topic import SubTopic
@@ -18,6 +19,14 @@ class UserCourseEnrollment:
     @staticmethod
     def get_user_enrollments(user_id):
         return UserCourseEnrollmentAcessor.get_user_enrollments(user_id)
+
+    @staticmethod
+    def get_managers_of_user(user_id):
+        managers = UserCourseEnrollmentAcessor.get_managers_of_user(user_id)
+        if not managers:
+            return None
+        manager_ids = list(set([element['enrolled_by'] for element in managers]))
+        return Admin.get_admins_from_ids(manager_ids)
 
     @staticmethod
     def delete_enrollment(enrollment):

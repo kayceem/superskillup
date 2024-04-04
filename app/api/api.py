@@ -35,6 +35,7 @@ USER_ENROLLED_COURSE_NOT_FOUND = 410
 USER_ENROLLED_TOPIC_NOT_FOUND = 411
 USER_ENROLLED_SUB_TOPIC_NOT_FOUND = 412
 USER_ENROLLED_QUESTION_NOT_FOUND = 413
+USER_ENROLLED_MANAGER_NOT_FOUND = 414
 # Gpt Review
 GPT_REVIEW_NOT_FOUND = 420
 
@@ -67,6 +68,7 @@ error_messages = {
     USER_ENROLLED_TOPIC_NOT_FOUND: "Enrolled topics not found",
     USER_ENROLLED_SUB_TOPIC_NOT_FOUND: "Enrolled sub topics not found",
     USER_ENROLLED_QUESTION_NOT_FOUND: "Enrolled questions not found",
+    USER_ENROLLED_MANAGER_NOT_FOUND: "Managers not found",
     GPT_REVIEW_NOT_FOUND: "Gpt review not found",
     MANAGER_FEEDBACK_NOT_FOUND: "Manager Feedback not found",
     INVALID_SEARCH_QUERY: "Invalid search query",
