@@ -43,8 +43,10 @@ urlpatterns = [
     # question
     path("v1/admin/question/create/", question_views.create_question, name="create-question"),
     path("v1/admin/question/update/<str:id>/", question_views.update_question, name="update-question"),
-    path("v1/admin/question/<str:id>/", question_views.get_question_by_id, name="question"),
-    path("v1/admin/question/course/<str:course_id>/", question_views.get_all_questions, name="question-by-course"),
+    path("v1/admin/question/delete/<str:id>/", question_views.delete_question, name="delete-question"),
+    path("v1/admin/question/<str:id>/", question_views.get_question_by_id, name="get-questions-by-id"),
+    path("v1/admin/question/course/<str:course_id>/", question_views.get_questions_by_course, name="get-questions-by-course"),
+    path("v1/admin/question/sub-topic/<str:sub_topic_id>/", question_views.get_questions_by_sub_topic, name="get-questions-by-sub-topic"),
     #     # admin answer
     #     path("v1/admin/answer/", admin_answer_views.get_all_answer, name="admin-answers"),
     #     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-answer-by-id"),
