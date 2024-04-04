@@ -12,5 +12,9 @@ class QuestionAnswerAccessor:
         return QuestionAnswer.objects.filter(id=id).first()
 
     @staticmethod
-    def get_answers_by_assignment(assign_id):
-        return QuestionAnswer.objects.filter(user_course_enrollment=assign_id).all()
+    def get_answer_by_question(user_id, question_id):
+        return QuestionAnswer.objects.filter(question=question_id, user_course_enrollment__user=user_id).first()
+
+    @staticmethod
+    def get_answers_by_enrollment(enrollment_id):
+        return QuestionAnswer.objects.filter(user_course_enrollment=enrollment_id).all()

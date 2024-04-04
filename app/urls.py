@@ -55,9 +55,6 @@ urlpatterns = [
     path("v1/admin/enrollment/<str:id>/", admin_enrollment_views.get_enrollment_by_id, name="admin-get-enrollment-by-id"),
     path("v1/admin/enrollment/user/<str:user_id>/", admin_enrollment_views.get_user_enrollments, name='admin-get-user-enrollments'),
     path("v1/admin/enrollment/user/<str:user_id>/course/", admin_enrollment_views.get_user_enrolled_courses, name="admin-get-user-enrolled-courses"),
-    # path("v1/admin/enrollment/<str:id>/topic/", admin_enrollment_views.get_assigned_topics, name="admin-assigned-topics"),
-    # path("v1/admin/enrollment/<str:id>/topic/<str:topic_id>/sub-topic/", admin_enrollment_views.get_assigned_sub_topic, name="admin-assigned-sub-topics"),
-    # path("v1/admin/enrollment/<str:id>/question/", admin_enrollment_views.get_user_assigned_questions, name="admin-assigned-questions"),
     # user-course-enrollment for user
     path("v1/user/enrollment/", user_enrollment_views.get_all_enrollments, name="user-get-all-enrollments"),
     path("v1/user/enrollment/course/", user_enrollment_views.get_enrolled_courses, name="user-get-enrolled-courses"),
@@ -65,17 +62,17 @@ urlpatterns = [
     path("v1/user/enrollment/<str:id>/topic/", user_enrollment_views.get_enrolled_topics, name="user-get-enrolled-topics"),
     path("v1/user/enrollment/<str:id>/topic/<str:topic_id>/sub-topic/", user_enrollment_views.get_enrolled_sub_topics, name="user-get-enrolled-sub-topics"),
     path("v1/user/enrollment/<str:id>/sub-topic/<str:sub_topic_id>/question/", user_enrollment_views.get_enrolled_questions, name="user-get-enrolled-questions"),
+    # user-answer
+    path("v1/user/answer/create/", user_answer_views.add_answer, name="user-add-answer"),
+    path("v1/user/answer/update/<str:id>/", user_answer_views.update_answer, name="user-update-answer"),
+    path("v1/user/answer/<str:id>/", user_answer_views.get_answer_by_id, name="user-get-answer-by-id"),
+    path("v1/user/answer/question/<str:question_id>/", user_answer_views.get_answer_by_question, name="user-get-answer-by-question"),
+    path("v1/user/answer/enrollment/<str:enrollment_id>/", user_answer_views.get_answers_by_enrollment, name="user-get-answers-by-enrollment"),
     #     # admin answer
     #     path("v1/admin/answer/", admin_answer_views.get_all_answer, name="admin-answers"),
     #     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-answer-by-id"),
     #     path("v1/admin/answer/assignment/<str:assign_id>/", admin_answer_views.get_answers_by_assignment, name="admin-answer-by-assignment"),
     #     path("v1/admin/answer/user/<str:user_id>/", admin_answer_views.get_answers_by_user, name="admin-users-answers"),
-    #     # user-answer
-    #     path("v1/user/answer/create/", user_answer_views.add_answer, name="add-answer"),
-    #     path("v1/user/answer/update/<str:id>/", user_answer_views.update_answer, name="update-answer"),
-    #     path("v1/user/answer/<str:id>/", user_answer_views.get_answer_by_id, name="answer_by_id"),
-    #     path("v1/user/answer/", user_answer_views.get_answers_by_user, name="user-answers"),
-    #     path("v1/user/answer/assignment/<str:assign_id>/", user_answer_views.get_answers_by_assignment, name="user-answer-by-assignment"),
     #     # gpt-review
     #     path("v1/admin/gpt-review/<str:answer_id>", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
     #     path("v1/user/gpt-review/<str:answer_id>", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),
