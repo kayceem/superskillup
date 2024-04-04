@@ -75,8 +75,8 @@ urlpatterns = [
     path("v1/admin/answer/question/<str:question_id>/user/<str:user_id>/", admin_answer_views.get_answer_by_question, name="get-answer-by-question"),
     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-get-answer-by-id"),
     # gpt-review
-    path("v1/admin/gpt-review/<str:answer_id>", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
-    path("v1/user/gpt-review/<str:answer_id>", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),
+    path("v1/admin/gpt-review/<str:answer_id>/", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
+    path("v1/user/gpt-review/<str:answer_id>/", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),
     # admin-review
     path("v1/admin/review/create/", manager_feedback.add_manager_feedback, name="admin-add-manager-feedback"),
     path("v1/admin/review/update/<str:id>/", manager_feedback.update_manager_feedback, name='admin-update-manager-feedback'),
