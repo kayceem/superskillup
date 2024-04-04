@@ -50,13 +50,15 @@ class BaseModel(models.Model):
                 if field.one_to_one:
                     related_object = getattr(self, field.name, None)
                     # print("one to one field ", RelatedModel, " ", related_object)
-                    self.__delete_related_object(field, related_object)
+                    if related_object:
+                        self.__delete_related_object(field, related_object)
 
                 elif field.one_to_many:
                     related_objects = getattr(self, field.get_accessor_name()).all()
                     for related_object in related_objects:
-                        # print("one to many field ", RelatedModel, " ", related_object)
-                        self.__delete_related_object(field, related_object)
+                        if related_object:
+                            # print("one to many field ", RelatedModel, " ", related_object)
+                            self.__delete_related_object(field, related_object)
                 else:
                     # print("many to many field ", field, " ",)
                     continue
