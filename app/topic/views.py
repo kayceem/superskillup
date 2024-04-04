@@ -69,3 +69,19 @@ def update_topic(request, id):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
     return response_builder.get_201_success_response("Topic updated successfully", serializer.data)
+
+
+@api_view(['DELETE'])
+@authentication_classes([AdminAuthentication])
+def delete_topic(request, id):
+    """
+    Delete topic
+    """
+    response_builder = ResponseBuilder()
+    topic = Topic.get_topic_by_id(topic_id=id)
+    if not topic:
+        return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
+    deleted = Topic.delete_topic(topic)
+    if not deleted:
+        return response_builder.get_200_fail_response(api.DELETE_ERROR)
+    return response_builder.get_204_success_response()

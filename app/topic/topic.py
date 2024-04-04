@@ -13,3 +13,7 @@ class Topic:
     @staticmethod
     def get_topics_by_course(course_id):
         return TopicAccessor.get_topics_by_course(course_id=course_id)
+
+    @staticmethod
+    def delete_topic(topic):
+        return topic.delete()
