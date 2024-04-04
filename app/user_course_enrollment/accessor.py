@@ -5,20 +5,20 @@ class UserCourseEnrollmentAcessor:
 
     # Only admin
     @staticmethod
-    def get_all_assignments() -> UserCourseEnrollment | None:
+    def get_all_enrollments() -> list[UserCourseEnrollment] | None:
         return UserCourseEnrollment.objects.all()
 
     # Both admin and user
     @staticmethod
-    def get_assignment_by_id(id) -> UserCourseEnrollment | None:
+    def get_enrollment_by_id(id) -> UserCourseEnrollment | None:
         return UserCourseEnrollment.objects.filter(id=id).first()
 
     @staticmethod
-    def get_user_assigned_courses(user_id) -> UserCourseEnrollment | None:
+    def get_user_enrolled_courses(user_id) -> dict | None:
         return UserCourseEnrollment.objects.filter(user_id=user_id).all().values('course')
 
     @staticmethod
-    def get_assignments_of_user(user_id) -> UserCourseEnrollment | None:
+    def get_user_enrollments(user_id) -> list[UserCourseEnrollment] | None:
         return UserCourseEnrollment.objects.filter(user_id=user_id).all()
 
     # @staticmethod

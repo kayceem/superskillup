@@ -30,7 +30,7 @@ QUESTION_NOT_FOUND = 400
 QUESTION_ANSWER_NOT_FOUND = 401
 
 # User Assignment
-USER_ASSIGNMENT_NOT_FOUND = 402
+USER_ENROLLMENT_NOT_FOUND = 402
 USER_ASSIGNED_COURSE_NOT_FOUND = 410
 USER_ASSIGNED_TOPIC_NOT_FOUND = 411
 USER_ASSIGNED_SUB_TOPIC_NOT_FOUND = 412
@@ -62,7 +62,7 @@ error_messages = {
     COURSE_NOT_FOUND: "Course not found",
     TOPIC_NOT_FOUND: "Topic not found",
     SUB_TOPIC_NOT_FOUND: "Sub topic not found",
-    USER_ASSIGNMENT_NOT_FOUND: "Assignment not found",
+    USER_ENROLLMENT_NOT_FOUND: "Enrollment not found",
     USER_ASSIGNED_COURSE_NOT_FOUND: "Assigned courses not found",
     USER_ASSIGNED_TOPIC_NOT_FOUND: "Assigned topics not found",
     USER_ASSIGNED_SUB_TOPIC_NOT_FOUND: "Assigned sub topics not found",

@@ -6,7 +6,7 @@ from app.topic import views as topic_views
 from app.sub_topic import views as sub_topic_views
 from app.question_answer import user_views as user_answer_views
 from app.question import views as question_views
-from app.user_course_enrollment import admin_views as admin_assignment_views
+from app.user_course_enrollment import admin_views as admin_enrollment_views
 from app.user_course_enrollment import user_views as user_assignment_views
 from app.question_answer import admin_views as admin_answer_views
 from app.gpt_review import admin_views as admin_gpt_views
@@ -47,6 +47,24 @@ urlpatterns = [
     path("v1/admin/question/<str:id>/", question_views.get_question_by_id, name="get-questions-by-id"),
     path("v1/admin/question/course/<str:course_id>/", question_views.get_questions_by_course, name="get-questions-by-course"),
     path("v1/admin/question/sub-topic/<str:sub_topic_id>/", question_views.get_questions_by_sub_topic, name="get-questions-by-sub-topic"),
+    # user-course-enrollment for admin
+    path("v1/admin/enrollment/", admin_enrollment_views.get_all_enrollments, name="admin-get-all-enrollments"),
+    path("v1/admin/enrollment/create/", admin_enrollment_views.create_user_course_enrollment, name="admin-create-user-course-enrollment"),
+    path("v1/admin/enrollment/update/<str:id>/", admin_enrollment_views.update_user_course_enrollment, name="admin-update-user-course-enrollment"),
+    path("v1/admin/enrollment/delete/<str:id>/", admin_enrollment_views.delete_user_course_enrollment, name="admin-delete-user-course-enrollment"),
+    path("v1/admin/enrollment/<str:id>/", admin_enrollment_views.get_enrollment_by_id, name="admin-get-enrollment-by-id"),
+    path("v1/admin/enrollment/user/<str:user_id>/", admin_enrollment_views.get_user_enrollments, name='admin-get-user-enrollments'),
+    path("v1/admin/enrollment/user/<str:user_id>/course/", admin_enrollment_views.get_user_enrolled_courses, name="admin-get-user-enrolled-courses"),
+    # path("v1/admin/enrollment/<str:id>/topic/", admin_enrollment_views.get_assigned_topics, name="admin-assigned-topics"),
+    # path("v1/admin/enrollment/<str:id>/topic/<str:topic_id>/sub-topic/", admin_enrollment_views.get_assigned_sub_topic, name="admin-assigned-sub-topics"),
+    # path("v1/admin/enrollment/<str:id>/question/", admin_enrollment_views.get_user_assigned_questions, name="admin-assigned-questions"),
+    # user-course-enrollment for user
+    #     path("v1/user/assignment/", user_assignment_views.get_all_assignments, name="user-assignments"),
+    #     path("v1/user/assignment/course/", user_assignment_views.get_assigned_courses, name="user-assigned-courses"),
+    #     path("v1/user/assignment/<str:id>/", user_assignment_views.get_assignment_by_id, name="user-assignment-by-id"),
+    #     path("v1/user/assignment/<str:id>/topic/", user_assignment_views.get_assigned_topics_by_course, name="user-assigned-topics-by-course"),
+    #     path("v1/user/assignment/<str:id>/topic/<str:topic_id>/sub-topic/", user_assignment_views.get_assigned_sub_topics_by_topic, name="user-assigned-sub-topics-by-topic"),
+    #     path("v1/user/assignment/<str:id>/question/", user_assignment_views.get_assigned_questions, name="user-assigned-questions"),
     #     # admin answer
     #     path("v1/admin/answer/", admin_answer_views.get_all_answer, name="admin-answers"),
     #     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-answer-by-id"),
@@ -58,23 +76,6 @@ urlpatterns = [
     #     path("v1/user/answer/<str:id>/", user_answer_views.get_answer_by_id, name="answer_by_id"),
     #     path("v1/user/answer/", user_answer_views.get_answers_by_user, name="user-answers"),
     #     path("v1/user/answer/assignment/<str:assign_id>/", user_answer_views.get_answers_by_assignment, name="user-answer-by-assignment"),
-    #     # user-course-assignment for admin
-    #     path("v1/admin/assignment/", admin_assignment_views.get_all_assignments, name="admin-assignments"),
-    #     path("v1/admin/assignment/create/", admin_assignment_views.assign_course, name="admin-assign-course"),
-    #     path("v1/admin/assignment/update/<str:id>/", admin_assignment_views.update_assigned_course, name="admin-update-assign-course"),
-    #     path("v1/admin/assignment/<str:id>/", admin_assignment_views.get_assignment_by_id, name="admin-assignment-by-id"),
-    #     path("v1/admin/assignment/user/<str:user_id>/", admin_assignment_views.get_assignments_of_user, name='admin-user-assignments'),
-    #     path("v1/admin/assignment/user/<str:user_id>/course/", admin_assignment_views.get_user_assigned_courses, name="admin-assigned-courses"),
-    #     path("v1/admin/assignment/<str:id>/topic/", admin_assignment_views.get_assigned_topics, name="admin-assigned-topics"),
-    #     path("v1/admin/assignment/<str:id>/topic/<str:topic_id>/sub-topic/", admin_assignment_views.get_assigned_sub_topic, name="admin-assigned-sub-topics"),
-    #     path("v1/admin/assignment/<str:id>/question/", admin_assignment_views.get_user_assigned_questions, name="admin-assigned-questions"),
-    #     # user-course-assignment for user
-    #     path("v1/user/assignment/", user_assignment_views.get_all_assignments, name="user-assignments"),
-    #     path("v1/user/assignment/course/", user_assignment_views.get_assigned_courses, name="user-assigned-courses"),
-    #     path("v1/user/assignment/<str:id>/", user_assignment_views.get_assignment_by_id, name="user-assignment-by-id"),
-    #     path("v1/user/assignment/<str:id>/topic/", user_assignment_views.get_assigned_topics_by_course, name="user-assigned-topics-by-course"),
-    #     path("v1/user/assignment/<str:id>/topic/<str:topic_id>/sub-topic/", user_assignment_views.get_assigned_sub_topics_by_topic, name="user-assigned-sub-topics-by-topic"),
-    #     path("v1/user/assignment/<str:id>/question/", user_assignment_views.get_assigned_questions, name="user-assigned-questions"),
     #     # gpt-review
     #     path("v1/admin/gpt-review/<str:answer_id>", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
     #     path("v1/user/gpt-review/<str:answer_id>", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),

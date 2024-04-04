@@ -1,25 +1,32 @@
 from app.course.course import Course
-from app.topic.topic import Topic
 from app.user_course_enrollment.accessor import UserCourseEnrollmentAcessor
 
 
 class UserCourseEnrollment:
 
     @staticmethod
-    def get_all_assignments():
-        return UserCourseEnrollmentAcessor.get_all_assignments()
+    def get_all_enrollments():
+        return UserCourseEnrollmentAcessor.get_all_enrollments()
 
     @staticmethod
-    def get_assignment_by_id(id):
-        return UserCourseEnrollmentAcessor.get_assignment_by_id(id)
+    def get_enrollment_by_id(id):
+        return UserCourseEnrollmentAcessor.get_enrollment_by_id(id)
 
     @staticmethod
-    def get_assignments_of_user(user_id):
-        return UserCourseEnrollmentAcessor.get_assignments_of_user(user_id)
+    def get_user_enrollments(user_id):
+        return UserCourseEnrollmentAcessor.get_user_enrollments(user_id)
 
     @staticmethod
-    def get_user_assigned_courses(user_id):
-        courses = UserCourseEnrollmentAcessor.get_user_assigned_courses(user_id)
+    def get_enrollments_of_user(user_id):
+        return UserCourseEnrollmentAcessor.get_enrollments_of_user(user_id)
+
+    @staticmethod
+    def delete_enrollment(enrollment):
+        return enrollment.delete()
+
+    @staticmethod
+    def get_user_enrolled_courses(user_id):
+        courses = UserCourseEnrollmentAcessor.get_user_enrolled_courses(user_id)
         if not courses:
             return None
         course_ids = [element['course'] for element in courses]
