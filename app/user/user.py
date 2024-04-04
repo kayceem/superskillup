@@ -19,6 +19,10 @@ class User:
         return UserAccessor.get_user_by_email(email=email)
 
     @staticmethod
+    def get_users_from_ids(user_ids):
+        return UserAccessor.get_users_from_ids(user_ids)
+
+    @staticmethod
     def get_all_users():
         return UserAccessor.get_all_users()
 

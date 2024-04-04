@@ -3,6 +3,7 @@ from app.course.serializers import CourseSerializer
 # from app.question.serializer import QuestionSerilizer
 # from app.sub_topic.serializers import SubTopicSerializer
 # from app.topic.serializers import TopicSerializer
+from app.user.serializers import UserSerializer
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.shared.authentication import AdminAuthentication
 from app.api.response_builder import ResponseBuilder
@@ -47,6 +48,19 @@ def get_user_enrollments(request, user_id):
         serializer = UserCourseEnrollmentSerializer(paginated_data, many=True)
         return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
     return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+
+
+@api_view(["GET"])
+@authentication_classes([AdminAuthentication])
+def get_enrolled_users(request):
+    user = request.user
+    response_builder = ResponseBuilder()
+    users = UserCourseEnrollment.get_enrolled_users(user.id)
+    if not users:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    paginated_data, page_info = paginate(users, request)
+    serializer = UserSerializer(paginated_data, many=True)
+    return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
 
 
 @api_view(["GET"])

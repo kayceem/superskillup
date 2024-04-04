@@ -52,9 +52,10 @@ urlpatterns = [
     path("v1/admin/enrollment/create/", admin_enrollment_views.create_user_course_enrollment, name="admin-create-user-course-enrollment"),
     path("v1/admin/enrollment/update/<str:id>/", admin_enrollment_views.update_user_course_enrollment, name="admin-update-user-course-enrollment"),
     path("v1/admin/enrollment/delete/<str:id>/", admin_enrollment_views.delete_user_course_enrollment, name="admin-delete-user-course-enrollment"),
-    path("v1/admin/enrollment/<str:id>/", admin_enrollment_views.get_enrollment_by_id, name="admin-get-enrollment-by-id"),
+    path("v1/admin/enrollment/user/", admin_enrollment_views.get_enrolled_users, name="admin-get-enrolled_users"),
     path("v1/admin/enrollment/user/<str:user_id>/", admin_enrollment_views.get_user_enrollments, name='admin-get-user-enrollments'),
     path("v1/admin/enrollment/user/<str:user_id>/course/", admin_enrollment_views.get_user_enrolled_courses, name="admin-get-user-enrolled-courses"),
+    path("v1/admin/enrollment/<str:id>/", admin_enrollment_views.get_enrollment_by_id, name="admin-get-enrollment-by-id"),
     # user-course-enrollment for user
     path("v1/user/enrollment/", user_enrollment_views.get_all_enrollments, name="user-get-all-enrollments"),
     path("v1/user/enrollment/manager/", user_enrollment_views.get_managers_of_user, name="user-get-managers-of-user"),

@@ -3,6 +3,7 @@ from app.course.course import Course
 from app.question.question import Question
 from app.sub_topic.sub_topic import SubTopic
 from app.topic.topic import Topic
+from app.user.user import User
 from app.user_course_enrollment.accessor import UserCourseEnrollmentAcessor
 
 
@@ -27,6 +28,14 @@ class UserCourseEnrollment:
             return None
         manager_ids = list(set([element['enrolled_by'] for element in managers]))
         return Admin.get_admins_from_ids(manager_ids)
+
+    @staticmethod
+    def get_enrolled_users(manager_id):
+        users = UserCourseEnrollmentAcessor.get_users_of_manager(manager_id)
+        if not users:
+            return None
+        user_ids = list(set([element['user'] for element in users]))
+        return User.get_users_from_ids(user_ids)
 
     @staticmethod
     def delete_enrollment(enrollment):
