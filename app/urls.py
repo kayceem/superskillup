@@ -25,6 +25,7 @@ urlpatterns = [
     # courses
     path("v1/admin/course/create/", course_views.create_course, name='create-course'),
     path("v1/admin/course/update/<str:id>/", course_views.update_course, name='update-course'),
+    path("v1/admin/course/delete/<str:id>/", course_views.delete_course, name='delete-course'),
     path("v1/admin/course/", course_views.get_all_courses, name='get-all-courses'),
     path("v1/admin/course/<str:id>/", course_views.get_course_by_id, name='get-course-by-id'),
     # topics

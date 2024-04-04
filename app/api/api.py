@@ -40,6 +40,10 @@ GPT_REVIEW_NOT_FOUND = 420
 
 # Manager Feedback
 MANAGER_FEEDBACK_NOT_FOUND = 403
+
+# Delete
+DELETE_ERROR = 720
+
 error_messages = {
     INVALID_INPUT: 'Invalid input',
     TOO_MANY_REQUEST: 'Too many requests',
