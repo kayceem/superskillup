@@ -11,7 +11,7 @@ class TestTopicCrud(TestCase):
     def setUp(self):
         self.request = RequestFactory()
         self.admin = User.objects.create_user(username='testadmin', email='test@ramailo.tech', password='password123')
-        self.course = Course.objects.create(name="Test Course")
+        self.course = Course.objects.create(name="Test Course", created_by=self.admin)
         self.topic = Topic.objects.create(name="Test Topic", course=self.course)
         self.sub_topic = SubTopic.objects.create(name="Test SubTopic", topic=self.topic)
         self.post = 'post'
@@ -48,7 +48,7 @@ class TestTopicCrud(TestCase):
         assert data['name'] == response.data['data']['name']
 
     def test_get_sub_topics_by_topic(self):
-        request = self.generate_request(reverse('get-sub-topics-by-topic', kwargs={'id': self.topic.id}))
+        request = self.generate_request(reverse('get-sub-topics-by-topic', kwargs={'topic_id': self.topic.id}))
         response = views.get_sub_topics_by_topic(request, self.topic.id)
         assert response.status_code == 200
         assert response.data['status_code'] == 1

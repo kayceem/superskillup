@@ -1,7 +1,7 @@
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from rest_framework.test import force_authenticate
-from app.models import Course, Question
+from app.models import Course, Question, Topic, SubTopic
 from django.contrib.auth.models import User
 from app.question import views
 
@@ -10,8 +10,11 @@ class TestQuestion(TestCase):
     def setUp(self):
         self.request = RequestFactory()
         self.user = User.objects.create(username='testuser', email='testuser@ramailo.tech', password='password123')
-        self.course = Course.objects.create(name="django")
-        self.question = Question.objects.create(question="trying", course=self.course)
+        self.admin = User.objects.create_user(username='testadmin', email='test@ramailo.tech', password='password123')
+        self.course = Course.objects.create(name="django", created_by=self.admin)
+        self.topic = Topic.objects.create(name="Test Topic", course=self.course)
+        self.sub_topic = SubTopic.objects.create(name="Test SubTopic", topic=self.topic)
+        self.question = Question.objects.create(question="trying", sub_topic=self.sub_topic)
         self.post = 'post'
         self.get = 'get'
         self.put = 'put'
@@ -28,7 +31,7 @@ class TestQuestion(TestCase):
         return request
 
     def test_create_question(self):
-        data = {"question": "What is django?", "course": self.course.id}
+        data = {"question": "What is django?", "sub_topic": self.sub_topic.id}
         request = self.generate_request(reverse('create-question'), self.post, data)
         response = views.create_question(request)
         assert response.status_code == 200
@@ -48,7 +51,7 @@ class TestQuestion(TestCase):
 
     def test_update_question(self):
         data = {"question": "Why django?"}
-        request = self.generate_request(reverse("update-question", kwargs={"question_id": self.question.id}), self.put, data)
+        request = self.generate_request(reverse("update-question", kwargs={"id": self.question.id}), self.put, data)
         response = views.update_question(request, self.question.id)
         assert response.status_code == 200
         assert response.data["status_message"] == "Question successfully updated"

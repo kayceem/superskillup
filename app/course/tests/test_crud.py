@@ -14,7 +14,7 @@ class TestCourseCrud(TestCase):
         self.request = RequestFactory()
         self.admin = User.objects.create_user(username='testadmin', email='test@ramailo.tech', password='password123')
         self.user = UserProfile.objects.create(name='testuser', email='testuser@ramailo.tech', password='password123')
-        self.course = Course.objects.create(name="Test Course")
+        self.course = Course.objects.create(name="Test Course", created_by=self.admin)
         self.post = 'post'
         self.get = 'get'
         self.put = 'put'
