@@ -13,3 +13,7 @@ class SubTopic:
     @staticmethod
     def get_sub_topics_by_topic(topic_id):
         return SubTopicAccessor.get_sub_topics_by_topic(topic_id=topic_id)
+
+    @staticmethod
+    def delete_sub_topic(sub_topic):
+        return sub_topic.delete()

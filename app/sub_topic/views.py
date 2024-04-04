@@ -1,10 +1,11 @@
-from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.decorators import api_view, authentication_classes, parser_classes
 from app.api.response_builder import ResponseBuilder
 from app.shared.pagination import paginate
 from app.sub_topic.serializers import SubTopicSerializer
 from app.api import api
 from app.sub_topic.sub_topic import SubTopic
 from app.shared.authentication import AdminAuthentication
+from rest_framework.parsers import MultiPartParser
 
 
 @api_view(['GET'])
@@ -39,6 +40,7 @@ def get_sub_topic_by_id(request, id):
 
 @api_view(['POST'])
 @authentication_classes([AdminAuthentication])
+@parser_classes([MultiPartParser])
 def create_sub_topic(request):
     """
     Create a SubTopic.
@@ -54,6 +56,7 @@ def create_sub_topic(request):
 
 @api_view(['PATCH', 'PUT'])
 @authentication_classes([AdminAuthentication])
+@parser_classes([MultiPartParser])
 def update_sub_topic(request, id):
     """
     Update the provided sub_topic
@@ -69,3 +72,19 @@ def update_sub_topic(request, id):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
     return response_builder.get_201_success_response("SubTopic updated successfully", serializer.data)
+
+
+@api_view(['DELETE'])
+@authentication_classes([AdminAuthentication])
+def delete_sub_topic(request, id):
+    """
+    Delete sub_topic
+    """
+    response_builder = ResponseBuilder()
+    sub_topic = SubTopic.get_sub_topic_by_id(sub_topic_id=id)
+    if not sub_topic:
+        return response_builder.get_404_not_found_response(api.SUB_TOPIC_NOT_FOUND)
+    deleted = SubTopic.delete_sub_topic(sub_topic)
+    if not deleted:
+        return response_builder.get_200_fail_response(api.DELETE_ERROR)
+    return response_builder.get_204_success_response()

@@ -37,6 +37,7 @@ urlpatterns = [
     # sub-topics
     path("v1/admin/sub-topic/create/", sub_topic_views.create_sub_topic, name='create-sub-topic'),
     path("v1/admin/sub-topic/update/<str:id>/", sub_topic_views.update_sub_topic, name='update-sub-topic'),
+    path("v1/admin/sub-topic/delete/<str:id>/", sub_topic_views.delete_sub_topic, name='delete-sub-topic'),
     path("v1/admin/sub-topic/topic/<str:topic_id>/", sub_topic_views.get_sub_topics_by_topic, name='get-sub-topics-by-topic'),
     path("v1/admin/sub-topic/<str:id>/", sub_topic_views.get_sub_topic_by_id, name='get-sub-topic-by-id'),
     # question
