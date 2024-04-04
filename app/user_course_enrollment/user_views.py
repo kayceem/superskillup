@@ -26,10 +26,10 @@ def get_all_assignments(request):
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assignment_by_id(request, assign_id):
+def get_assignment_by_id(request, id):
     user = request.user
     response_builder = ResponseBuilder()
-    assignment = UserCourseEnrollment.get_assignment_by_id(assign_id)
+    assignment = UserCourseEnrollment.get_assignment_by_id(id)
     if not assignment:
         return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
     if user != assignment.user:
@@ -52,7 +52,7 @@ def get_assigned_courses(request):
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assigned_topics_by_course(request, assign_id):
+def get_assigned_topics_by_course(request, id):
     user = request.user
     response_builder = ResponseBuilder()
     assigned_user, topics = UserCourseEnrollment.get_user_assigned_topics_by_course(assign_id)
@@ -66,10 +66,10 @@ def get_assigned_topics_by_course(request, assign_id):
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assigned_sub_topics_by_topic(request, assign_id, topic_id):
+def get_assigned_sub_topics_by_topic(request, id, topic_id):
     user = request.user
     response_builder = ResponseBuilder()
-    assigned_user, sub_topics = UserCourseEnrollment.get_user_assigned_sub_topics(assign_id, topic_id)
+    assigned_user, sub_topics = UserCourseEnrollment.get_user_assigned_sub_topics(id, topic_id)
     if not sub_topics:
         return response_builder.get_404_not_found_response(api.USER_ASSIGNED_SUB_TOPIC_NOT_FOUND)
     if user != assigned_user:
@@ -80,10 +80,10 @@ def get_assigned_sub_topics_by_topic(request, assign_id, topic_id):
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assigned_questions(request, assign_id):
+def get_assigned_questions(request, id):
     user = request.user
     response_builder = ResponseBuilder()
-    assigned_user, questions = UserCourseEnrollment.get_user_assigned_questions(assign_id)
+    assigned_user, questions = UserCourseEnrollment.get_user_assigned_questions(id)
     if not questions:
         return response_builder.get_404_not_found_response(api.USER_ASSIGNED_QUESTION_NOT_FOUND)
     if user != assigned_user:

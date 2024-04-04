@@ -17,6 +17,12 @@ class GptReview:
         return GptReviewAccessor.get_gpt_review_by_answer(answer_id)
 
     @staticmethod
+    def get_user_of_gpt_review(gpt_review):
+        if not gpt_review:
+            return None
+        return gpt_review.question_answer.user_course_enrollment.user
+
+    @staticmethod
     def add_gpt_review(answer):
         course = answer.user_course_enrollment.course.name
         question = answer.question.question

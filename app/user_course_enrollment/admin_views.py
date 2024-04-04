@@ -81,9 +81,9 @@ def assign_course(request):
 
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
-def get_assigned_topics(request, assign_id):
+def get_assigned_topics(request, id):
     response_builder = ResponseBuilder()
-    user, data = UserCourseEnrollment.get_user_assigned_topics_by_course(assign_id)
+    user, data = UserCourseEnrollment.get_user_assigned_topics_by_course(id)
     if data is None:
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user)
     serializer = TopicSerializer(data, many=True)
@@ -107,10 +107,10 @@ def update_assigned_course(request, id):
 
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
-def get_assigned_sub_topic(request, assign_id, topic_id):
+def get_assigned_sub_topic(request, id, topic_id):
     response_builder = ResponseBuilder()
     try:
-        user, sub_topics = UserCourseEnrollment.get_user_assigned_sub_topics(assign_id, topic_id)
+        user, sub_topics = UserCourseEnrollment.get_user_assigned_sub_topics(id, topic_id)
         if sub_topics is None:
             return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user)
         serializer = SubTopicSerializer(sub_topics, many=True)
@@ -122,9 +122,9 @@ def get_assigned_sub_topic(request, assign_id, topic_id):
 
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
-def get_user_assigned_questions(request, assign_id):
+def get_user_assigned_questions(request, id):
     response_builder = ResponseBuilder()
-    user, data = UserCourseEnrollment.get_user_assigned_questions(assign_id)
+    user, data = UserCourseEnrollment.get_user_assigned_questions(id)
     if data is None:
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user)
     serializer = QuestionSerilizer(data, many=True)

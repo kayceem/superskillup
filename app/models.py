@@ -1,9 +1,25 @@
+from app.utils.utils import user_profile_image_path, course_thumbnail_path, sub_topic_file_path, assignment_file_path, assignment_submission_file_path
 from django.db import models
 from django.forms import ValidationError
 from app.utils import get_char_uuid
 from app.utils.hashing import hash_raw_password
 from django.contrib.auth.models import User
-from app.utils.utils import user_profile_image_path, course_thumbnail_path, sub_topic_file_path, assignment_file_path, assignment_submission_file_path
+from django.contrib.contenttypes.fields import GenericRelation
+from django.db import transaction
+
+
+class CustomQuerySet(models.QuerySet):
+    def delete(self):
+        for obj in self.all():
+            obj.delete()
+        return
+
+
+class CustomObjectManager(models.Manager):
+
+    def get_queryset(self):
+        return CustomQuerySet(self.model, using=self._db).filter(is_deleted=False)
+        # return super().get_queryset().filter(is_deleted=False)
 
 
 class BaseModel(models.Model):
@@ -11,6 +27,57 @@ class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
+    objects = CustomObjectManager()
+    all_objects = models.Manager()
+
+    def delete(self):
+        if self.pk is None:
+            raise ValueError(
+                "%s object can't be deleted because its %s attribute is set "
+                "to None." % (self._meta.object_name, self._meta.pk.attname)
+            )
+        with transaction.atomic():
+            for field in self._meta.get_fields():
+
+                if isinstance(field, GenericRelation):
+                    print(field.related_model)
+                    continue
+
+                RelatedModel = field.related_model
+                if not RelatedModel:
+                    continue
+
+                if field.one_to_one:
+                    related_object = getattr(self, field.name, None)
+                    # print("one to one field ", RelatedModel, " ", related_object)
+                    self.__delete_related_object(field, related_object)
+
+                elif field.one_to_many:
+                    related_objects = getattr(self, field.get_accessor_name()).all()
+                    for related_object in related_objects:
+                        # print("one to many field ", RelatedModel, " ", related_object)
+                        self.__delete_related_object(field, related_object)
+                else:
+                    # print("many to many field ", field, " ",)
+                    continue
+
+            self.is_deleted = True
+            self.save(update_fields=['is_deleted'])
+            return True
+
+    def hard_delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+
+    def __delete_related_object(self, field, related_object):
+        if hasattr(field, 'on_delete'):
+            on_delete = field.on_delete
+        else:
+            return
+
+        if on_delete is models.CASCADE:
+            related_object.delete()
+        else:
+            return
 
     class Meta:
         abstract = True
@@ -81,7 +148,7 @@ class Course(BaseModel):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=course_thumbnail_path, max_length=255, blank=True, null=True)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES, null=True, blank=True)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
 
 class Topic(BaseModel):

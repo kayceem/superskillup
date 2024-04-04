@@ -1,10 +1,5 @@
 from django.contrib import admin
 from app.models import UserProfile, QuestionAnswer, Assignment, UserAssignment, UserAssignmentSubmission, UserCourseEnrollment, Question, Course, Topic, SubTopic, GptReview, ManagerFeedback, Tag
-from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
-
-# admin.site.unregister(User)
-# admin.site.unregister(Group)
 
 
 class SubTopicInline(admin.TabularInline):
@@ -40,14 +35,6 @@ class CourseAdmin(admin.ModelAdmin):
 
     get_topics.short_description = "Topics"
 
-    # def change_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted', 'url')
-    #     return super().change_view(request, object_id, form_url=form_url, extra_context=extra_context)
-
-    # def changeform_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted', 'url')
-    #     return super().changeform_view(request, object_id, form_url=form_url, extra_context=extra_context)
-
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
@@ -61,14 +48,6 @@ class TopicAdmin(admin.ModelAdmin):
 
     get_sub_topics.short_description = "Sub Topics"
 
-    # def change_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted',)
-    #     return super().change_view(request, object_id, form_url=form_url, extra_context=extra_context)
-
-    # def changeform_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted',)
-    #     return super().changeform_view(request, object_id, form_url=form_url, extra_context=extra_context)
-
 
 @admin.register(SubTopic)
 class SubTopicAdmin(admin.ModelAdmin):
@@ -80,27 +59,11 @@ class SubTopicAdmin(admin.ModelAdmin):
 
     get_course.short_description = "Course"
 
-    # def change_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted',)
-    #     return super().change_view(request, object_id, form_url=form_url, extra_context=extra_context)
-
-    # def changeform_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted',)
-    #     return super().changeform_view(request, object_id, form_url=form_url, extra_context=extra_context)
-
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('id', 'question', 'course', 'topic', 'sub_topic')
     search_fields = ['question']
-
-    # def change_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted',)
-    #     return super().change_view(request, object_id, form_url=form_url, extra_context=extra_context)
-
-    # def changeform_view(self, request, object_id, form_url='', extra_context=None):
-    #     self.exclude = ('is_deleted',)
-    #     return super().changeform_view(request, object_id, form_url=form_url, extra_context=extra_context)
 
 
 @admin.register(Assignment)
