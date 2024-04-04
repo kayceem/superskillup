@@ -10,3 +10,7 @@ class UserAccessor:
     @classmethod
     def get_user_by_email(cls, email) -> UserProfile | None:
         return UserProfile.objects.filter(email=email).first()
+
+    @classmethod
+    def get_all_users(cls) -> list[UserProfile] | None:
+        return UserProfile.objects.filter(is_verified=True).all()

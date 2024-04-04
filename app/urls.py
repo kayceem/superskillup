@@ -17,6 +17,7 @@ from app.user_course_enrollment import search as search_views
 urlpatterns = [
     # login
     path("v1/admin/login/", admin_views.login_admin, name='admin-login'),
+    path("v1/admin/user/", user_views.get_all_users, name='get-all-users'),
     path("v1/user/login/", user_views.login_user, name='login-user'),
     path("v1/user/register/", user_views.register_user, name='register-user'),
     path("v1/user/verify-otp/", user_views.check_otp, name='check-otp'),

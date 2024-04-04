@@ -18,6 +18,10 @@ class User:
     def get_user_by_email(email):
         return UserAccessor.get_user_by_email(email=email)
 
+    @staticmethod
+    def get_all_users():
+        return UserAccessor.get_all_users()
+
     def generate_auth_token(self):
         refresh = RefreshToken.for_user(self.user)
         return str(refresh.access_token)
