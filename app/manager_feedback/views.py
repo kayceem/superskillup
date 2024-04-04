@@ -1,9 +1,9 @@
-from app.ManagerFeedback.ManagerFeedback import ManagerFeedback
+from app.manager_feedback.manager_feedback import ManagerFeedback
 from rest_framework.decorators import api_view, authentication_classes
 from app.api.response_builder import ResponseBuilder
 from app.api import api
 from app.shared.authentication import AdminAuthentication, CombinedAuthentication
-from app.ManagerFeedback.serializer import ManagerFeedbackSerializer
+from app.manager_feedback.serializer import ManagerFeedbackSerializer
 from app.shared.pagination import paginate
 from app.user.user import User
 from app.utils.utils import is_user_admin
@@ -30,7 +30,7 @@ def get_feedback_by_id(request, id):
     serializer = ManagerFeedbackSerializer(data)
     if data:
         if not is_user_admin(user):
-            answered_user = data.gpt_review.user_answer.user_course_assignment.user
+            answered_user = data.gpt_review.question_answer.user_course_enrollment.user
             if answered_user == user:
                 return response_builder.get_200_success_response("Data Fetched", serializer.data)
             return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "Access Denied")
@@ -49,7 +49,7 @@ def get_feedback_by_answer(request, answer_id):
     serializer = ManagerFeedbackSerializer(data)
     if data:
         if not is_user_admin(user):
-            answered_user = data.gpt_review.user_answer.user_course_assignment.user
+            answered_user = data.gpt_review.question_answer.user_course_enrollment.user
             if answered_user == user:
                 return response_builder.get_200_success_response("Data Fetched", serializer.data)
             return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "Access Denied")

@@ -14,7 +14,7 @@ from app.api import api
 #     gpt_review = GptReview.get_gpt_review_by_id(id)
 #     if not gpt_review:
 #         return response_builder.get_404_not_found_response(api.GPT_REVIEW_NOT_FOUND)
-#     if not gpt_review.user_answer.user_course_assignment.user != user:
+#     if not gpt_review.question_answer.user_course_enrollment.user != user:
 #         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
 #     serializer = GptReviewSerializer(gpt_review)
 #     return response_builder.get_200_success_response("Data Fetched", serializer.data)
@@ -23,12 +23,12 @@ from app.api import api
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_gpt_review_by_answer(request, answer_id):
-    user = request.user
     response_builder = ResponseBuilder()
     gpt_review = GptReview.get_gpt_review_by_answer(answer_id)
     if not gpt_review:
         return response_builder.get_404_not_found_response(api.GPT_REVIEW_NOT_FOUND)
-    if gpt_review.user_answer.user_course_assignment.user != user:
+    user = GptReview.get_user_of_gpt_review(gpt_review)
+    if user != request.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     serializer = GptReviewSerializer(gpt_review)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)

@@ -1,4 +1,4 @@
-from app.ManagerFeedback.accessor import ManagerFeedbackAccessor
+from app.manager_feedback.accessor import ManagerFeedbackAccessor
 from app.gpt_review.gpt_review import GptReview
 
 

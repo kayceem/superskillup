@@ -9,12 +9,12 @@ from app.shared.authentication import AdminAuthentication
 
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
-def get_topics_by_course(request, id):
+def get_topics_by_course(request, course_id):
     """
     Get topics of course
     """
     response_builder = ResponseBuilder()
-    topics = Topic.get_topics_by_course(course_id=id)
+    topics = Topic.get_topics_by_course(course_id=course_id)
     if not topics:
         return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
     paginated_topics, page_info = paginate(topics, request)

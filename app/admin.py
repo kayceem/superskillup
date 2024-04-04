@@ -1,48 +1,96 @@
-# from django.contrib import admin
-
-# from app.models import UserProfile, UserAnswer, UserCourseAssignment, Question, Course, Topic, SubTopic, GptReview, ManagerFeedback
-
-
-# @admin.register(UserProfile)
-# class UserProfileAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name', 'email', "is_verified", "is_active")
+from django.contrib import admin
+from app.models import UserProfile, QuestionAnswer, Assignment, UserAssignment, UserAssignmentSubmission, UserCourseEnrollment, Question, Course, Topic, SubTopic, GptReview, ManagerFeedback, Tag
 
 
-# @admin.register(UserAnswer)
-# class UserAnswerAdmin(admin.ModelAdmin):
-#     list_display = ('id', "user_course_assignment", "question", "answer", "is_reviewed_by_gpt", "is_reviewed_by_manager")
+class SubTopicInline(admin.TabularInline):
+    model = SubTopic
+    show_change_link = True
+    extra = 0
 
 
-# @admin.register(UserCourseAssignment)
-# class UserAssignmentAdmin(admin.ModelAdmin):
-#     list_display = ('id', "user", "course", "deadline", "status")
+class TopicInline(admin.TabularInline):
+    model = Topic
+    extra = 0
+    show_change_link = True
 
 
-# @admin.register(Question)
-# class QuestionAdmin(admin.ModelAdmin):
-#     list_display = ('id', "question", "level", "course", "topic", "sub_topic")
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'email', "is_verified", "is_active")
 
 
-# @admin.register(Course)
-# class CourseAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name')
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
 
 
-# @admin.register(Topic)
-# class TopicAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name', "course")
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'get_topics')
+    inlines = [TopicInline]
+    search_fields = ['name']
+
+    def get_topics(self, obj):
+        return ", ".join([topic.name for topic in obj.topics.all()])
+
+    get_topics.short_description = "Topics"
 
 
-# @admin.register(SubTopic)
-# class SubTopicAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name', "topic")
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ('name', "course", "get_sub_topics")
+    inlines = [SubTopicInline]
+    search_fields = ['name']
+    fieldsets = ((None, {'fields': ('name', 'course')}),)
+
+    def get_sub_topics(self, obj):
+        return ", ".join([topic.name for topic in obj.sub_topics.all()])
+
+    get_sub_topics.short_description = "Sub Topics"
 
 
-# @admin.register(GptReview)
-# class GptReviewAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'user', "question", "remarks", "score")
+@admin.register(SubTopic)
+class SubTopicAdmin(admin.ModelAdmin):
+    list_display = ('name', "topic", "get_course")
+    search_fields = ['name']
+
+    def get_course(self, obj):
+        return obj.topic.course
+
+    get_course.short_description = "Course"
 
 
-# @admin.register(ManagerFeedback)
-# class ManagerFeedbackAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'gpt_review', "remarks", "score")
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'question', 'course', 'topic', 'sub_topic')
+    search_fields = ['question']
+
+
+@admin.register(Assignment)
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'course', 'created_by')
+
+
+@admin.register(UserCourseEnrollment)
+class UserCourseEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'course', 'status')
+
+
+@admin.register(UserAssignment)
+class UserAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'assignment', 'user_course_enrollment')
+
+
+@admin.register(UserAssignmentSubmission)
+class UserAssignmentSubmissionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_assignment')
+
+
+@admin.register(GptReview)
+class GptReviewAdmin(admin.ModelAdmin):
+    list_display = ('id', 'question_answer', 'remarks', 'score')
+
+
+@admin.register(ManagerFeedback)
+class ManagerFeedbackAdmin(admin.ModelAdmin):
+    list_display = ('id', 'gpt_review', 'remarks', 'score')

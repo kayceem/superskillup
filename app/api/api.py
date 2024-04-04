@@ -27,7 +27,7 @@ SUB_TOPIC_NOT_FOUND = 715
 
 # Question
 QUESTION_NOT_FOUND = 400
-USER_ANSWER_NOT_FOUND = 401
+QUESTION_ANSWER_NOT_FOUND = 401
 
 # User Assignment
 USER_ASSIGNMENT_NOT_FOUND = 402
@@ -54,7 +54,7 @@ error_messages = {
     USER_VERIFIED: "User is already verified",
     OTP_ALREADY_SENT: "OTP was already sent. Please check your mail",
     QUESTION_NOT_FOUND: "Question doesn't exists",
-    USER_ANSWER_NOT_FOUND: "User answer not found",
+    QUESTION_ANSWER_NOT_FOUND: "User answer not found",
     COURSE_NOT_FOUND: "Course not found",
     TOPIC_NOT_FOUND: "Topic not found",
     SUB_TOPIC_NOT_FOUND: "Sub topic not found",
