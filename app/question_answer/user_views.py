@@ -71,7 +71,7 @@ def get_answers_by_assignment(request, assign_id):
                 return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
             return response_builder.get_404_not_found_response(api.QUESTION_ANSWER_NOT_FOUND)
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User unauthorized")
-    return response_builder.get_404_not_found_response(api.USER_ASSIGNED_COURSE_NOT_FOUND)
+    return response_builder.get_404_not_found_response(api.USER_ENROLLED_COURSE_NOT_FOUND)
 
 
 @api_view(["GET"])

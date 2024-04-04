@@ -8,6 +8,10 @@ class Question:
         return QuestionAccessor.get_questions_by_course(course_id)
 
     @staticmethod
+    def get_questions_by_course_sub_topic(course_id, sub_topic_id):
+        return QuestionAccessor.get_questions_by_course_sub_topic(course_id, sub_topic_id)
+
+    @staticmethod
     def get_questions_by_sub_topic(sub_topic_id):
         return QuestionAccessor.get_questions_by_sub_topic(sub_topic_id)
 

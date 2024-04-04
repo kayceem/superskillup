@@ -13,80 +13,89 @@ from app.api import api
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_all_assignments(request):
+def get_all_enrollments(request):
     user = request.user
     response_builder = ResponseBuilder()
-    assignments = UserCourseEnrollment.get_assignments_of_user(user.id)
-    if not assignments:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
-    paginated_data, page_info = paginate(assignments, request)
+    enrollments = UserCourseEnrollment.get_user_enrollments(user.id)
+    if not enrollments:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    paginated_data, page_info = paginate(enrollments, request)
     serializer = UserCourseEnrollmentSerializer(paginated_data, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
 
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assignment_by_id(request, id):
+def get_enrollment_by_id(request, id):
     user = request.user
     response_builder = ResponseBuilder()
-    assignment = UserCourseEnrollment.get_assignment_by_id(id)
-    if not assignment:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
-    if user != assignment.user:
+    enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
+    if not enrollment:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    if user != enrollment.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
-    serializer = UserCourseEnrollmentSerializer(assignment)
+    serializer = UserCourseEnrollmentSerializer(enrollment)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assigned_courses(request):
+def get_enrolled_courses(request):
     user = request.user
     response_builder = ResponseBuilder()
-    courses = UserCourseEnrollment.get_user_assigned_courses(user.id)
+    courses = UserCourseEnrollment.get_user_enrolled_courses(user.id)
     if not courses:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNED_COURSE_NOT_FOUND)
+        return response_builder.get_404_not_found_response(api.USER_ENROLLED_COURSE_NOT_FOUND)
     serializer = CourseSerializer(courses, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assigned_topics_by_course(request, id):
+def get_enrolled_topics(request, id):
     user = request.user
     response_builder = ResponseBuilder()
-    assigned_user, topics = UserCourseEnrollment.get_user_assigned_topics_by_course(assign_id)
-    if not topics:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNED_TOPIC_NOT_FOUND)
-    if user != assigned_user:
+    enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
+    if not enrollment:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    if user != enrollment.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
+    topics = UserCourseEnrollment.get_topics_by_enrolled_course(enrollment.course.id)
+    if not topics:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLED_TOPIC_NOT_FOUND)
     serializer = TopicSerializer(topics, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assigned_sub_topics_by_topic(request, id, topic_id):
+def get_enrolled_sub_topics(request, id, topic_id):
     user = request.user
     response_builder = ResponseBuilder()
-    assigned_user, sub_topics = UserCourseEnrollment.get_user_assigned_sub_topics(id, topic_id)
-    if not sub_topics:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNED_SUB_TOPIC_NOT_FOUND)
-    if user != assigned_user:
+    enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
+    if not enrollment:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    if user != enrollment.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
+    sub_topics = UserCourseEnrollment.get_sub_topics_by_enrolled_topic(enrollment.course.id, topic_id)
+    if not sub_topics:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLED_SUB_TOPIC_NOT_FOUND)
     serializer = SubTopicSerializer(sub_topics, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
-def get_assigned_questions(request, id):
+def get_enrolled_questions(request, id, sub_topic_id):
     user = request.user
     response_builder = ResponseBuilder()
-    assigned_user, questions = UserCourseEnrollment.get_user_assigned_questions(id)
-    if not questions:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNED_QUESTION_NOT_FOUND)
-    if user != assigned_user:
+    enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
+    if not enrollment:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    if user != enrollment.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
+    questions = UserCourseEnrollment.get_questions_by_enrolled_sub_topic(enrollment.course.id, sub_topic_id)
+    if not questions:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLED_QUESTION_NOT_FOUND)
     serializer = QuestionSerilizer(questions, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)

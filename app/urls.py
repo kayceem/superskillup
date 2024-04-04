@@ -7,7 +7,7 @@ from app.sub_topic import views as sub_topic_views
 from app.question_answer import user_views as user_answer_views
 from app.question import views as question_views
 from app.user_course_enrollment import admin_views as admin_enrollment_views
-from app.user_course_enrollment import user_views as user_assignment_views
+from app.user_course_enrollment import user_views as user_enrollment_views
 from app.question_answer import admin_views as admin_answer_views
 from app.gpt_review import admin_views as admin_gpt_views
 from app.gpt_review import user_views as user_gpt_views
@@ -59,12 +59,12 @@ urlpatterns = [
     # path("v1/admin/enrollment/<str:id>/topic/<str:topic_id>/sub-topic/", admin_enrollment_views.get_assigned_sub_topic, name="admin-assigned-sub-topics"),
     # path("v1/admin/enrollment/<str:id>/question/", admin_enrollment_views.get_user_assigned_questions, name="admin-assigned-questions"),
     # user-course-enrollment for user
-    #     path("v1/user/assignment/", user_assignment_views.get_all_assignments, name="user-assignments"),
-    #     path("v1/user/assignment/course/", user_assignment_views.get_assigned_courses, name="user-assigned-courses"),
-    #     path("v1/user/assignment/<str:id>/", user_assignment_views.get_assignment_by_id, name="user-assignment-by-id"),
-    #     path("v1/user/assignment/<str:id>/topic/", user_assignment_views.get_assigned_topics_by_course, name="user-assigned-topics-by-course"),
-    #     path("v1/user/assignment/<str:id>/topic/<str:topic_id>/sub-topic/", user_assignment_views.get_assigned_sub_topics_by_topic, name="user-assigned-sub-topics-by-topic"),
-    #     path("v1/user/assignment/<str:id>/question/", user_assignment_views.get_assigned_questions, name="user-assigned-questions"),
+    path("v1/user/enrollment/", user_enrollment_views.get_all_enrollments, name="user-get-all-enrollments"),
+    path("v1/user/enrollment/course/", user_enrollment_views.get_enrolled_courses, name="user-get-enrolled-courses"),
+    path("v1/user/enrollment/<str:id>/", user_enrollment_views.get_enrollment_by_id, name="user-get-enrollment-by-id"),
+    path("v1/user/enrollment/<str:id>/topic/", user_enrollment_views.get_enrolled_topics, name="user-get-enrolled-topics"),
+    path("v1/user/enrollment/<str:id>/topic/<str:topic_id>/sub-topic/", user_enrollment_views.get_enrolled_sub_topics, name="user-get-enrolled-sub-topics"),
+    path("v1/user/enrollment/<str:id>/sub-topic/<str:sub_topic_id>/question/", user_enrollment_views.get_enrolled_questions, name="user-get-enrolled-questions"),
     #     # admin answer
     #     path("v1/admin/answer/", admin_answer_views.get_all_answer, name="admin-answers"),
     #     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-answer-by-id"),
