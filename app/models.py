@@ -148,7 +148,7 @@ class Course(BaseModel):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=course_thumbnail_path, max_length=255, blank=True, null=True)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES, null=True, blank=True)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
 
 class Topic(BaseModel):
