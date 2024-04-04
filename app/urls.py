@@ -68,11 +68,10 @@ urlpatterns = [
     path("v1/user/answer/<str:id>/", user_answer_views.get_answer_by_id, name="user-get-answer-by-id"),
     path("v1/user/answer/question/<str:question_id>/", user_answer_views.get_answer_by_question, name="user-get-answer-by-question"),
     path("v1/user/answer/enrollment/<str:enrollment_id>/", user_answer_views.get_answers_by_enrollment, name="user-get-answers-by-enrollment"),
-    #     # admin answer
-    #     path("v1/admin/answer/", admin_answer_views.get_all_answer, name="admin-answers"),
-    #     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-answer-by-id"),
-    #     path("v1/admin/answer/assignment/<str:assign_id>/", admin_answer_views.get_answers_by_assignment, name="admin-answer-by-assignment"),
-    #     path("v1/admin/answer/user/<str:user_id>/", admin_answer_views.get_answers_by_user, name="admin-users-answers"),
+    # admin answer
+    path("v1/admin/answer/enrollment/<str:enrollment_id>/", admin_answer_views.get_answers_by_enrollment, name="admin-answer-by-enrollment"),
+    path("v1/admin/answer/question/<str:question_id>/user/<str:user_id>/", admin_answer_views.get_answer_by_question, name="get-answer-by-question"),
+    path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-get-answer-by-id"),
     #     # gpt-review
     #     path("v1/admin/gpt-review/<str:answer_id>", admin_gpt_views.get_gpt_review_by_answer, name="admin-get-gpt-review-by-answer-id"),
     #     path("v1/user/gpt-review/<str:answer_id>", user_gpt_views.get_gpt_review_by_answer, name="user-get-gpt-review-by-answer-id"),
