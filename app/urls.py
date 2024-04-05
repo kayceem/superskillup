@@ -13,6 +13,7 @@ from app.gpt_review import admin_views as admin_gpt_views
 from app.gpt_review import user_views as user_gpt_views
 from app.manager_feedback import views as manager_feedback
 from app.user_course_enrollment import search as search_views
+from app.assignment import views as assignment_views
 
 urlpatterns = [
     # login
@@ -47,6 +48,12 @@ urlpatterns = [
     path("v1/admin/question/<str:id>/", question_views.get_question_by_id, name="get-questions-by-id"),
     path("v1/admin/question/course/<str:course_id>/", question_views.get_questions_by_course, name="get-questions-by-course"),
     path("v1/admin/question/sub-topic/<str:sub_topic_id>/", question_views.get_questions_by_sub_topic, name="get-questions-by-sub-topic"),
+    # assignments
+    path("v1/admin/assignment/create/", assignment_views.create_assignment, name='create-assignment'),
+    path("v1/admin/assignment/update/<str:id>/", assignment_views.update_assignment, name='update-assignment'),
+    path("v1/admin/assignment/delete/<str:id>/", assignment_views.delete_assignment, name='delete-assignment'),
+    path("v1/admin/assignment/course/<str:course_id>/", assignment_views.get_assignments_by_course, name='get-assignments-by-course'),
+    path("v1/admin/assignment/<str:id>/", assignment_views.get_assignment_by_id, name='get-assignment-by-id'),
     # user-course-enrollment for admin
     path("v1/admin/enrollment/", admin_enrollment_views.get_all_enrollments, name="admin-get-all-enrollments"),
     path("v1/admin/enrollment/create/", admin_enrollment_views.create_user_course_enrollment, name="admin-create-user-course-enrollment"),
