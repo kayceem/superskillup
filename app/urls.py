@@ -16,6 +16,10 @@ from app.user_course_enrollment import search as search_views
 from app.assignment import views as assignment_views
 from app.user_assignment import user_views as user_assignment_views
 from app.user_assignment import admin_views as admin_user_assignment_views
+from app.user_assignment_submission import admin_views as admin_user_assignment_submission_views
+from app.user_assignment_submission import user_views as user_assignment_submission_views
+
+
 urlpatterns = [
     # login
     path("v1/admin/login/", admin_views.login_admin, name='admin-login'),
@@ -85,14 +89,20 @@ urlpatterns = [
     path("v1/user/user-assignment/course/<str:course_id>/", user_assignment_views.get_user_assignments_by_course, name='user-get-user-assignments-by-course'),
     path("v1/user/user-assignment/enrollment/<str:enrollment_id>/", user_assignment_views.get_user_assignments_by_enrollment, name='user-et-user-assignments-by-enrollment'),
     path("v1/user/user-assignment/<str:id>/", user_assignment_views.get_user_assignment_by_id, name='user-get-user-assignment-by-id'),
+    # user-assignment-submission for admin
+    path("v1/admin/assignment-submission/user-assignment/<str:user_assignment_id>/", admin_user_assignment_submission_views.get_user_assignment_submission_by_user_assignment, name='admin-get-assignment-submission-by-user-assignment'),
+    path("v1/admin/assignment-submission/<str:id>/", admin_user_assignment_submission_views.get_user_assignment_submission_by_id, name='admin-get-assignment-submission-by-id'),
+    # user-assignment-submission for user
+    path("v1/user/assignment-submission/create/", user_assignment_submission_views.add_assignment_submission, name="user-add-assignment-submission"),
+    path("v1/user/assignment-submission/update/<str:id>/", user_assignment_submission_views.update_assignment_submission, name="user-update-assignment-submission"),
+    path("v1/user/assignment-submission/user-assignment/<str:user_assignment_id>/", user_assignment_submission_views.get_user_assignment_submission_by_user_assignment, name='user-get-assignment-submmsion-by-user-assignment'),
+    path("v1/user/assignment-submission/<str:id>/", user_assignment_submission_views.get_user_assignment_submission_by_id, name="user-get-assignment-submission-by-id"),
     # user-answer
     path("v1/user/answer/create/", user_answer_views.add_answer, name="user-add-answer"),
     path("v1/user/answer/update/<str:id>/", user_answer_views.update_answer, name="user-update-answer"),
     path("v1/user/answer/<str:id>/", user_answer_views.get_answer_by_id, name="user-get-answer-by-id"),
     path("v1/user/answer/question/<str:question_id>/", user_answer_views.get_answer_by_question, name="user-get-answer-by-question"),
-    path("v1/user/answer/enrollment/<str:enrollment_id>/", user_answer_views.get_answers_by_enrollment, name="user-get-answers-by-enrollment"),
     # admin answer
-    path("v1/admin/answer/enrollment/<str:enrollment_id>/", admin_answer_views.get_answers_by_enrollment, name="admin-answer-by-enrollment"),
     path("v1/admin/answer/question/<str:question_id>/user/<str:user_id>/", admin_answer_views.get_answer_by_question, name="get-answer-by-question"),
     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-get-answer-by-id"),
     # gpt-review

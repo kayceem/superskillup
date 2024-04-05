@@ -40,6 +40,7 @@ USER_ENROLLED_MANAGER_NOT_FOUND = 414
 # Assignment
 ASSIGNMENT_NOT_FOUND = 415
 USER_ASSIGNMENT_NOT_FOUND = 416
+USER_ASSIGNMENT_SUBMISSION_NOT_FOUND = 417
 
 # Gpt Review
 GPT_REVIEW_NOT_FOUND = 420
@@ -76,6 +77,7 @@ error_messages = {
     USER_ENROLLED_MANAGER_NOT_FOUND: "Managers not found",
     ASSIGNMENT_NOT_FOUND: "Assignment not found",
     USER_ASSIGNMENT_NOT_FOUND: "User assignment not found",
+    USER_ASSIGNMENT_SUBMISSION_NOT_FOUND: "User assignment submission not found",
     GPT_REVIEW_NOT_FOUND: "Gpt review not found",
     MANAGER_FEEDBACK_NOT_FOUND: "Manager Feedback not found",
     INVALID_SEARCH_QUERY: "Invalid search query",
