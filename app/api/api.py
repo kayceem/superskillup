@@ -45,6 +45,9 @@ USER_ASSIGNMENT_SUBMISSION_NOT_FOUND = 417
 # Gpt Review
 GPT_REVIEW_NOT_FOUND = 420
 
+# Tag
+TAG_NOT_FOUND = 430
+
 # Manager Feedback
 MANAGER_FEEDBACK_NOT_FOUND = 403
 
@@ -79,6 +82,7 @@ error_messages = {
     USER_ASSIGNMENT_NOT_FOUND: "User assignment not found",
     USER_ASSIGNMENT_SUBMISSION_NOT_FOUND: "User assignment submission not found",
     GPT_REVIEW_NOT_FOUND: "Gpt review not found",
+    TAG_NOT_FOUND: "Tag not found",
     MANAGER_FEEDBACK_NOT_FOUND: "Manager Feedback not found",
     INVALID_SEARCH_QUERY: "Invalid search query",
 }

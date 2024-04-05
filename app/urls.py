@@ -18,7 +18,7 @@ from app.user_assignment import user_views as user_assignment_views
 from app.user_assignment import admin_views as admin_user_assignment_views
 from app.user_assignment_submission import admin_views as admin_user_assignment_submission_views
 from app.user_assignment_submission import user_views as user_assignment_submission_views
-
+from app.tag import views as tag_views
 
 urlpatterns = [
     # login
@@ -118,4 +118,12 @@ urlpatterns = [
     path("v1/user/review/<str:id>/", manager_feedback.get_feedback_by_id, name='user-manager-review-by-id'),
     #     # search
     #     path("v1/search/", search_views.search, name='search'),
+    # tag admin
+    path("v1/admin/tag/", tag_views.get_all_tags, name='admin-get-all-tags'),
+    path("v1/admin/tag/<str:id>/", tag_views.get_tag_by_id, name='admin-get-tag-by-id'),
+    # tag user
+    path("v1/user/tag/", tag_views.get_all_tags, name='user-get-all-tags'),
+    path("v1/user/tag/<str:id>/", tag_views.get_tag_by_id, name='user-get-tag-by-id'),
+
+
 ]
