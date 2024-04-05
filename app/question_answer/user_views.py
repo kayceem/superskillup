@@ -49,7 +49,7 @@ def add_answer(request):
     serializer.save()
     answer = QuestionAnswer.get_answer_by_id(serializer.data["id"])
     GptReview.add_gpt_review(answer)
-    send_answer_submitted_mail(answer)
+    # send_answer_submitted_mail(answer)
     return response_builder.get_201_success_response("Answer successfully added", serializer.data)
 
 
