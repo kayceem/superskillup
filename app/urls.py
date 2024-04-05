@@ -116,8 +116,8 @@ urlpatterns = [
     # user-review
     path("v1/user/review/answer/<str:answer_id>/", manager_feedback.get_feedback_by_answer, name="user-manager-feedback-by-answer"),
     path("v1/user/review/<str:id>/", manager_feedback.get_feedback_by_id, name='user-manager-review-by-id'),
-    #     # search
-    #     path("v1/search/", search_views.search, name='search'),
+    # search
+    path("v1/search/", search_views.search, name='search'),
     # tag admin
     path("v1/admin/tag/", tag_views.get_all_tags, name='admin-get-all-tags'),
     path("v1/admin/tag/<str:id>/", tag_views.get_tag_by_id, name='admin-get-tag-by-id'),
