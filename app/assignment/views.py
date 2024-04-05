@@ -33,7 +33,7 @@ def get_assignment_by_id(request, id):
     response_builder = ResponseBuilder()
     assignment = Assignment.get_assignment_by_id(id)
     if not assignment:
-        return response_builder.get_404_not_found_response(api.assignment_NOT_FOUND)
+        return response_builder.get_404_not_found_response(api.ASSIGNMENT_NOT_FOUND)
     serializer = AssignmentSerializer(assignment)
     return response_builder.get_200_success_response("Assignment found", serializer.data)
 
@@ -67,7 +67,7 @@ def update_assignment(request, id):
     is_PATCH = request.method == 'PATCH'
     assignment = Assignment.get_assignment_by_id(id)
     if not assignment:
-        return response_builder.get_404_not_found_response(api.assignment_NOT_FOUND)
+        return response_builder.get_404_not_found_response(api.ASSIGNMENT_NOT_FOUND)
     serializer = AssignmentSerializer(assignment, data=request.data, partial=is_PATCH)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
@@ -84,7 +84,7 @@ def delete_assignment(request, id):
     response_builder = ResponseBuilder()
     assignment = Assignment.get_assignment_by_id(id)
     if not assignment:
-        return response_builder.get_404_not_found_response(api.assignment_NOT_FOUND)
+        return response_builder.get_404_not_found_response(api.ASSIGNMENT_NOT_FOUND)
     deleted = Assignment.delete_assignment(assignment)
     if not deleted:
         return response_builder.get_200_fail_response(api.DELETE_ERROR)
