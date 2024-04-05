@@ -5,7 +5,6 @@ from app.api import api
 from app.shared.authentication import AdminAuthentication, CombinedAuthentication
 from app.manager_feedback.serializer import ManagerFeedbackSerializer
 from app.shared.pagination import paginate
-from app.user.user import User
 from app.utils.utils import is_user_admin
 
 

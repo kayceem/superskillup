@@ -5,7 +5,7 @@ from app.question.serializer import QuestionSerilizer
 from app.sub_topic.serializers import SubTopicSerializer
 from app.topic.serializers import TopicSerializer
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
-from app.shared.authentication import AdminAuthentication, UserAuthentication
+from app.shared.authentication import UserAuthentication
 from app.api.response_builder import ResponseBuilder
 from app.user_course_enrollment.serializer import UserCourseEnrollmentSerializer
 from app.shared.pagination import paginate

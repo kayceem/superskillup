@@ -111,7 +111,6 @@ class UserProfile(BaseModel):
 class Tag(BaseModel):
 
     name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(null=True, blank=True)
 
 
 class Course(BaseModel):
@@ -184,7 +183,7 @@ class UserCourseEnrollment(BaseModel):
 
 class Assignment(BaseModel):
     title = models.CharField(max_length=255)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assignments', null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assignments')
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
