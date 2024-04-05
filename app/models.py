@@ -50,13 +50,15 @@ class BaseModel(models.Model):
                 if field.one_to_one:
                     related_object = getattr(self, field.name, None)
                     # print("one to one field ", RelatedModel, " ", related_object)
-                    self.__delete_related_object(field, related_object)
+                    if related_object:
+                        self.__delete_related_object(field, related_object)
 
                 elif field.one_to_many:
                     related_objects = getattr(self, field.get_accessor_name()).all()
                     for related_object in related_objects:
-                        # print("one to many field ", RelatedModel, " ", related_object)
-                        self.__delete_related_object(field, related_object)
+                        if related_object:
+                            # print("one to many field ", RelatedModel, " ", related_object)
+                            self.__delete_related_object(field, related_object)
                 else:
                     # print("many to many field ", field, " ",)
                     continue
@@ -148,7 +150,7 @@ class Course(BaseModel):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=course_thumbnail_path, max_length=255, blank=True, null=True)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
 
 
 class Topic(BaseModel):

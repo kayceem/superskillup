@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, parser_classes
 from app.api.response_builder import ResponseBuilder
 from app.user.serializers import ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer
 from app.api import api
@@ -6,9 +6,28 @@ from app.utils import utils
 from app.user.user import User
 from django.utils import timezone
 from app.services.email_service import send_otp_mail
+from app.shared.authentication import AdminAuthentication
+from app.shared.pagination import paginate
+from rest_framework.parsers import MultiPartParser
+
+
+@api_view(['GET'])
+@authentication_classes([AdminAuthentication])
+def get_all_users(request):
+    """
+    Get all users
+    """
+    response_builder = ResponseBuilder()
+    users = User.get_all_users()
+    if not users:
+        return response_builder.get_404_not_found_response(api.USER_NOT_FOUND)
+    paginated_users, page_info = paginate(users, request)
+    serializer = UserSerializer(paginated_users, many=True)
+    return response_builder.get_200_success_response("Users found", serializer.data, page_info)
 
 
 @api_view(['POST'])
+@parser_classes([MultiPartParser])
 def register_user(request):
     """
     Register a User.

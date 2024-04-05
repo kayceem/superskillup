@@ -11,7 +11,7 @@ class UserCourseEnrollmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourseEnrollment
-        fields = ["id", "user", "course", "status", "assigned_by"]
+        fields = ["id", "user", "course", "status", "enrolled_by"]
         extra_kwargs = {'id': {'read_only': True}}
 
 

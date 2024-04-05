@@ -1,56 +1,65 @@
+from app.app_admin.app_admin import Admin
 from app.course.course import Course
+from app.question.question import Question
+from app.sub_topic.sub_topic import SubTopic
 from app.topic.topic import Topic
+from app.user.user import User
 from app.user_course_enrollment.accessor import UserCourseEnrollmentAcessor
 
 
 class UserCourseEnrollment:
 
     @staticmethod
-    def get_all_assignments():
-        return UserCourseEnrollmentAcessor.get_all_assignments()
+    def get_all_enrollments():
+        return UserCourseEnrollmentAcessor.get_all_enrollments()
 
     @staticmethod
-    def get_assignment_by_id(id):
-        return UserCourseEnrollmentAcessor.get_assignment_by_id(id)
+    def get_enrollment_by_id(id):
+        return UserCourseEnrollmentAcessor.get_enrollment_by_id(id)
 
     @staticmethod
-    def get_assignments_of_user(user_id):
-        return UserCourseEnrollmentAcessor.get_assignments_of_user(user_id)
+    def get_user_enrollments(user_id):
+        return UserCourseEnrollmentAcessor.get_user_enrollments(user_id)
 
     @staticmethod
-    def get_user_assigned_courses(user_id):
-        courses = UserCourseEnrollmentAcessor.get_user_assigned_courses(user_id)
+    def get_managers_of_user(user_id):
+        managers = UserCourseEnrollmentAcessor.get_managers_of_user(user_id)
+        if not managers:
+            return None
+        manager_ids = list(set([element['enrolled_by'] for element in managers]))
+        return Admin.get_admins_from_ids(manager_ids)
+
+    @staticmethod
+    def get_enrolled_users(manager_id):
+        users = UserCourseEnrollmentAcessor.get_users_of_manager(manager_id)
+        if not users:
+            return None
+        user_ids = list(set([element['user'] for element in users]))
+        return User.get_users_from_ids(user_ids)
+
+    @staticmethod
+    def delete_enrollment(enrollment):
+        return enrollment.delete()
+
+    @staticmethod
+    def get_user_enrolled_courses(user_id):
+        courses = UserCourseEnrollmentAcessor.get_user_enrolled_courses(user_id)
         if not courses:
             return None
         course_ids = [element['course'] for element in courses]
         return Course.get_courses_from_ids(course_ids)
 
     @staticmethod
-    def get_user_assigned_topics_by_course(assign_id):
-        assignment = UserCourseEnrollmentAcessor.get_assignment_by_id(assign_id)
-        if not assignment:
-            return "Assignment not found", None
-        topics = assignment.course.topics.all()
-        return assignment.user, topics
+    def get_topics_by_enrolled_course(course_id):
+        return Topic.get_topics_by_course(course_id)
 
     @staticmethod
-    def get_user_assigned_sub_topics(assign_id, topic_id):
-        assignment = UserCourseEnrollmentAcessor.get_assignment_by_id(assign_id)
-        if not assignment:
-            return "Assignment not found", None
-        topics = assignment.course.topics.filter(id=topic_id).first()
-        if not topics:
-            return "Topics not Found", None
-        sub_topics = assignment.course.topics.filter(id=topic_id).first().sub_topics.all()
-        return assignment.user, sub_topics
+    def get_sub_topics_by_enrolled_topic(course_id, topic_id):
+        return SubTopic.get_sub_topics_by_course_topic(course_id, topic_id)
 
     @staticmethod
-    def get_user_assigned_questions(assign_id):
-        assignment = UserCourseEnrollmentAcessor.get_assignment_by_id(assign_id)
-        if not assignment:
-            return "Assignment not found", None
-        questions = assignment.course.course_questions.all()
-        return assignment.user, questions
+    def get_questions_by_enrolled_sub_topic(course_id, sub_topic_id):
+        return Question.get_questions_by_course_sub_topic(course_id, sub_topic_id)
 
     @staticmethod
     def filter_courses(courses, type, query):

@@ -46,6 +46,10 @@ class ResponseBuilder(object):
         self.status = status.HTTP_202_ACCEPTED
         return self
 
+    def no_content_204(self):
+        self.status = status.HTTP_204_NO_CONTENT
+        return self
+
     def not_found_404(self):
         self.status = status.HTTP_404_NOT_FOUND
         return self
@@ -105,3 +109,6 @@ class ResponseBuilder(object):
 
     def get_200_success_response(self, message, result={}, page_info={}):
         return self.success().ok_200().message(message).result_object(result).page_object(page_info).get_response()
+
+    def get_204_success_response(self):
+        return self.success().no_content_204().get_response()

@@ -23,12 +23,12 @@ def send_otp_mail(user):
     send_email("OTP Verification", body, [user.email])
 
 
-def send_course_assigned_mail(assignment):
-    body = render_to_string("course_assigned.html", context={"user": assignment.user.name, "course": assignment.course.name, "manager": assignment.assigned_by.username})
-    send_email(f"Course: {assignment.course.name}", body, [assignment.user.email])
+def send_course_enrolled_mail(enrollment):
+    body = render_to_string("course_assigned.html", context={"user": enrollment.user.name, "course": enrollment.course.name, "manager": enrollment.enrolled_by.username})
+    send_email(f"Course: {enrollment.course.name}", body, [enrollment.user.email])
 
 
 def send_answer_submitted_mail(answer):
-    body = render_to_string("answer_submitted.html", context={"user": answer.user_course_enrollment.user.name, "admin": answer.user_course_enrollment.assigned_by.username, "question": answer.question.question})
+    body = render_to_string("answer_submitted.html", context={"user": answer.user_course_enrollment.user.name, "admin": answer.user_course_enrollment.enrolled_by.username, "question": answer.question.question})
     subject = "Answer Submission"
-    send_email(subject, body, [answer.user_course_enrollment.assigned_by.email])
+    send_email(subject, body, [answer.user_course_enrollment.enrolled_by.email])

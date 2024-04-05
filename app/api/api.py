@@ -29,17 +29,22 @@ SUB_TOPIC_NOT_FOUND = 715
 QUESTION_NOT_FOUND = 400
 QUESTION_ANSWER_NOT_FOUND = 401
 
-# User Assignment
-USER_ASSIGNMENT_NOT_FOUND = 402
-USER_ASSIGNED_COURSE_NOT_FOUND = 410
-USER_ASSIGNED_TOPIC_NOT_FOUND = 411
-USER_ASSIGNED_SUB_TOPIC_NOT_FOUND = 412
-USER_ASSIGNED_QUESTION_NOT_FOUND = 413
+# User Enrollment
+USER_ENROLLMENT_NOT_FOUND = 402
+USER_ENROLLED_COURSE_NOT_FOUND = 410
+USER_ENROLLED_TOPIC_NOT_FOUND = 411
+USER_ENROLLED_SUB_TOPIC_NOT_FOUND = 412
+USER_ENROLLED_QUESTION_NOT_FOUND = 413
+USER_ENROLLED_MANAGER_NOT_FOUND = 414
 # Gpt Review
 GPT_REVIEW_NOT_FOUND = 420
 
 # Manager Feedback
 MANAGER_FEEDBACK_NOT_FOUND = 403
+
+# Delete
+DELETE_ERROR = 720
+
 error_messages = {
     INVALID_INPUT: 'Invalid input',
     TOO_MANY_REQUEST: 'Too many requests',
@@ -58,11 +63,12 @@ error_messages = {
     COURSE_NOT_FOUND: "Course not found",
     TOPIC_NOT_FOUND: "Topic not found",
     SUB_TOPIC_NOT_FOUND: "Sub topic not found",
-    USER_ASSIGNMENT_NOT_FOUND: "Assignment not found",
-    USER_ASSIGNED_COURSE_NOT_FOUND: "Assigned courses not found",
-    USER_ASSIGNED_TOPIC_NOT_FOUND: "Assigned topics not found",
-    USER_ASSIGNED_SUB_TOPIC_NOT_FOUND: "Assigned sub topics not found",
-    USER_ASSIGNED_QUESTION_NOT_FOUND: "Assigned questions not found",
+    USER_ENROLLMENT_NOT_FOUND: "Enrollment not found",
+    USER_ENROLLED_COURSE_NOT_FOUND: "Enrolled courses not found",
+    USER_ENROLLED_TOPIC_NOT_FOUND: "Enrolled topics not found",
+    USER_ENROLLED_SUB_TOPIC_NOT_FOUND: "Enrolled sub topics not found",
+    USER_ENROLLED_QUESTION_NOT_FOUND: "Enrolled questions not found",
+    USER_ENROLLED_MANAGER_NOT_FOUND: "Managers not found",
     GPT_REVIEW_NOT_FOUND: "Gpt review not found",
     MANAGER_FEEDBACK_NOT_FOUND: "Manager Feedback not found",
     INVALID_SEARCH_QUERY: "Invalid search query",

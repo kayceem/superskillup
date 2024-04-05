@@ -9,8 +9,8 @@ class QuestionSerilizer(serializers.ModelSerializer):
         fields = ["id", "question", "course", "topic", "sub_topic"]
         extra_kwargs = {'id': {'read_only': True}}
 
-    def validate(self, attrs):
-        if attrs.get('sub_topic'):
-            attrs['topic'] = attrs.get('sub_topic').topic
-            attrs['course'] = attrs.get('topic').course
-        return super().validate(attrs)
+    # def validate(self, attrs):
+    #     if attrs.get('sub_topic'):
+    #         attrs['topic'] = attrs.get('sub_topic').topic
+    #         attrs['course'] = attrs.get('topic').course
+    #     return super().validate(attrs)

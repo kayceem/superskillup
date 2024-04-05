@@ -18,3 +18,7 @@ class Course:
     @staticmethod
     def get_courses_from_ids(course_ids):
         return CourseAccessor.get_courses_from_ids(course_ids)
+
+    @staticmethod
+    def delete_course(course):
+        return course.delete()

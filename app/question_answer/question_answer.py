@@ -13,8 +13,12 @@ class QuestionAnswer:
         return QuestionAnswerAccessor.get_answer_by_id(id)
 
     @staticmethod
-    def get_answers_by_assignment(assign_id):
-        return QuestionAnswerAccessor.get_answers_by_assignment(assign_id)
+    def get_answer_by_question(user_id, question_id):
+        return QuestionAnswerAccessor.get_answer_by_question(user_id, question_id)
+
+    @staticmethod
+    def get_answers_by_enrollment(enrollment_id):
+        return QuestionAnswerAccessor.get_answers_by_enrollment(enrollment_id)
 
     @staticmethod
     def get_answers_by_user(user_id):
