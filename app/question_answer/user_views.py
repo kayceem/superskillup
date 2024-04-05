@@ -68,7 +68,7 @@ def add_answer(request):
     answer = QuestionAnswer.get_answer_by_id(serializer.data["id"])
     GptReview.add_gpt_review(answer)
     send_answer_submitted_mail(answer)
-    return response_builder.get_200_success_response("Answer successfully added", serializer.data)
+    return response_builder.get_201_success_response("Answer successfully added", serializer.data)
 
 
 @api_view(["PUT", "PATCH"])
@@ -87,4 +87,4 @@ def update_answer(request, id):
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
     GptReview.update_gpt_review(answer)
-    return response_builder.get_200_success_response("Answer successfully added", serializer.data)
+    return response_builder.get_201_success_response("Answer successfully added", serializer.data)

@@ -62,7 +62,7 @@ def add_manager_feedback(request):
     serializer = ManagerFeedbackSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return response_builder.get_200_success_response("Feedback added", serializer.data)
+        return response_builder.get_201_success_response("Feedback added", serializer.data)
     return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
 
 
@@ -77,5 +77,5 @@ def update_manager_feedback(request, id):
     serializer = ManagerFeedbackSerializer(manager_feedback, data=request.data, partial=is_PATCH)
     if serializer.is_valid():
         serializer.save()
-        return response_builder.get_200_success_response("Feedback added", serializer.data)
+        return response_builder.get_201_success_response("Feedback added", serializer.data)
     return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)

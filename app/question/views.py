@@ -50,7 +50,7 @@ def create_question(request):
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
-    return response_builder.get_200_success_response("Question successfully created", serializer.data)
+    return response_builder.get_201_success_response("Question successfully created", serializer.data)
 
 
 @api_view(["PUT", "PATCH"])
@@ -65,7 +65,7 @@ def update_question(request, id):
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
-    return response_builder.get_200_success_response("Question successfully updated", serializer.data)
+    return response_builder.get_201_success_response("Question successfully updated", serializer.data)
 
 
 @api_view(["DELETE"])

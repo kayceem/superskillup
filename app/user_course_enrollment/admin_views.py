@@ -88,7 +88,7 @@ def create_user_course_enrollment(request):
     serializer.save()
     ernollment = UserCourseEnrollment.get_enrollment_by_id(serializer.data.get('id'))
     email_service.send_course_enrolled_mail(ernollment)
-    return response_builder.get_200_success_response("User enrolled in course successfully", serializer.data)
+    return response_builder.get_201_success_response("User enrolled in course successfully", serializer.data)
 
 
 @api_view(["PUT", "PATCH"])
@@ -103,7 +103,7 @@ def update_user_course_enrollment(request, id):
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
-    return response_builder.get_200_success_response("Successfully updated", serializer.data)
+    return response_builder.get_201_success_response("Successfully updated", serializer.data)
 
 
 @api_view(["DELETE"])
