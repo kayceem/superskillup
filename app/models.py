@@ -111,7 +111,6 @@ class UserProfile(BaseModel):
 class Tag(BaseModel):
 
     name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(null=True, blank=True)
 
 
 class Course(BaseModel):
