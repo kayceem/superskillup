@@ -14,19 +14,28 @@ class TopicInline(admin.TabularInline):
     show_change_link = True
 
 
+class BaseAdminModel(admin.ModelAdmin):
+
+    def delete_model(self, request, obj):
+        obj.hard_delete()
+
+    def get_queryset(self, request):
+        return self.model.all_objects.all()
+
+
 @admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(BaseAdminModel):
     list_display = ('id', 'name', 'email', "is_verified", "is_active")
 
 
 @admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(BaseAdminModel):
     list_display = ('id', 'name')
 
 
 @admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'get_topics')
+class CourseAdmin(BaseAdminModel):
+    list_display = ('name', 'get_topics')
     inlines = [TopicInline]
     search_fields = ['name']
 
@@ -37,7 +46,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 @admin.register(Topic)
-class TopicAdmin(admin.ModelAdmin):
+class TopicAdmin(BaseAdminModel):
     list_display = ('name', "course", "get_sub_topics")
     inlines = [SubTopicInline]
     search_fields = ['name']
@@ -50,7 +59,7 @@ class TopicAdmin(admin.ModelAdmin):
 
 
 @admin.register(SubTopic)
-class SubTopicAdmin(admin.ModelAdmin):
+class SubTopicAdmin(BaseAdminModel):
     list_display = ('name', "topic", "get_course")
     search_fields = ['name']
 
@@ -61,36 +70,42 @@ class SubTopicAdmin(admin.ModelAdmin):
 
 
 @admin.register(Question)
-class QuestionAdmin(admin.ModelAdmin):
+class QuestionAdmin(BaseAdminModel):
     list_display = ('id', 'question', 'course', 'topic', 'sub_topic')
     search_fields = ['question']
 
 
+@admin.register(QuestionAnswer)
+class QuestionAnswerAdmin(BaseAdminModel):
+    list_display = ('id', 'user_course_enrollment', 'question', 'answer')
+    search_fields = ['question']
+
+
 @admin.register(Assignment)
-class AssignmentAdmin(admin.ModelAdmin):
+class AssignmentAdmin(BaseAdminModel):
     list_display = ('id', 'title', 'course', 'created_by')
 
 
 @admin.register(UserCourseEnrollment)
-class UserCourseEnrollmentAdmin(admin.ModelAdmin):
+class UserCourseEnrollmentAdmin(BaseAdminModel):
     list_display = ('id', 'user', 'course', 'status')
 
 
 @admin.register(UserAssignment)
-class UserAssignmentAdmin(admin.ModelAdmin):
+class UserAssignmentAdmin(BaseAdminModel):
     list_display = ('id', 'assignment', 'user_course_enrollment')
 
 
 @admin.register(UserAssignmentSubmission)
-class UserAssignmentSubmissionAdmin(admin.ModelAdmin):
+class UserAssignmentSubmissionAdmin(BaseAdminModel):
     list_display = ('id', 'user_assignment')
 
 
 @admin.register(GptReview)
-class GptReviewAdmin(admin.ModelAdmin):
+class GptReviewAdmin(BaseAdminModel):
     list_display = ('id', 'question_answer', 'remarks', 'score')
 
 
 @admin.register(ManagerFeedback)
-class ManagerFeedbackAdmin(admin.ModelAdmin):
+class ManagerFeedbackAdmin(BaseAdminModel):
     list_display = ('id', 'gpt_review', 'remarks', 'score')
