@@ -45,9 +45,10 @@ def create_course(request):
     """
     Create a Course.
     """
-    request.data['created_by'] = request.user.id
+    data = request.data.copy()
+    data['created_by'] = request.user.id
     response_builder = ResponseBuilder()
-    serializer = CourseSerializer(data=request.data)
+    serializer = CourseSerializer(data=data)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
     serializer.save()
@@ -68,7 +69,6 @@ def update_course(request, id):
         return response_builder.get_404_not_found_response(api.COURSE_NOT_FOUND)
     if course.created_by != request.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
-    request.data['created_by'] = request.user.id
     serializer = CourseSerializer(course, data=request.data, partial=is_PATCH)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
