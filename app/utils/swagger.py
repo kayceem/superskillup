@@ -9,6 +9,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
         swagger = super().get_schema(request, public)
         swagger.tags = [
             {
+                "name": "admin-auth",
+                "description": "Endpoint for admin authentication."
+            },
+            {
                 "name": "search",
                 "description": "Endpoint for searching course, topic, sub topic and questions."
             },
