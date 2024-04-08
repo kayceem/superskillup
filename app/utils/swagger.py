@@ -26,11 +26,15 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
             },
             {
                 "name": "admin-review",
-                "description": "Endpoints for admin and review(for question answer) interaction."
+                "description": "Endpoints for admin and review(manager feedback) interaction."
             },
             {
                 "name": "admin-question",
                 "description": "Endpoints for admin and question interaction."
+            },
+            {
+                "name": "admin-answer",
+                "description": "Endpoints for admin and question answer interaction."
             },
             {
                 "name": "user-gpt-review",
@@ -38,7 +42,11 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
             },
             {
                 "name": "user-review",
-                "description": "Endpoints for user and review(for question answer) interaction."
+                "description": "Endpoints for user and review(manager feedback) interaction."
+            },
+            {
+                "name": "user-answer",
+                "description": "Endpoints for user and question answer interaction."
             },
             {
                 "name": "search",
