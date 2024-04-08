@@ -37,6 +37,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
                 "description": "Endpoints for admin and question answer interaction."
             },
             {
+                "name": "admin-sub-topic",
+                "description": "Endpoints for admin and sub topic interaction."
+            },
+            {
                 "name": "user-gpt-review",
                 "description": "Endpoint for user and gpt review interaction."
             },

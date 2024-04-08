@@ -6,13 +6,15 @@ from app.api import api
 from app.sub_topic.sub_topic import SubTopic
 from app.shared.authentication import AdminAuthentication
 from rest_framework.parsers import MultiPartParser
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-sub-topic'], method='get', responses={200: SubTopicSerializer(many=True)})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_sub_topics_by_topic(request, topic_id):
     """
-    Get sub_topics of course
+    Get sub_topics of topic
     """
     response_builder = ResponseBuilder()
     sub_topics = SubTopic.get_sub_topics_by_topic(topic_id=topic_id)
@@ -23,6 +25,7 @@ def get_sub_topics_by_topic(request, topic_id):
     return response_builder.get_200_success_response("SubTopics found", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['admin-sub-topic'], method='get', responses={200: SubTopicSerializer})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_sub_topic_by_id(request, id):
@@ -38,6 +41,7 @@ def get_sub_topic_by_id(request, id):
     return response_builder.get_200_success_response("SubTopic found", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-sub-topic'], method='post', request_body=SubTopicSerializer, responses={201: SubTopicSerializer})
 @api_view(['POST'])
 @authentication_classes([AdminAuthentication])
 @parser_classes([MultiPartParser])
@@ -54,6 +58,7 @@ def create_sub_topic(request):
     return response_builder.get_201_success_response("SubTopic created successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-sub-topic'], methods=['put', 'patch'], request_body=SubTopicSerializer, responses={201: SubTopicSerializer})
 @api_view(['PATCH', 'PUT'])
 @authentication_classes([AdminAuthentication])
 @parser_classes([MultiPartParser])
@@ -74,6 +79,7 @@ def update_sub_topic(request, id):
     return response_builder.get_201_success_response("SubTopic updated successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-sub-topic'], method='delete', request_body=SubTopicSerializer)
 @api_view(['DELETE'])
 @authentication_classes([AdminAuthentication])
 def delete_sub_topic(request, id):
