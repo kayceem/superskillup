@@ -57,6 +57,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
                 "description": "Endpoint for searching course, topic, sub topic and questions."
             },
             {
+                "name": "tags",
+                "description": "Endpoints for tags"
+            },
+            {
                 "name": "admin",
                 "description": "Endpoints for admin auth."
             },
