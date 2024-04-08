@@ -6,11 +6,16 @@ from app.user_assignment.serializer import UserAssignmentSerializer
 from app.shared.pagination import paginate
 from app.api import api
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['user-assignment'], method='get', responses={200: UserAssignmentSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_all_user_assignments(request):
+    """
+    Get all assignments of a user [multiple courses]
+    """
     user = request.user
     response_builder = ResponseBuilder()
     user_assignments = UserAssignment.get_all_user_assignments_by_user(user.id)
@@ -21,10 +26,14 @@ def get_all_user_assignments(request):
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['user-assignment'], method='get', responses={200: UserAssignmentSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_user_assignments_by_course(request, course_id):
     user = request.user
+    """
+    Get all assignments of a user by course
+    """
     response_builder = ResponseBuilder()
     user_assignments = UserAssignment.get_user_assignments_by_course(user.id, course_id)
     if not user_assignments:
@@ -34,9 +43,13 @@ def get_user_assignments_by_course(request, course_id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['user-assignment'], method='get', responses={200: UserAssignmentSerializer})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_user_assignment_by_id(request, id):
+    """
+    Get assignment of a user by id
+    """
     response_builder = ResponseBuilder()
     user_assignment = UserAssignment.get_user_assignment_by_id(id)
     if not user_assignment:
@@ -48,9 +61,13 @@ def get_user_assignment_by_id(request, id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-assignment'], method='get', responses={200: UserAssignmentSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_user_assignments_by_enrollment(request, enrollment_id):
+    """
+    Get all assignments by enrollment (user and course)
+    """
     response_builder = ResponseBuilder()
     enrollment = UserCourseEnrollment.get_enrollment_by_id(enrollment_id)
     if not enrollment:
