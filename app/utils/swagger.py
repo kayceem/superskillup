@@ -13,6 +13,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
                 "description": "Endpoint for admin authentication."
             },
             {
+                "name": "admin-assignment",
+                "description": "Endpoints for admin and assignment interaction."
+            },
+            {
                 "name": "search",
                 "description": "Endpoint for searching course, topic, sub topic and questions."
             },
@@ -31,10 +35,6 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
             {
                 "name": "user-review",
                 "description": "Endpoints for user and review(for question answer) interaction."
-            },
-            {
-                "name": "admin-assignment",
-                "description": "Endpoints for admin and assignment interaction."
             },
             {
                 "name": "admin-course",

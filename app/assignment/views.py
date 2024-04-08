@@ -6,8 +6,10 @@ from app.api import api
 from app.assignment.assignment import Assignment
 from app.shared.authentication import AdminAuthentication
 from rest_framework.parsers import MultiPartParser
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-assignment'], method='get', responses={200: AssignmentSerializer(many=True)})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_assignments_by_course(request, course_id):
@@ -23,6 +25,7 @@ def get_assignments_by_course(request, course_id):
     return response_builder.get_200_success_response("Assignments found", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['admin-assignment'], method='get', responses={200: AssignmentSerializer})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_assignment_by_id(request, id):
@@ -38,6 +41,7 @@ def get_assignment_by_id(request, id):
     return response_builder.get_200_success_response("Assignment found", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-assignment'], method='post', request_body=AssignmentSerializer, responses={201: AssignmentSerializer})
 @api_view(['POST'])
 @authentication_classes([AdminAuthentication])
 @parser_classes([MultiPartParser])
@@ -55,6 +59,7 @@ def create_assignment(request):
     return response_builder.get_201_success_response("Assignment created successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-assignment'], methods=['patch', 'put'], request_body=AssignmentSerializer, responses={201: AssignmentSerializer})
 @api_view(['PATCH', 'PUT'])
 @authentication_classes([AdminAuthentication])
 @parser_classes([MultiPartParser])
@@ -75,6 +80,7 @@ def update_assignment(request, id):
     return response_builder.get_201_success_response("Assignment updated successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-assignment'], method='delete')
 @api_view(['DELETE'])
 @authentication_classes([AdminAuthentication])
 def delete_assignment(request, id):
