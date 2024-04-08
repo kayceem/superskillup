@@ -57,6 +57,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
                 "description": "Endpoints for admin and user assignment submission interaction."
             },
             {
+                "name": "admin-user-enrollment",
+                "description": "Endpoints for admin and user enrollment interaction."
+            },
+            {
                 "name": "user-auth",
                 "description": "Endpoint for user authentication."
             },
@@ -81,20 +85,16 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
                 "description": "Endpoints for user and assignment submission interaction."
             },
             {
+                "name": "user-enrollment",
+                "description": "Endpoints for user and enrollment(course/topic/sub-topic/question) interaction."
+            },
+            {
                 "name": "search",
                 "description": "Endpoint for searching course, topic, sub topic and questions."
             },
             {
                 "name": "tags",
                 "description": "Endpoints for tags"
-            },
-            {
-                "name": "admin",
-                "description": "Endpoints for admin auth."
-            },
-            {
-                "name": "user",
-                "description": "Endpoints for user auth and signup."
             },
         ]
 
