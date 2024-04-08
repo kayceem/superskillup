@@ -5,8 +5,10 @@ from app.topic.serializers import TopicSerializer
 from app.api import api
 from app.topic.topic import Topic
 from app.shared.authentication import AdminAuthentication
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-topic'], method='get', responses={200: TopicSerializer(many=True)})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_topics_by_course(request, course_id):
@@ -22,6 +24,7 @@ def get_topics_by_course(request, course_id):
     return response_builder.get_200_success_response("Topics found", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['admin-topic'], method='get', responses={200: TopicSerializer})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_topic_by_id(request, id):
@@ -37,6 +40,7 @@ def get_topic_by_id(request, id):
     return response_builder.get_200_success_response("Topic found", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-topic'], method='post', request_body=TopicSerializer, responses={201: TopicSerializer})
 @api_view(['POST'])
 @authentication_classes([AdminAuthentication])
 def create_topic(request):
@@ -52,6 +56,7 @@ def create_topic(request):
     return response_builder.get_201_success_response("Topic created successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-topic'], methods=['patch', 'put'], request_body=TopicSerializer, responses={201: TopicSerializer})
 @api_view(['PATCH', 'PUT'])
 @authentication_classes([AdminAuthentication])
 def update_topic(request, id):
@@ -71,6 +76,7 @@ def update_topic(request, id):
     return response_builder.get_201_success_response("Topic updated successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-topic'], method='delete', request_body=TopicSerializer)
 @api_view(['DELETE'])
 @authentication_classes([AdminAuthentication])
 def delete_topic(request, id):
