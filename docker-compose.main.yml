@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  superskillup-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: superskillup-be
+    image: 277304117720.dkr.ecr.ap-south-1.amazonaws.com/superskillup-be:dev
+    command: "gunicorn superskillup.wsgi:application --bind 0.0.0.0:8033"
+    restart: always
+    ports:
+      - "8033:8033"
+    env_file:
+      - .env
+    networks:
+      - superskillup
+    
+networks:
+    superskillup:
+      driver: bridge
