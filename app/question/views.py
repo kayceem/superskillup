@@ -5,11 +5,16 @@ from app.api.response_builder import ResponseBuilder
 from app.question.serializer import QuestionSerilizer
 from app.api import api
 from app.shared.pagination import paginate
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-question'], method='get', responses={200: QuestionSerilizer(many=True)})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_questions_by_course(request, course_id):
+    """
+        Get all questions of a course
+    """
     response_builder = ResponseBuilder()
     data = Question.get_questions_by_course(course_id)
     if data:
@@ -19,9 +24,13 @@ def get_questions_by_course(request, course_id):
     return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND)
 
 
+@swagger_auto_schema(tags=['admin-question'], method='get', responses={200: QuestionSerilizer(many=True)})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_questions_by_sub_topic(request, sub_topic_id):
+    """
+        Get all questions of a sub topic
+    """
     response_builder = ResponseBuilder()
     data = Question.get_questions_by_sub_topic(sub_topic_id)
     if data:
@@ -31,9 +40,13 @@ def get_questions_by_sub_topic(request, sub_topic_id):
     return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND)
 
 
+@swagger_auto_schema(tags=['admin-question'], method='get', responses={200: QuestionSerilizer})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_question_by_id(request, id):
+    """
+        Get question by id
+    """
     response_builder = ResponseBuilder()
     data = Question.get_question_by_id(id)
     if data:
@@ -42,9 +55,13 @@ def get_question_by_id(request, id):
     return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND)
 
 
+@swagger_auto_schema(tags=['admin-question'], method='post', request_body=QuestionSerilizer, responses={201: QuestionSerilizer})
 @api_view(["POST"])
 @authentication_classes([AdminAuthentication])
 def create_question(request):
+    """
+        Create a question
+    """
     response_builder = ResponseBuilder()
     serializer = QuestionSerilizer(data=request.data)
     if not serializer.is_valid():
@@ -53,9 +70,13 @@ def create_question(request):
     return response_builder.get_201_success_response("Question successfully created", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-question'], methods=['put', 'patch'], request_body=QuestionSerilizer, responses={201: QuestionSerilizer})
 @api_view(["PUT", "PATCH"])
 @authentication_classes([AdminAuthentication])
 def update_question(request, id):
+    """
+        Update the provided question
+    """
     is_PATCH = request.method == 'PATCH'
     response_builder = ResponseBuilder()
     question = Question.get_question_by_id(id)
@@ -68,9 +89,13 @@ def update_question(request, id):
     return response_builder.get_201_success_response("Question successfully updated", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-question'], method='delete')
 @api_view(["DELETE"])
 @authentication_classes([AdminAuthentication])
 def delete_question(request, id):
+    """
+        Delete the provided question
+    """
     response_builder = ResponseBuilder()
     question = Question.get_question_by_id(id)
     if question is None:

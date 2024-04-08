@@ -1,8 +1,5 @@
 from rest_framework.decorators import api_view, authentication_classes
 from app.course.serializers import CourseSerializer
-# from app.question.serializer import QuestionSerilizer
-# from app.sub_topic.serializers import SubTopicSerializer
-# from app.topic.serializers import TopicSerializer
 from app.user.serializers import UserSerializer
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.shared.authentication import AdminAuthentication
@@ -13,11 +10,16 @@ from app.shared.pagination import paginate
 from app.api import api
 from app.user.user import User
 from app.services import email_service
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], method='get', responses={200: UserCourseEnrollmentSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_all_enrollments(request):
+    """
+    Get all enrollments [multiple users | multiple courses]
+    """
     response_builder = ResponseBuilder()
     data = UserCourseEnrollment.get_all_enrollments()
     if data:
@@ -27,9 +29,13 @@ def get_all_enrollments(request):
     return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], method='get', responses={200: UserCourseEnrollmentSerializer})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_enrollment_by_id(request, id):
+    """
+    Get enrollment by id
+    """
     response_builder = ResponseBuilder()
     data = UserCourseEnrollment.get_enrollment_by_id(id)
     if data:
@@ -38,9 +44,13 @@ def get_enrollment_by_id(request, id):
     return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], method='get', responses={200: UserCourseEnrollmentSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_user_enrollments(request, user_id):
+    """
+    Get all enrollments of user [multiple courses]
+    """
     response_builder = ResponseBuilder()
     data = UserCourseEnrollment.get_user_enrollments(user_id)
     if data:
@@ -50,9 +60,13 @@ def get_user_enrollments(request, user_id):
     return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], method='get', responses={200: UserSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_enrolled_users(request):
+    """
+    Get all enrolled users
+    """
     user = request.user
     response_builder = ResponseBuilder()
     users = UserCourseEnrollment.get_enrolled_users(user.id)
@@ -63,9 +77,13 @@ def get_enrolled_users(request):
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], method='get', responses={200: CourseSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_user_enrolled_courses(request, user_id):
+    """
+    Get enrolled courses of a user
+    """
     response_builder = ResponseBuilder()
     user = User.get_user_by_id(user_id)
     if not user:
@@ -77,9 +95,13 @@ def get_user_enrolled_courses(request, user_id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], method='post', request_body=UserCourseEnrollmentSerializer, responses={200: UserCourseEnrollmentSerializer})
 @api_view(["POST"])
 @authentication_classes([AdminAuthentication])
 def create_user_course_enrollment(request):
+    """
+    Enroll user to a course
+    """
     response_builder = ResponseBuilder()
     request.data["enrolled_by"] = request.user.id
     serializer = UserCourseEnrollmentSerializer(data=request.data)
@@ -91,10 +113,14 @@ def create_user_course_enrollment(request):
     return response_builder.get_201_success_response("User enrolled in course successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], methods=['put', 'patch'], request_body=UserCourseEnrollmentSerializer, responses={200: UserCourseEnrollmentSerializer})
 @api_view(["PUT", "PATCH"])
 @authentication_classes([AdminAuthentication])
 def update_user_course_enrollment(request, id):
     is_PATCH = request.method == 'PATCH'
+    """
+    Update user course enrollment
+    """
     response_builder = ResponseBuilder()
     enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
     if not enrollment:
@@ -106,9 +132,13 @@ def update_user_course_enrollment(request, id):
     return response_builder.get_201_success_response("Successfully updated", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-user-enrollment'], method='delete')
 @api_view(["DELETE"])
 @authentication_classes([AdminAuthentication])
 def delete_user_course_enrollment(request, id):
+    """
+    Delete user course enrollment
+    """
     response_builder = ResponseBuilder()
     enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
     if not enrollment:

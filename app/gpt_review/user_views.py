@@ -4,8 +4,10 @@ from app.gpt_review.gpt_review import GptReview
 from app.api.response_builder import ResponseBuilder
 from app.gpt_review.serializer import GptReviewSerializer
 from app.api import api
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['user-gpt-review'], method='get', responses={200: GptReviewSerializer})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_gpt_review_by_answer(request, answer_id):

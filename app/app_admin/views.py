@@ -1,11 +1,14 @@
 from rest_framework.decorators import api_view
 from app.app_admin.serializers import AdminLoginSerializer
+from app.app_admin.swagger import AdminResponse
 from app.utils import utils
 from app.api.response_builder import ResponseBuilder
 from app.app_admin.app_admin import Admin
 from app.api import api
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-auth'], method='post', request_body=AdminLoginSerializer, responses={200: AdminResponse.response()})
 @api_view(['POST'])
 def login_admin(request):
     """

@@ -10,11 +10,16 @@ from app.api.response_builder import ResponseBuilder
 from app.user_course_enrollment.serializer import UserCourseEnrollmentSerializer
 from app.shared.pagination import paginate
 from app.api import api
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: UserCourseEnrollmentSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_all_enrollments(request):
+    """
+    Get all enrollments of user
+    """
     user = request.user
     response_builder = ResponseBuilder()
     enrollments = UserCourseEnrollment.get_user_enrollments(user.id)
@@ -25,9 +30,13 @@ def get_all_enrollments(request):
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: UserCourseEnrollmentSerializer})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_enrollment_by_id(request, id):
+    """
+    Get enrollment by id
+    """
     user = request.user
     response_builder = ResponseBuilder()
     enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
@@ -39,9 +48,13 @@ def get_enrollment_by_id(request, id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: CourseSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_enrolled_courses(request):
+    """
+    Get all enrolled courses
+    """
     user = request.user
     response_builder = ResponseBuilder()
     courses = UserCourseEnrollment.get_user_enrolled_courses(user.id)
@@ -51,9 +64,13 @@ def get_enrolled_courses(request):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: AdminSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_managers_of_user(request):
+    """
+    Get managers of user
+    """
     user = request.user
     response_builder = ResponseBuilder()
     managers = UserCourseEnrollment.get_managers_of_user(user.id)
@@ -63,9 +80,13 @@ def get_managers_of_user(request):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: TopicSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_enrolled_topics(request, id):
+    """
+    Get all topics of enrolled course by enrollment
+    """
     user = request.user
     response_builder = ResponseBuilder()
     enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
@@ -80,9 +101,13 @@ def get_enrolled_topics(request, id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: SubTopicSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_enrolled_sub_topics(request, id, topic_id):
+    """
+    Get all sub topics by enrollment and topic
+    """
     user = request.user
     response_builder = ResponseBuilder()
     enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
@@ -97,9 +122,13 @@ def get_enrolled_sub_topics(request, id, topic_id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: QuestionSerilizer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_enrolled_questions(request, id, sub_topic_id):
+    """
+    Get all questions by enrollment and sub-topic
+    """
     user = request.user
     response_builder = ResponseBuilder()
     enrollment = UserCourseEnrollment.get_enrollment_by_id(id)

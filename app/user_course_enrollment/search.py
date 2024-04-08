@@ -6,8 +6,11 @@ from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollme
 from app.user_course_enrollment.serializer import SearchRequestSerializer, SearchDataSerializer
 from app.api import api
 from app.utils import utils
+from drf_yasg.utils import swagger_auto_schema
+from app.user_course_enrollment.swagger import manual_parameters
 
 
+@swagger_auto_schema(tags=['search'], method='get', manual_parameters=manual_parameters, responses={200: SearchDataSerializer})
 @api_view(["GET"])
 @authentication_classes([CombinedAuthentication])
 def search(request):

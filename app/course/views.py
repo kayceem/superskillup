@@ -6,8 +6,10 @@ from app.course.course import Course
 from app.shared.authentication import AdminAuthentication
 from app.shared.pagination import paginate
 from rest_framework.parsers import MultiPartParser
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-course'], method='get', responses={200: CourseSerializer(many=True)})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_all_courses(request):
@@ -23,6 +25,7 @@ def get_all_courses(request):
     return response_builder.get_200_success_response("Courses found", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['admin-course'], method='get', responses={200: CourseSerializer})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_course_by_id(request, id):
@@ -38,6 +41,7 @@ def get_course_by_id(request, id):
     return response_builder.get_200_success_response("Course found", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-course'], method='post', request_body=CourseSerializer, responses={201: CourseSerializer})
 @api_view(['POST'])
 @authentication_classes([AdminAuthentication])
 @parser_classes([MultiPartParser])
@@ -55,6 +59,7 @@ def create_course(request):
     return response_builder.get_201_success_response("Course created successfully", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-course'], methods=['patch', 'put'], request_body=CourseSerializer, responses={201: CourseSerializer})
 @api_view(['PATCH', 'PUT'])
 @authentication_classes([AdminAuthentication])
 @parser_classes([MultiPartParser])
@@ -76,6 +81,7 @@ def update_course(request, id):
     return response_builder.get_201_success_response("Course updated successfully", serializer.data)
 
 
+@ swagger_auto_schema(tags=['admin-course'], method='delete')
 @api_view(['DELETE'])
 @authentication_classes([AdminAuthentication])
 def delete_course(request, id):

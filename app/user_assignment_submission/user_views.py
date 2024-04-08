@@ -5,11 +5,16 @@ from app.api.response_builder import ResponseBuilder
 from app.user_assignment_submission.serializer import UserAssignmentSubmissionSerializer
 from app.api import api
 from rest_framework.parsers import MultiPartParser
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['user-assignment-submission'], method='get', responses={200: UserAssignmentSubmissionSerializer})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_user_assignment_submission_by_id(request, id):
+    """
+    Get user assignment submission by id
+    """
     response_builder = ResponseBuilder()
     assignment_submission = UserAssignmentSubmission.get_user_assignment_submission_by_id(id)
     if not assignment_submission:
@@ -21,9 +26,13 @@ def get_user_assignment_submission_by_id(request, id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-assignment-submission'], method='get', responses={200: UserAssignmentSubmissionSerializer})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_user_assignment_submission_by_user_assignment(request, user_assignment_id):
+    """
+    Get user assignment submission user assignment
+    """
     response_builder = ResponseBuilder()
     assignment_submission = UserAssignmentSubmission.get_user_assignment_submission_by_user_assignment(user_assignment_id)
     if not assignment_submission:
@@ -35,10 +44,14 @@ def get_user_assignment_submission_by_user_assignment(request, user_assignment_i
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-assignment-submission'], method='post', request_body=UserAssignmentSubmissionSerializer, responses={200: UserAssignmentSubmissionSerializer})
 @api_view(["POST"])
 @authentication_classes([UserAuthentication])
 @parser_classes([MultiPartParser])
 def add_assignment_submission(request):
+    """
+    Submit assignment
+    """
     user = request.user
     response_builder = ResponseBuilder()
     serializer = UserAssignmentSubmissionSerializer(data=request.data)
@@ -50,10 +63,14 @@ def add_assignment_submission(request):
     return response_builder.get_201_success_response("Assignment successfully added", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-assignment-submission'], methods=['put', 'patch'], request_body=UserAssignmentSubmissionSerializer, responses={200: UserAssignmentSubmissionSerializer})
 @api_view(["PUT", "PATCH"])
 @authentication_classes([UserAuthentication])
 @parser_classes([MultiPartParser])
 def update_assignment_submission(request, id):
+    """
+    Update assignment
+    """
     user = request.user
     is_PATCH = request.method == 'PATCH'
     response_builder = ResponseBuilder()

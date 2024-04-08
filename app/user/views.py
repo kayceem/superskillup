@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, authentication_classes, parser_c
 from app.api.response_builder import ResponseBuilder
 from app.user.serializers import ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer
 from app.api import api
+from app.user.swagger import UserResponse
 from app.utils import utils
 from app.user.user import User
 from django.utils import timezone
@@ -9,8 +10,10 @@ from app.services.email_service import send_otp_mail
 from app.shared.authentication import AdminAuthentication
 from app.shared.pagination import paginate
 from rest_framework.parsers import MultiPartParser
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-user'], method='get', responses={200: UserSerializer(many=True)})
 @api_view(['GET'])
 @authentication_classes([AdminAuthentication])
 def get_all_users(request):
@@ -26,6 +29,7 @@ def get_all_users(request):
     return response_builder.get_200_success_response("Users found", serializer.data, page_info)
 
 
+@swagger_auto_schema(tags=['user-auth'], method='post', request_body=UserSerializer, responses={201: UserResponse.response()})
 @api_view(['POST'])
 @parser_classes([MultiPartParser])
 def register_user(request):
@@ -40,11 +44,12 @@ def register_user(request):
     serializer.save()
     user = User.get_user_by_email(email=serializer.validated_data["email"])
     send_otp_mail(user)
-    result = {"Message": "Please check you email."}
+    result = {"message": "Please check you email."}
 
     return response_builder.get_201_success_response("User registered successfully", result)
 
 
+@swagger_auto_schema(tags=['user-auth'], method='post', request_body=UserLoginSerializer, responses={200: UserResponse.response(message=False)})
 @api_view(['POST'])
 def login_user(request):
     """
@@ -65,8 +70,12 @@ def login_user(request):
     return response_builder.get_200_success_response("User logged in successfully", result)
 
 
+@swagger_auto_schema(tags=['user-auth'], method='post', request_body=OTPSerializer, responses={201: UserSerializer})
 @api_view(["POST"])
 def check_otp(request):
+    """
+    Verify otp
+    """
     response_builder = ResponseBuilder()
     otp_serializer = OTPSerializer(data=request.data)
     if not otp_serializer.is_valid():
@@ -88,8 +97,12 @@ def check_otp(request):
     return response_builder.get_201_success_response("User successfully verified", result)
 
 
+@swagger_auto_schema(tags=['user-auth'], method='post', request_body=ResendOTPSerializer, responses={201: UserResponse.response()})
 @api_view(["POST"])
 def resend_otp(request):
+    """
+    Resend otp
+    """
     response_builder = ResponseBuilder()
     resend_serializer = ResendOTPSerializer(data=request.data)
     if not resend_serializer.is_valid():
@@ -102,11 +115,11 @@ def resend_otp(request):
     otp_expired = User.check_otp_expired(user.email)
     if user.otp is None:
         send_otp_mail(user)
-        result = {"Message": "Please check you email."}
+        result = {"message": "Please check you email."}
         return response_builder.get_201_success_response("Email Sent.", result)
     else:
         if otp_expired:
             send_otp_mail(user)
-            result = {"Message": "Please check you email."}
+            result = {"message": "Please check you email."}
             return response_builder.get_201_success_response("Email sent.", result)
         return response_builder.get_200_fail_response(api.OTP_ALREADY_SENT)
