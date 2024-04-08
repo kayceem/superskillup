@@ -21,16 +21,16 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
                 "description": "Endpoints for admin and course interaction."
             },
             {
-                "name": "search",
-                "description": "Endpoint for searching course, topic, sub topic and questions."
-            },
-            {
                 "name": "admin-gpt-review",
                 "description": "Endpoint for admin and gpt review interaction."
             },
             {
                 "name": "user-gpt-review",
                 "description": "Endpoint for user and gpt review interaction."
+            },
+            {
+                "name": "search",
+                "description": "Endpoint for searching course, topic, sub topic and questions."
             },
             {
                 "name": "admin-review",
