@@ -34,6 +34,7 @@ TEST_MODE = bool(strtobool(os.getenv("TEST_MODE", 'False')))
 ALLOWED_HOSTS = ['*']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -165,8 +166,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # CORS HEADERS
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'https://dev-superskillup-api.idea2mvp.in',
+]
+
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8000",
+    "http://localhost:5173",
+    "http://127.0.0.1:8000",
+    "https://dev-superskillup-api.idea2mvp.in",
+]
+
+
 CORS_ALLOW_HEADERS = default_headers + ('access-control-allow-headers',)
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "http://127.0.0.1",
+    'https://dev-superskillup-api.idea2mvp.in'
+]
 
 # AWS
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
