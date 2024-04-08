@@ -6,8 +6,10 @@ from app.shared.authentication import AdminAuthentication, CombinedAuthenticatio
 from app.manager_feedback.serializer import ManagerFeedbackSerializer
 from app.shared.pagination import paginate
 from app.utils.utils import is_user_admin
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(tags=['admin-review'], method='get', responses={200: ManagerFeedbackSerializer})
 @api_view(["GET"])
 @authentication_classes([AdminAuthentication])
 def get_all_feedback(request):
@@ -20,6 +22,7 @@ def get_all_feedback(request):
     return response_builder.get_404_not_found_response(api.MANAGER_FEEDBACK_NOT_FOUND)
 
 
+@swagger_auto_schema(tags=['user-review', 'admin-review'], method='get', responses={200: ManagerFeedbackSerializer})
 @api_view(["GET"])
 @authentication_classes([CombinedAuthentication])
 def get_feedback_by_id(request, id):
@@ -37,6 +40,7 @@ def get_feedback_by_id(request, id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['user-review', 'admin-review'], method='get', responses={200: ManagerFeedbackSerializer})
 @api_view(["GET"])
 @authentication_classes([CombinedAuthentication])
 def get_feedback_by_answer(request, answer_id):
@@ -54,6 +58,7 @@ def get_feedback_by_answer(request, answer_id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
+@swagger_auto_schema(tags=['admin-review'], method='post', request_body=ManagerFeedbackSerializer, responses={201: ManagerFeedbackSerializer})
 @api_view(["POST"])
 @authentication_classes([AdminAuthentication])
 def add_manager_feedback(request):
@@ -65,6 +70,7 @@ def add_manager_feedback(request):
     return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
 
 
+@swagger_auto_schema(tags=['admin-review'], methods=['put', 'patch'], request_body=ManagerFeedbackSerializer, responses={201: ManagerFeedbackSerializer})
 @api_view(["PUT", "PATCH"])
 @authentication_classes([AdminAuthentication])
 def update_manager_feedback(request, id):
