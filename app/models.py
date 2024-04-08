@@ -107,6 +107,9 @@ class UserProfile(BaseModel):
         self.password = hash_raw_password(self.password)
         return super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(BaseModel):
 
@@ -151,12 +154,18 @@ class Course(BaseModel):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES, null=True, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Topic(BaseModel):
     name = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='topics')
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class SubTopic(BaseModel):
@@ -167,6 +176,9 @@ class SubTopic(BaseModel):
     video = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True)
     file = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True)
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class UserCourseEnrollment(BaseModel):
     IN_PROGRESS = 'in-progess'
@@ -176,6 +188,9 @@ class UserCourseEnrollment(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, choices=STATUS, default=IN_PROGRESS)
     enrolled_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned')
+
+    def __str__(self):
+        return f'{self.user}-{self.course}'
 
     class Meta:
         unique_together = ['user', 'course']
@@ -189,6 +204,9 @@ class Assignment(BaseModel):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.FileField(upload_to=assignment_file_path, max_length=255, blank=True, null=True)
 
+    def __str__(self):
+        return self.title
+
 
 class UserAssignment(BaseModel):
     user_course_enrollment = models.ForeignKey(UserCourseEnrollment, on_delete=models.CASCADE, related_name='assignments')
@@ -200,6 +218,9 @@ class UserAssignment(BaseModel):
             raise ValidationError("Assignment course must match with user's enrolled course.")
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f'{self.user_course_enrollment}-{self.assignment}'
+
     class Meta:
         unique_together = ['user_course_enrollment', 'assignment']
 
@@ -209,12 +230,18 @@ class UserAssignmentSubmission(BaseModel):
     url = models.URLField(null=True, blank=True)
     file = models.FileField(upload_to=assignment_submission_file_path, max_length=255, blank=True, null=True)
 
+    def __str__(self):
+        return f'{self.user_assignment}'
+
 
 class Question(BaseModel):
     question = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course_questions', null=True, blank=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='topic_questions', null=True, blank=True)
     sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, related_name='sub_topic_questions')
+
+    def __str__(self):
+        return self.question
 
     def save(self, *args, **kwargs):
         sub_topic = SubTopic.objects.filter(pk=self.sub_topic.pk).first()
@@ -235,6 +262,9 @@ class QuestionAnswer(BaseModel):
             raise ValidationError("Question course must match with user's enrolled course.")
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f'{self.user_course_enrollment}-{self.question}'
+
     class Meta:
         unique_together = ['user_course_enrollment', 'question']
 
@@ -244,8 +274,14 @@ class GptReview(BaseModel):
     remarks = models.TextField(null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.question_answer}'
+
 
 class ManagerFeedback(BaseModel):
     gpt_review = models.OneToOneField(GptReview, on_delete=models.CASCADE)
     remarks = models.TextField(null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.gpt_review}'
