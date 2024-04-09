@@ -216,10 +216,9 @@ class UserAssignment(BaseModel):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='users', null=True)
     deadline = models.DateTimeField(null=True, blank=True)
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if self.user_course_enrollment.course != self.assignment.course:
             raise ValidationError("Assignment course must match with user's enrolled course.")
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user_course_enrollment}-{self.assignment}'
@@ -260,10 +259,9 @@ class QuestionAnswer(BaseModel):
     is_reviewed_by_gpt = models.BooleanField(default=False)
     is_reviewed_by_manager = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if self.user_course_enrollment.course != self.question.course:
             raise ValidationError("Question course must match with user's enrolled course.")
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user_course_enrollment}-{self.question}'
