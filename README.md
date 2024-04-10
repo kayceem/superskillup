@@ -55,7 +55,7 @@
 and for their values contact to your `Leads` or `Project Manger` 
 
 
-## Installation
+## Installation and Execution
 - Through Docker
     1. Make sure you have Docker Installed on your system
     2. Clone the repository 
@@ -64,6 +64,10 @@ and for their values contact to your `Leads` or `Project Manger`
         ```bash 
          docker-compose -f .\docker-compose.main.yml up
         ```
+        
+- To verify project is running \
+    `http://localhost:8033/swagger/`
+
 - Alternative Way
     1. Clone the repository 
     2. setup local env file `.env` to the root directory
@@ -89,6 +93,16 @@ and for their values contact to your `Leads` or `Project Manger`
 - To verify project is running \
     `http://localhost:8000/swagger/`
     
+
+## Swagger UI
+
+- After running the project visit the following url to view swagger ui.
+    1. Docker \
+    `http://localhost:8033/swagger/`
+
+    2. Alternate way \
+    `http://localhost:8000/swagger/`
+
 
  ## Migration 
 
