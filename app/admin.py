@@ -50,25 +50,31 @@ class TagAdmin(BaseAdminModel):
 
 @admin.register(Course)
 class CourseAdmin(BaseAdminModel):
-    list_display = ('name', 'get_topics')
+    list_display = ('name', 'category', 'get_tags', 'created_by')
     inlines = [TopicInline, AssignmentInline]
     search_fields = ['name']
 
     def get_topics(self, obj):
-        return ", ".join([topic.name for topic in obj.topics.all()])
+        return "\n".join([topic.name for topic in obj.topics.all()])
+
+    def get_tags(self, obj):
+        return ", ".join([tag.name for tag in obj.tags.all()])
+
+    def get_readonly_fields(self, request, obj=None):
+        return ['id', 'get_topics'] if obj else []
 
     get_topics.short_description = "Topics"
+    get_tags.short_description = "Tags"
 
 
 @admin.register(Topic)
 class TopicAdmin(BaseAdminModel):
-    list_display = ('name', "course", "get_sub_topics")
+    list_display = ('name', 'course',)
     inlines = [SubTopicInline]
     search_fields = ['name']
-    fieldsets = ((None, {'fields': ('name', 'course', 'description', 'id', 'get_sub_topics')}),)
 
     def get_sub_topics(self, obj):
-        return ", ".join([topic.name for topic in obj.sub_topics.all()])
+        return "\n".join([topic.name for topic in obj.sub_topics.all()])
 
     get_sub_topics.short_description = "Sub Topics"
 
@@ -110,17 +116,28 @@ class AssignmentAdmin(BaseAdminModel):
 
 @admin.register(UserCourseEnrollment)
 class UserCourseEnrollmentAdmin(BaseAdminModel):
-    list_display = ('user', 'course', 'status')
+    list_display = ('user', 'course', 'status', 'enrolled_by')
 
 
 @admin.register(UserAssignment)
 class UserAssignmentAdmin(BaseAdminModel):
-    list_display = ('assignment', 'user_course_enrollment')
+    list_display = ('assignment', 'user_course_enrollment', 'deadline', 'is_submitted')
+
+    def is_submitted(self, obj) -> bool:
+        return UserAssignmentSubmission.objects.filter(user_assignment=obj).exists()
+
+    is_submitted.short_description = "Submitted"
+    is_submitted.boolean = True
 
 
 @admin.register(UserAssignmentSubmission)
 class UserAssignmentSubmissionAdmin(BaseAdminModel):
-    list_display = ('user_assignment',)
+    list_display = ('user_assignment', 'submitted_at')
+
+    def submitted_at(self, obj):
+        return obj.created_at
+
+    submitted_at.short_description = "Submitted at"
 
 
 @admin.register(GptReview)
