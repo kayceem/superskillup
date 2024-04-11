@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view, authentication_classes, parser_classes
+from app.services import email_service
 from app.shared.authentication import UserAuthentication
 from app.user_assignment_submission.user_assignment_submission import UserAssignmentSubmission
 from app.api.response_builder import ResponseBuilder
@@ -60,6 +61,7 @@ def add_assignment_submission(request):
     if user != serializer.validated_data['user_assignment'].user_course_enrollment.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User unauthorized")
     serializer.save()
+    email_service.send_assignment_submitted_mail(serializer.validated_data['user_assignment'])
     return response_builder.get_201_success_response("Assignment successfully added", serializer.data)
 
 

@@ -5,7 +5,6 @@ from app.question_answer.question_answer import QuestionAnswer
 from app.api.response_builder import ResponseBuilder
 from app.question_answer.serializer import QuestionAnswerSerializer
 from app.api import api
-from app.services.email_service import send_answer_submitted_mail
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.gpt_review.gpt_review import GptReview
 from drf_yasg.utils import swagger_auto_schema
