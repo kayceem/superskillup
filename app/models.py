@@ -6,6 +6,7 @@ from app.utils.hashing import hash_raw_password
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import transaction
+from app.utils import validators
 
 
 class CustomQuerySet(models.QuerySet):
@@ -176,8 +177,8 @@ class SubTopic(BaseModel):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='sub_topics')
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
-    video = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True)
-    file = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True)
+    video = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True, validators=[validators.get_video_extension_validator()])
+    file = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True, validators=[validators.get_document_extension_validator()])
 
     def __str__(self):
         return f'{self.name}'
@@ -205,7 +206,7 @@ class Assignment(BaseModel):
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=assignment_file_path, max_length=255, blank=True, null=True)
+    file = models.FileField(upload_to=assignment_file_path, max_length=255, blank=True, null=True, validators=[validators.get_document_extension_validator()])
 
     def __str__(self):
         return self.title
@@ -216,10 +217,9 @@ class UserAssignment(BaseModel):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='users', null=True)
     deadline = models.DateTimeField(null=True, blank=True)
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if self.user_course_enrollment.course != self.assignment.course:
             raise ValidationError("Assignment course must match with user's enrolled course.")
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user_course_enrollment}-{self.assignment}'
@@ -231,7 +231,7 @@ class UserAssignment(BaseModel):
 class UserAssignmentSubmission(BaseModel):
     user_assignment = models.OneToOneField(UserAssignment, on_delete=models.CASCADE, related_name='submissions')
     url = models.URLField(null=True, blank=True)
-    file = models.FileField(upload_to=assignment_submission_file_path, max_length=255, blank=True, null=True)
+    file = models.FileField(upload_to=assignment_submission_file_path, max_length=255, blank=True, null=True, validators=[validators.get_document_extension_validator()])
 
     def __str__(self):
         return f'{self.user_assignment}'
@@ -260,10 +260,9 @@ class QuestionAnswer(BaseModel):
     is_reviewed_by_gpt = models.BooleanField(default=False)
     is_reviewed_by_manager = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if self.user_course_enrollment.course != self.question.course:
             raise ValidationError("Question course must match with user's enrolled course.")
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user_course_enrollment}-{self.question}'
