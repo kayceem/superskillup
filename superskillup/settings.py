@@ -33,7 +33,6 @@ TEST_MODE = bool(strtobool(os.getenv("TEST_MODE", 'False')))
 ALLOWED_HOSTS = ['*']
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -149,7 +148,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
+EMAIL_FILE_PATH = BASE_DIR / ('emails/')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -183,7 +182,6 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 
-
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
     "http://127.0.0.1",
@@ -209,3 +207,47 @@ S3_TOPIC_FOLDER = "topics"
 S3_SUB_TOPIC_FOLDER = "sub_topics"
 S3_ASSIGNMENT_SUBMISSIONS_FOLDER = "submissions"
 S3_USER_FOLDER = "users"
+
+# Logging
+LOGGING = {
+    # Define the logging version
+    'version': 1,
+
+    # Enable the existing loggers
+    'disable_existing_loggers': False,
+
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+
+    # Define the formatters
+    'formatters': {
+        'verbose': {
+            'format': '[%(levelname)s] [%(asctime)s] [%(module)s] [%(lineno)s] [%(message)s]'
+        },
+    },
+
+    # Define the handlers
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            # 'filters': ['require_debug_true'],
+            'formatter': 'verbose'
+        },
+        # "mail_admins": {
+        #     "level": "ERROR",
+        #     "class": "django.utils.log.AdminEmailHandler",
+        # },
+    },
+
+    # Define the loggers
+    'loggers': {
+        'app': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
