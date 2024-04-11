@@ -5,6 +5,11 @@ from django.conf import settings
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 
+import logging
+
+
+log = logging.getLogger(__name__)
+
 
 def send_email(subject, body, receiver):
     sender = settings.EMAIL_HOST_USER
@@ -15,20 +20,32 @@ def send_email(subject, body, receiver):
 
 
 def send_otp_mail(user):
-    generated_otp = "".join([str(randint(0, 9)) for _ in range(0, 6)])
-    user.otp = generated_otp
-    user.otp_sent_date = timezone.now()
-    user.save()
-    body = render_to_string("otp_email.html", context={"otp": generated_otp})
-    send_email("OTP Verification", body, [user.email])
+    try:
+        generated_otp = "".join([str(randint(0, 9)) for _ in range(0, 6)])
+        user.otp = generated_otp
+        user.otp_sent_date = timezone.now()
+        user.save()
+        body = render_to_string("otp_email.html", context={"otp": generated_otp})
+        log.info(f"Sending OTP verification mail to: {user.email}")
+        send_email("OTP Verification", body, [user.email])
+    except Exception as e:
+        log.error(f"Failed sending otp verification mail to: {user.email} - {str(e)}")
 
 
 def send_course_enrolled_mail(enrollment):
-    body = render_to_string("course_assigned.html", context={"user": enrollment.user.name, "course": enrollment.course.name, "manager": enrollment.enrolled_by.username})
-    send_email(f"Course: {enrollment.course.name}", body, [enrollment.user.email])
+    try:
+        log.info(f"Sending course enrolled mail to: {enrollment.user.email}")
+        body = render_to_string("course_assigned.html", context={"user": enrollment.user.name, "course": enrollment.course.name, "manager": enrollment.enrolled_by.username})
+        send_email(f"Course: {enrollment.course.name}", body, [enrollment.user.email])
+    except Exception as e:
+        log.error(f"Failed sending course enrolled mail to: {enrollment.user.email} - {str(e)}")
 
 
-def send_answer_submitted_mail(answer):
-    body = render_to_string("answer_submitted.html", context={"user": answer.user_course_enrollment.user.name, "admin": answer.user_course_enrollment.enrolled_by.username, "question": answer.question.question})
-    subject = "Answer Submission"
-    send_email(subject, body, [answer.user_course_enrollment.enrolled_by.email])
+def send_assignment_submitted_mail(user_assignment):
+    try:
+        log.info(f"Sending assignment submitted mail to: {user_assignment.user_course_enrollment.enrolled_by.email}")
+        body = render_to_string("assignment_submitted.html", context={"user": user_assignment.user_course_enrollment.user.name, "admin": user_assignment.user_course_enrollment.enrolled_by.username, "assignment": user_assignment.assignment.title})
+        subject = f"Assignment Submission - {user_assignment.assignment.title}"
+        send_email(subject, body, [user_assignment.user_course_enrollment.enrolled_by.email])
+    except Exception as e:
+        log.error(f"Failed assignment submitted mail to: {user_assignment.user_course_enrollment.enrolled_by.email} - {str(e)}")

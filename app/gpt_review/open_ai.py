@@ -2,6 +2,11 @@ import json
 import requests
 from django.conf import settings
 
+import logging
+
+
+log = logging.getLogger(__name__)
+
 
 class OpenAI:
 
@@ -23,9 +28,11 @@ class OpenAI:
         }
 
         try:
+            log.info('Sending request to openai api for generating remarks and score.')
             response = requests.post(url, json=data, headers=cls.get_headers())
 
             if response.status_code != 200:
+                log.debug(f'OpenAI api did not send 200 status code: {response.status_code}')
                 return None
             data = response.json()
             data_string = data['choices'][0]['message']['content']
@@ -38,11 +45,13 @@ class OpenAI:
             required_keys = ['remarks', 'score']
 
             if set(required_keys) - set(json_data.keys()):
+                log.debug(f'OpenAI api sent invalid keys: {json_data.keys()}')
                 return None
 
             return json_data
 
         except Exception as e:
+            log.error(f'Error occured while generating remarks: {str(e)}')
             return None
 
     @classmethod
@@ -62,9 +71,11 @@ class OpenAI:
         }
 
         try:
+            log.info('Sending request to openai api for fixing response')
             response = requests.post(url, json=data, headers=cls.get_headers())
             content = response.json()['choices'][0]['message']['content']
             return json.loads(content)
 
         except Exception as e:
+            log.error(f'Error occured while fixing response: {str(e)}')
             raise e
