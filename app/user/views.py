@@ -66,7 +66,9 @@ def login_user(request):
     status, auth_token = User.login(email, password)
     if utils.is_status_failed(status):
         return response_builder.get_200_fail_response(status)
-    result = {"access_token": auth_token}
+    user = User.get_user_by_email(email=email)
+    user_serializer = UserSerializer(user)
+    result = {"access_token": auth_token, "user": user_serializer.data}
     return response_builder.get_200_success_response("User logged in successfully", result)
 
 
@@ -92,9 +94,7 @@ def check_otp(request):
     user.otp = None
     user.is_verified = True
     user.save()
-    serializer = UserSerializer(user)
-    result = {"user": serializer.data}
-    return response_builder.get_201_success_response("User successfully verified", result)
+    return response_builder.get_201_success_response("User successfully verified")
 
 
 @swagger_auto_schema(tags=['user-auth'], method='post', request_body=ResendOTPSerializer, responses={201: UserResponse.response()})
