@@ -170,6 +170,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://dev-superskillup-api.idea2mvp.in',
+    'https://dev-superskillup.idea2mvp.in'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -179,6 +180,7 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:5173",
     "http://127.0.0.1:8000",
     "https://dev-superskillup-api.idea2mvp.in",
+    "https://dev-superskillup.idea2mvp.in"
 ]
 
 
