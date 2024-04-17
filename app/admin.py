@@ -33,6 +33,9 @@ class BaseAdminModel(admin.ModelAdmin):
     change_form_template = 'admin/soft_delete.html'
 
     def response_change(self, request, obj):
+        if obj is None:
+            return super().response_change(request, obj)
+
         if "_soft-delete" in request.POST:
             if obj.is_deleted:
                 self.message_user(request, "Already deleted", level=messages.ERROR)
@@ -52,11 +55,13 @@ class BaseAdminModel(admin.ModelAdmin):
         if not obj:
             return []
         if not obj.is_deleted:
-            return ['id']
+            return ['id', 'is_deleted']
         fields = ([f.name for f in self.model._meta.fields])
         return fields
 
     def get_inlines(self, request, obj):
+        if not obj:
+            return []
         if not obj.is_deleted:
             return self.inlines
         return []
@@ -67,6 +72,8 @@ class BaseAdminModel(admin.ModelAdmin):
         return super(BaseAdminModel, self).change_view(request, object_id, extra_context=extra_context)
 
     def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        if obj is None:
+            return super().render_change_form(request, context, add, change, form_url, obj)
         if obj.is_deleted:
             context.update({
                 'show_save': False,
@@ -101,6 +108,8 @@ class CourseAdmin(BaseAdminModel):
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
+        if fields == []:
+            return fields
         if obj.is_deleted:
             return fields
         fields.append('get_topics')
@@ -123,6 +132,8 @@ class TopicAdmin(BaseAdminModel):
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
+        if fields == []:
+            return fields
         if obj.is_deleted:
             return fields
         fields.append('get_sub_topics')
@@ -148,6 +159,8 @@ class QuestionAdmin(BaseAdminModel):
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
+        if fields == []:
+            return fields
         if obj.is_deleted:
             return fields
         fields.extend(['course', 'topic'])
@@ -202,6 +215,8 @@ class ManagerFeedbackAdmin(BaseAdminModel):
 
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
+        if fields == []:
+            return fields
         if obj.is_deleted:
             return fields
         fields.extend(['gpt_review_remarks', 'gpt_review_score'])
