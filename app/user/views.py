@@ -94,7 +94,7 @@ def check_otp(request):
     user.otp = None
     user.is_verified = True
     user.save()
-    return response_builder.get_201_success_response("User successfully verified")
+    return response_builder.get_201_success_response("User successfully verified", result={})
 
 
 @swagger_auto_schema(tags=['user-auth'], method='post', request_body=ResendOTPSerializer, responses={201: UserResponse.response()})
