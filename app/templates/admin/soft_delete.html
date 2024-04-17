@@ -1,0 +1,10 @@
+{% extends 'admin/change_form.html' %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    {% if show_soft_delete %}
+    <div class="submit-row" style="justify-content: flex-end;">
+        <input type="submit" value="Soft Delete" name="_soft-delete" style="background-color: #ba2121;" onmouseover="this.style.backgroundColor='#a41515';" onmouseout="this.style.backgroundColor='#ba2121';">
+    </div>
+    {% endif %}
+{% endblock %}

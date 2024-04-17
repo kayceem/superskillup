@@ -1,5 +1,7 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 from app.models import UserProfile, QuestionAnswer, Assignment, UserAssignment, UserAssignmentSubmission, UserCourseEnrollment, Question, Course, Topic, SubTopic, GptReview, ManagerFeedback, Tag
+from django.contrib import messages
 
 
 class AssignmentInline(admin.TabularInline):
@@ -28,29 +30,66 @@ class TopicInline(admin.TabularInline):
 
 class BaseAdminModel(admin.ModelAdmin):
 
+    change_form_template = 'admin/soft_delete.html'
+
+    def response_change(self, request, obj):
+        if "_soft-delete" in request.POST:
+            if obj.is_deleted:
+                self.message_user(request, "Already deleted", level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            obj.delete()
+            self.message_user(request, "Soft delete successfull.")
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
+
     def delete_model(self, request, obj):
         obj.hard_delete()
 
     def get_queryset(self, request):
-        return self.model.all_objects.all()
+        return self.model.all_objects.get_queryset()
 
     def get_readonly_fields(self, request, obj=None):
-        return ['id'] if obj else []
+        if not obj:
+            return []
+        if not obj.is_deleted:
+            return ['id']
+        fields = ([f.name for f in self.model._meta.fields])
+        return fields
+
+    def get_inlines(self, request, obj):
+        if not obj.is_deleted:
+            return self.inlines
+        return []
+
+    def change_view(self, request, object_id, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['show_soft_delete'] = True
+        return super(BaseAdminModel, self).change_view(request, object_id, extra_context=extra_context)
+
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        if obj.is_deleted:
+            context.update({
+                'show_save': False,
+                'show_save_and_continue': False,
+                'show_save_and_add_another': False,
+                'show_soft_delete': False,
+            })
+        return super().render_change_form(request, context, add, change, form_url, obj)
 
 
 @admin.register(UserProfile)
 class UserProfileAdmin(BaseAdminModel):
-    list_display = ('name', 'email', "is_verified", "is_active")
+    list_display = ('name', 'email', 'is_verified', 'is_deleted')
 
 
 @admin.register(Tag)
 class TagAdmin(BaseAdminModel):
-    list_display = ('name',)
+    list_display = ('name', 'is_deleted')
 
 
 @admin.register(Course)
 class CourseAdmin(BaseAdminModel):
-    list_display = ('name', 'category', 'get_tags', 'created_by')
+    list_display = ('name', 'category', 'get_tags', 'created_by', 'is_deleted')
     inlines = [TopicInline, AssignmentInline]
     search_fields = ['name']
 
@@ -61,7 +100,11 @@ class CourseAdmin(BaseAdminModel):
         return ", ".join([tag.name for tag in obj.tags.all()])
 
     def get_readonly_fields(self, request, obj=None):
-        return ['id', 'get_topics'] if obj else []
+        fields = super().get_readonly_fields(request, obj)
+        if obj.is_deleted:
+            return fields
+        fields.append('get_topics')
+        return fields
 
     get_topics.short_description = "Topics"
     get_tags.short_description = "Tags"
@@ -69,7 +112,7 @@ class CourseAdmin(BaseAdminModel):
 
 @admin.register(Topic)
 class TopicAdmin(BaseAdminModel):
-    list_display = ('name', 'course',)
+    list_display = ('name', 'course', 'is_deleted')
     inlines = [SubTopicInline]
     search_fields = ['name']
 
@@ -79,12 +122,16 @@ class TopicAdmin(BaseAdminModel):
     get_sub_topics.short_description = "Sub Topics"
 
     def get_readonly_fields(self, request, obj=None):
-        return ['id', 'get_sub_topics'] if obj else []
+        fields = super().get_readonly_fields(request, obj)
+        if obj.is_deleted:
+            return fields
+        fields.append('get_sub_topics')
+        return fields
 
 
 @admin.register(SubTopic)
 class SubTopicAdmin(BaseAdminModel):
-    list_display = ('name', "topic", "get_course")
+    list_display = ('name', "topic", 'get_course', 'is_deleted')
     search_fields = ['name']
     inlines = [QuestionInline]
 
@@ -96,32 +143,36 @@ class SubTopicAdmin(BaseAdminModel):
 
 @admin.register(Question)
 class QuestionAdmin(BaseAdminModel):
-    list_display = ('question', 'course', 'topic', 'sub_topic')
+    list_display = ('question', 'course', 'topic', 'sub_topic', 'is_deleted')
     search_fields = ['question']
 
     def get_readonly_fields(self, request, obj=None):
-        return ['id', 'course', 'topic'] if obj else []
+        fields = super().get_readonly_fields(request, obj)
+        if obj.is_deleted:
+            return fields
+        fields.extend(['course', 'topic'])
+        return fields
 
 
 @admin.register(QuestionAnswer)
 class QuestionAnswerAdmin(BaseAdminModel):
-    list_display = ('user_course_enrollment', 'question', 'answer')
+    list_display = ('user_course_enrollment', 'question', 'answer', 'is_deleted')
     search_fields = ['question']
 
 
 @admin.register(Assignment)
 class AssignmentAdmin(BaseAdminModel):
-    list_display = ('title', 'course', 'created_by')
+    list_display = ('title', 'course', 'created_by', 'is_deleted')
 
 
 @admin.register(UserCourseEnrollment)
 class UserCourseEnrollmentAdmin(BaseAdminModel):
-    list_display = ('user', 'course', 'status', 'enrolled_by')
+    list_display = ('user', 'course', 'status', 'enrolled_by', 'is_deleted')
 
 
 @admin.register(UserAssignment)
 class UserAssignmentAdmin(BaseAdminModel):
-    list_display = ('assignment', 'user_course_enrollment', 'deadline', 'is_submitted')
+    list_display = ('assignment', 'user_course_enrollment', 'deadline', 'is_submitted', 'is_deleted')
 
     def is_submitted(self, obj) -> bool:
         return UserAssignmentSubmission.objects.filter(user_assignment=obj).exists()
@@ -132,7 +183,7 @@ class UserAssignmentAdmin(BaseAdminModel):
 
 @admin.register(UserAssignmentSubmission)
 class UserAssignmentSubmissionAdmin(BaseAdminModel):
-    list_display = ('user_assignment', 'submitted_at')
+    list_display = ('user_assignment', 'submitted_at', 'is_deleted')
 
     def submitted_at(self, obj):
         return obj.created_at
@@ -142,15 +193,19 @@ class UserAssignmentSubmissionAdmin(BaseAdminModel):
 
 @admin.register(GptReview)
 class GptReviewAdmin(BaseAdminModel):
-    list_display = ('question_answer', 'remarks', 'score')
+    list_display = ('question_answer', 'remarks', 'score', 'is_deleted')
 
 
 @admin.register(ManagerFeedback)
 class ManagerFeedbackAdmin(BaseAdminModel):
-    list_display = ('gpt_review', 'remarks', 'score')
+    list_display = ('gpt_review', 'remarks', 'score', 'is_deleted')
 
     def get_readonly_fields(self, request, obj=None):
-        return ['id', 'gpt_review_remarks', 'gpt_review_score'] if obj else []
+        fields = super().get_readonly_fields(request, obj)
+        if obj.is_deleted:
+            return fields
+        fields.extend(['gpt_review_remarks', 'gpt_review_score'])
+        return fields
 
     def gpt_review_remarks(self, obj):
         return obj.gpt_review.remarks if obj.gpt_review else "No GPT Review"
