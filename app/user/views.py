@@ -7,7 +7,7 @@ from app.utils import utils
 from app.user.user import User
 from django.utils import timezone
 from app.services.email_service import send_otp_mail
-from app.shared.authentication import AdminAuthentication
+from app.shared.authentication import AdminAuthentication, UserAuthentication
 from app.shared.pagination import paginate
 from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
@@ -123,3 +123,16 @@ def resend_otp(request):
             result = {"message": "Please check you email."}
             return response_builder.get_201_success_response("Email sent.", result)
         return response_builder.get_200_fail_response(api.OTP_ALREADY_SENT)
+
+
+@swagger_auto_schema(tags=['user'], method='get', responses={200: UserSerializer})
+@api_view(["GET"])
+@authentication_classes([UserAuthentication])
+def get_user_info(request):
+    """
+    Get user information
+    """
+    response_builder = ResponseBuilder()
+    user = request.user
+    serializer = UserSerializer(user)
+    return response_builder.get_200_success_response("User data fetched", serializer.data)
