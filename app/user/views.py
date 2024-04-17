@@ -7,7 +7,7 @@ from app.utils import utils
 from app.user.user import User
 from django.utils import timezone
 from app.services.email_service import send_otp_mail
-from app.shared.authentication import AdminAuthentication
+from app.shared.authentication import AdminAuthentication, UserAuthentication
 from app.shared.pagination import paginate
 from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
@@ -66,7 +66,9 @@ def login_user(request):
     status, auth_token = User.login(email, password)
     if utils.is_status_failed(status):
         return response_builder.get_200_fail_response(status)
-    result = {"access_token": auth_token}
+    user = User.get_user_by_email(email=email)
+    user_serializer = UserSerializer(user)
+    result = {"access_token": auth_token, "user": user_serializer.data}
     return response_builder.get_200_success_response("User logged in successfully", result)
 
 
@@ -92,9 +94,7 @@ def check_otp(request):
     user.otp = None
     user.is_verified = True
     user.save()
-    serializer = UserSerializer(user)
-    result = {"user": serializer.data}
-    return response_builder.get_201_success_response("User successfully verified", result)
+    return response_builder.get_201_success_response("User successfully verified")
 
 
 @swagger_auto_schema(tags=['user-auth'], method='post', request_body=ResendOTPSerializer, responses={201: UserResponse.response()})
@@ -123,3 +123,16 @@ def resend_otp(request):
             result = {"message": "Please check you email."}
             return response_builder.get_201_success_response("Email sent.", result)
         return response_builder.get_200_fail_response(api.OTP_ALREADY_SENT)
+
+
+@swagger_auto_schema(tags=['user'], method='get', responses={200: UserSerializer})
+@api_view(["GET"])
+@authentication_classes([UserAuthentication])
+def get_user_info(request):
+    """
+    Get user information
+    """
+    response_builder = ResponseBuilder()
+    user = request.user
+    serializer = UserSerializer(user)
+    return response_builder.get_200_success_response("User data fetched", serializer.data)
