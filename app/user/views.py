@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, authentication_classes, parser_classes
 from app.api.response_builder import ResponseBuilder
-from app.user.serializers import ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer
+from app.user.serializers import ForgotPasswordSerializer, ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer
 from app.api import api
 from app.user.swagger import UserResponse
 from app.utils import utils
@@ -87,10 +87,10 @@ def check_otp(request):
         return response_builder.get_400_bad_request_response(api.USER_NOT_FOUND, "User is not registered")
     otp = otp_serializer.validated_data["otp"]
     if user.otp != otp:
-        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
+        return response_builder.get_400_bad_request_response(api.OTP_VERIFICATION_FAILED, "Invalid OTP")
     otp_expired = User.check_otp_expired(user.email)
     if otp_expired:
-        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, "Invalid OTP")
+        return response_builder.get_400_bad_request_response(api.OTP_VERIFICATION_FAILED, "OTP Expired")
     user.otp = None
     user.is_verified = True
     user.save()
@@ -136,3 +136,50 @@ def get_user_info(request):
     user = request.user
     serializer = UserSerializer(user)
     return response_builder.get_200_success_response("User data fetched", serializer.data)
+
+
+@swagger_auto_schema(tags=['user-auth'], method='post', request_body=ForgotPasswordSerializer, responses={201: UserResponse.response()})
+@api_view(["POST"])
+def forgot_password(request):
+    """
+    Forgot password
+    """
+    response_builder = ResponseBuilder()
+    serializer = ForgotPasswordSerializer(data=request.data)
+    if not serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+    user = User.get_user_by_email(serializer.validated_data["email"])
+    if not user:
+        return response_builder.get_400_bad_request_response(api.USER_NOT_FOUND, "User is not registered")
+    otp = serializer.validated_data["otp"]
+    if user.otp != otp:
+        return response_builder.get_400_bad_request_response(api.OTP_VERIFICATION_FAILED, "Invalid OTP")
+    otp_expired = User.check_otp_expired(user.email)
+    if otp_expired:
+        return response_builder.get_400_bad_request_response(api.OTP_VERIFICATION_FAILED, "OTP Expired")
+    user_serializer = UserSerializer(user, data={'password': serializer.validated_data['password']}, partial=True)
+    if not user_serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user_serializer.errors)
+    user_serializer.save()
+    User.reset_otp(user)
+    return response_builder.get_201_success_response('Password updated sucessfully', {})
+
+
+@swagger_auto_schema(tags=['user-auth'], method='post', request_body=ResendOTPSerializer, responses={201: UserResponse.response()})
+@api_view(["POST"])
+def send_otp_forgot_password(request):
+    """
+    Send otp forgot password
+    """
+    response_builder = ResponseBuilder()
+    otp_serializer = ResendOTPSerializer(data=request.data)
+    if not otp_serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, otp_serializer.errors)
+    user = User.get_user_by_email(otp_serializer.validated_data["email"])
+    if not user:
+        return response_builder.get_400_bad_request_response(api.USER_NOT_FOUND, "User is not registered")
+    if not user.is_verified:
+        return response_builder.get_200_fail_response(api.USER_NOT_VERIFIED)
+    send_otp_mail(user)
+    result = {"message": "Please check you email."}
+    return response_builder.get_201_success_response("Email Sent.", result)
