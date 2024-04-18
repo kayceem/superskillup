@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from app.app_admin.serializers import AdminSerializer
+from app.user.serializers import UserSerializer
 from app.models import UserCourseEnrollment
 from rest_framework.exceptions import ValidationError
 from app.course.serializers import CourseSerializer
@@ -8,6 +10,11 @@ from app.question.serializer import QuestionSerilizer
 
 
 class UserCourseEnrollmentSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['course'] = CourseSerializer(instance.course).data
+        representation['enrolled_by'] = AdminSerializer(instance.enrolled_by).data
+        return representation
 
     class Meta:
         model = UserCourseEnrollment
