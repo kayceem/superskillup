@@ -28,6 +28,8 @@ urlpatterns = [
     path("v1/user/register/", user_views.register_user, name='register-user'),
     path("v1/user/verify-otp/", user_views.check_otp, name='check-otp'),
     path("v1/user/resend-otp/", user_views.resend_otp, name='resend-otp'),
+    path("v1/user/forgot-password/", user_views.forgot_password, name='forgot-password'),
+    path("v1/user/otp/", user_views.send_otp_forgot_password, name='otp'),
     path("v1/user/", user_views.get_user_info, name='get-user'),
     # courses
     path("v1/admin/course/create/", course_views.create_course, name='create-course'),

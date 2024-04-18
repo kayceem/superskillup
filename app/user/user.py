@@ -26,6 +26,13 @@ class User:
     def get_all_users():
         return UserAccessor.get_all_users()
 
+    @staticmethod
+    def reset_otp(user):
+        if not user:
+            return
+        user.otp = None
+        user.save()
+
     def generate_auth_token(self):
         refresh = RefreshToken.for_user(self.user)
         return str(refresh.access_token)
