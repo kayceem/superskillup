@@ -1,4 +1,5 @@
 from django.urls import path
+from app.app_admin import views as admin_views
 from app.user import views as user_views
 from app.course import views as course_views
 from app.topic import views as topic_views
@@ -21,8 +22,9 @@ from app.tag import views as tag_views
 
 urlpatterns = [
     # login
-    path("v1/login/", user_views.login, name='login'),
+    path("v1/admin/login/", admin_views.login_admin, name='admin-login'),
     path("v1/admin/user/", user_views.get_all_users, name='get-all-users'),
+    path("v1/user/login/", user_views.login_user, name='login-user'),
     path("v1/user/register/", user_views.register_user, name='register-user'),
     path("v1/user/verify-otp/", user_views.check_otp, name='check-otp'),
     path("v1/user/resend-otp/", user_views.resend_otp, name='resend-otp'),
