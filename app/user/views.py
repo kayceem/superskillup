@@ -111,17 +111,9 @@ def resend_otp(request):
         return response_builder.get_400_bad_request_response(api.USER_NOT_FOUND, "User is not registered")
     if user.is_verified:
         return response_builder.get_200_fail_response(api.USER_VERIFIED)
-    otp_expired = User.check_otp_expired(user.email)
-    if user.otp is None:
-        send_otp_mail(user)
-        result = {"message": "Please check you email."}
-        return response_builder.get_201_success_response("Email Sent.", result)
-    else:
-        if otp_expired:
-            send_otp_mail(user)
-            result = {"message": "Please check you email."}
-            return response_builder.get_201_success_response("Email sent.", result)
-        return response_builder.get_200_fail_response(api.OTP_ALREADY_SENT)
+    send_otp_mail(user)
+    result = {"message": "Please check you email."}
+    return response_builder.get_201_success_response("Email Sent.", result)
 
 
 @swagger_auto_schema(tags=['user'], method='get', responses={200: UserSerializer})
