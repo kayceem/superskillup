@@ -2,6 +2,7 @@ from rest_framework import serializers
 from app.models import UserProfile
 from app.utils.hashing import hash_raw_password
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,9 +17,19 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
-class UserLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=False)
+    username = serializers.CharField(required=False)
     password = serializers.CharField()
+
+    def validate(self, attrs):
+        email = attrs.get('email', None)
+        username = attrs.get('username', None)
+        if not email and not username:
+            raise ValidationError('email or username must be provided.')
+        if email and username:
+            raise ValidationError('Either email or username should be provided.')
+        return super().validate(attrs)
 
 
 class OTPSerializer(serializers.Serializer):
