@@ -1,8 +1,11 @@
+from rest_framework.decorators import api_view
+from app.app_admin.app_admin import Admin
+from app.app_admin.serializers import AdminSerializer
 from rest_framework.decorators import api_view, authentication_classes, parser_classes
 from app.api.response_builder import ResponseBuilder
-from app.user.serializers import ForgotPasswordSerializer, ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer
+from app.user.serializers import ForgotPasswordSerializer, ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer, LoginSerializer
 from app.api import api
-from app.user.swagger import UserResponse
+from app.user.swagger import LoginResponse, UserResponse
 from app.utils import utils
 from app.user.user import User
 from app.services.email_service import send_otp_mail
@@ -48,7 +51,7 @@ def register_user(request):
     return response_builder.get_201_success_response("User registered successfully", result)
 
 
-@swagger_auto_schema(tags=['user-auth'], method='post', request_body=UserLoginSerializer, responses={200: UserResponse.response(message=False)})
+@swagger_auto_schema(tags=['user-auth'], method='post', request_body=UserLoginSerializer, responses={200: LoginResponse.response()})
 @api_view(['POST'])
 def login_user(request):
     """
@@ -196,3 +199,37 @@ def check_otp_forgot_password(request):
     if otp_expired:
         return response_builder.get_400_bad_request_response(api.OTP_VERIFICATION_FAILED, "OTP Expired")
     return response_builder.get_200_success_response("OTP verified")
+
+
+@swagger_auto_schema(tags=['auth'], method='post', request_body=LoginSerializer, responses={200: LoginResponse.response()})
+@api_view(['POST'])
+def login(request):
+    """
+    Login admin or user and generate auth token
+    """
+
+    response_builder = ResponseBuilder()
+    serializer = LoginSerializer(data=request.data)
+    if not serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+    username = serializer.validated_data.get('username', None)
+    email = serializer.validated_data.get('email', None)
+    password = serializer.validated_data.get('password')
+    if email:
+        status, auth_token = User.login(email, password)
+        role = "user"
+        info = User.get_user_by_email(email=email)
+        info_serializer = UserSerializer(info)
+    else:
+        status, auth_token = Admin.login(username, password)
+        role = "admin"
+        info = Admin.get_admin_by_username(username=username)
+        info_serializer = AdminSerializer(info)
+    if utils.is_status_failed(status):
+        return response_builder.get_200_fail_response(status)
+    result = {
+        "access_token": auth_token,
+        "role": role,
+        "info": info_serializer.data
+    }
+    return response_builder.get_200_success_response("Log in successfully", result)
