@@ -2,6 +2,8 @@ import uuid
 from app.api.api import SUCCESS
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 
 def get_char_uuid(length: int = None) -> str:
@@ -22,6 +24,14 @@ def is_status_failed(status: int) -> bool:
 
 def is_user_admin(user) -> bool:
     return isinstance(user, User)
+
+
+def is_email(text):
+    try:
+        validate_email(text)
+        return True
+    except ValidationError as e:
+        return False
 
 
 def generate_filename(filename):

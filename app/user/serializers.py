@@ -39,7 +39,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
-    username = serializers.CharField(required=False)
+    username = serializers.CharField()
     password = serializers.CharField()
 
     def validate(self, attrs):
