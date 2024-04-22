@@ -212,13 +212,12 @@ def login(request):
     serializer = LoginSerializer(data=request.data)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
-    username = serializer.validated_data.get('username', None)
-    email = serializer.validated_data.get('email', None)
+    username = serializer.validated_data.get('username')
     password = serializer.validated_data.get('password')
-    if email:
-        status, auth_token = User.login(email, password)
+    if utils.is_email(username):
+        status, auth_token = User.login(username, password)
         role = "user"
-        info = User.get_user_by_email(email=email)
+        info = User.get_user_by_email(email=username)
         info_serializer = UserSerializer(info)
     else:
         status, auth_token = Admin.login(username, password)
