@@ -141,3 +141,21 @@ def get_enrolled_questions(request, id, sub_topic_id):
         return response_builder.get_404_not_found_response(api.USER_ENROLLED_QUESTION_NOT_FOUND)
     serializer = QuestionSerilizer(questions, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
+
+
+@swagger_auto_schema(tags=['user-enrollment'], method='get')
+@api_view(["GET"])
+@authentication_classes([UserAuthentication])
+def get_enrolled_course_completion(request, id):
+    """
+    Get course completion
+    """
+    user = request.user
+    response_builder = ResponseBuilder()
+    enrollment = UserCourseEnrollment.get_enrollment_by_id(id)
+    if not enrollment:
+        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    if user != enrollment.user:
+        return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
+    completion = UserCourseEnrollment.get_course_completion(enrollment)
+    return response_builder.get_200_success_response("Data Fetched", completion)

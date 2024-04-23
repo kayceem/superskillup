@@ -232,6 +232,7 @@ class UserAssignmentSubmission(BaseModel):
     user_assignment = models.OneToOneField(UserAssignment, on_delete=models.CASCADE, related_name='submissions')
     url = models.URLField(null=True, blank=True)
     file = models.FileField(upload_to=assignment_submission_file_path, max_length=255, blank=True, null=True, validators=[validators.get_document_extension_validator()])
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.user_assignment}'
@@ -287,3 +288,11 @@ class ManagerFeedback(BaseModel):
 
     def __str__(self):
         return f'{self.gpt_review}'
+
+
+class UserVideoWatched(BaseModel):
+    user_course_enrollment = models.ForeignKey(UserCourseEnrollment, on_delete=models.CASCADE, related_name='videos_watched')
+    sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, related_name='videos_watched')
+
+    class Meta:
+        unique_together = ['user_course_enrollment', 'sub_topic']

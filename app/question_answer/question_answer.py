@@ -1,5 +1,4 @@
 from app.question_answer.accessor import QuestionAnswerAccessor
-from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 
 
 class QuestionAnswer:
@@ -11,3 +10,7 @@ class QuestionAnswer:
     @staticmethod
     def get_answer_by_question(user_id, question_id):
         return QuestionAnswerAccessor.get_answer_by_question(user_id, question_id)
+
+    @staticmethod
+    def get_answered_questions_by_course(user_id, course_id):
+        return QuestionAnswerAccessor.get_answered_questions_by_course(user_id, course_id)

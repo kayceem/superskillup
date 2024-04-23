@@ -18,6 +18,7 @@ from app.user_assignment import admin_views as admin_user_assignment_views
 from app.user_assignment_submission import admin_views as admin_user_assignment_submission_views
 from app.user_assignment_submission import user_views as user_assignment_submission_views
 from app.tag import views as tag_views
+from app.user_video_watched import views as user_video_views
 
 urlpatterns = [
     # login
@@ -76,6 +77,7 @@ urlpatterns = [
     path("v1/user/enrollment/course/", user_enrollment_views.get_enrolled_courses, name="user-get-enrolled-courses"),
     path("v1/user/enrollment/<str:id>/", user_enrollment_views.get_enrollment_by_id, name="user-get-enrollment-by-id"),
     path("v1/user/enrollment/<str:id>/topic/", user_enrollment_views.get_enrolled_topics, name="user-get-enrolled-topics"),
+    path("v1/user/enrollment/<str:id>/completion/", user_enrollment_views.get_enrolled_course_completion, name="user-get-enrolled-course-completion"),
     path("v1/user/enrollment/<str:id>/topic/<str:topic_id>/sub-topic/", user_enrollment_views.get_enrolled_sub_topics, name="user-get-enrolled-sub-topics"),
     path("v1/user/enrollment/<str:id>/sub-topic/<str:sub_topic_id>/question/", user_enrollment_views.get_enrolled_questions, name="user-get-enrolled-questions"),
     # user-assignments for admin
@@ -104,6 +106,8 @@ urlpatterns = [
     path("v1/user/answer/update/<str:id>/", user_answer_views.update_answer, name="user-update-answer"),
     path("v1/user/answer/<str:id>/", user_answer_views.get_answer_by_id, name="user-get-answer-by-id"),
     path("v1/user/answer/question/<str:question_id>/", user_answer_views.get_answer_by_question, name="user-get-answer-by-question"),
+    # user-video
+    path("v1/user/video/create/", user_video_views.add_user_video, name="user-add-video"),
     # admin answer
     path("v1/admin/answer/question/<str:question_id>/user/<str:user_id>/", admin_answer_views.get_answer_by_question, name="get-answer-by-question"),
     path("v1/admin/answer/<str:id>/", admin_answer_views.get_answer_by_id, name="admin-get-answer-by-id"),
