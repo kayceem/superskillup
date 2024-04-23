@@ -288,3 +288,11 @@ class ManagerFeedback(BaseModel):
 
     def __str__(self):
         return f'{self.gpt_review}'
+
+
+class UserVideoWatched(BaseModel):
+    user_course_enrollment = models.ForeignKey(UserCourseEnrollment, on_delete=models.CASCADE, related_name='videos_watched')
+    sub_topic = models.ForeignKey(SubTopic, on_delete=models.CASCADE, related_name='videos_watched')
+
+    class Meta:
+        unique_together = ['user_course_enrollment', 'sub_topic']

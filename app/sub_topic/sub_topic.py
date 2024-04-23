@@ -11,6 +11,14 @@ class SubTopic:
         return SubTopicAccessor.get_sub_topic_by_id(id=sub_topic_id)
 
     @staticmethod
+    def get_total_videos(course_id):
+        return SubTopicAccessor.get_total_videos(course_id)
+
+    @staticmethod
+    def video_exists(id):
+        return SubTopicAccessor.video_exists(id)
+
+    @staticmethod
     def get_sub_topics_by_topic(topic_id):
         return SubTopicAccessor.get_sub_topics_by_topic(topic_id=topic_id)
 

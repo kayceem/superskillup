@@ -28,15 +28,3 @@ class UserCourseEnrollmentAcessor:
     @staticmethod
     def get_user_enrollments(user_id) -> list[UserCourseEnrollment] | None:
         return UserCourseEnrollment.objects.filter(user_id=user_id).all()
-
-    # @staticmethod
-    # def get_user_assigned_topics(id) -> UserCourseEnrollment | None:
-    #     return UserCourseEnrollment.objects.filter(id=id).first().course.topics.all()
-
-    # @staticmethod
-    # def get_user_assigned_sub_topics(user_id, topic_id) -> UserCourseEnrollment | None:
-    #     return UserCourseEnrollment.objects.filter(user_id=user_id, topic_id=topic_id).first().course..all()
-
-    # @staticmethod
-    # def get_user_assigned_questions(user) -> UserCourseEnrollment | None:
-    #     return UserCourseEnrollment.objects.filter(user_id=user).all().values('question')

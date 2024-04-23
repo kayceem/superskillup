@@ -1,10 +1,12 @@
 from app.app_admin.app_admin import Admin
 from app.course.course import Course
 from app.question.question import Question
+from app.question_answer.question_answer import QuestionAnswer
 from app.sub_topic.sub_topic import SubTopic
 from app.topic.topic import Topic
 from app.user.user import User
 from app.user_course_enrollment.accessor import UserCourseEnrollmentAcessor
+from app.user_video_watched.user_video_watched import UserVideo
 
 
 class UserCourseEnrollment:
@@ -16,6 +18,23 @@ class UserCourseEnrollment:
     @staticmethod
     def get_enrollment_by_id(id):
         return UserCourseEnrollmentAcessor.get_enrollment_by_id(id)
+
+    @staticmethod
+    def get_course_completion(enrollment):
+        total_questions = Question.get_total_questions(enrollment.course.id)
+        answered_questions = QuestionAnswer.get_answered_questions_by_course(enrollment.user.id, enrollment.course.id)
+        total_videos = SubTopic.get_total_videos(enrollment.course.id)
+        watched_videos = UserVideo.get_watched_videos(enrollment.id)
+        return {
+            'questions': {
+                'total': total_questions,
+                'answered': answered_questions
+            },
+            'videos': {
+                'total': total_videos,
+                'watched': watched_videos
+            }
+        }
 
     @staticmethod
     def get_user_enrollments(user_id):
