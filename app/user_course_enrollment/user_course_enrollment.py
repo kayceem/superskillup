@@ -104,5 +104,5 @@ class UserCourseEnrollment:
 
     @classmethod
     def get_search_results_user(cls, user, **kwargs):
-        courses = cls.get_user_assigned_courses(user.id)
+        courses = cls.get_user_enrolled_courses(user.id)
         return cls.get_search_data(courses=courses, **kwargs)
