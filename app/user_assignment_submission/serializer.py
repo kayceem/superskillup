@@ -6,5 +6,5 @@ class UserAssignmentSubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAssignmentSubmission
-        fields = ["id", "user_assignment", "file", "url",]
+        fields = ["id", "user_assignment", "file", "url", 'description']
         extra_kwargs = {'id': {'read_only': True}}
