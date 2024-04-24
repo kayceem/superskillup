@@ -7,6 +7,7 @@ from app.course.serializers import CourseSerializer
 from app.topic.serializers import TopicSerializer
 from app.sub_topic.serializers import SubTopicSerializer
 from app.question.serializer import QuestionSerilizer
+from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment as EnrollmentService
 
 
 class UserCourseEnrollmentSerializer(serializers.ModelSerializer):
@@ -14,6 +15,7 @@ class UserCourseEnrollmentSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['course'] = CourseSerializer(instance.course).data
         representation['enrolled_by'] = AdminSerializer(instance.enrolled_by).data
+        representation['percentage'] = EnrollmentService.get_course_completion_percentage(instance)
         return representation
 
     class Meta:
