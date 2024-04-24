@@ -9,6 +9,10 @@ class QuestionAccessor:
         return Question.objects.filter(id=id).first()
 
     @staticmethod
+    def get_total_questions(course_id):
+        return Question.objects.filter(course=course_id).count()
+
+    @staticmethod
     def get_questions_by_course(course_id):
         return Question.objects.filter(course=course_id).all()
 
