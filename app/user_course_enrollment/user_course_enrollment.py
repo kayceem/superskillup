@@ -25,7 +25,9 @@ class UserCourseEnrollment:
         answered_questions = QuestionAnswer.get_answered_questions_by_course(enrollment.user.id, enrollment.course.id)
         total_videos = SubTopic.get_total_videos(enrollment.course.id)
         watched_videos = UserVideo.get_watched_videos(enrollment.id)
+        completed_percentage = UserCourseEnrollment.calculate_completion_percentage(total_questions, answered_questions, total_videos, watched_videos)
         return {
+            'percentage': completed_percentage,
             'questions': {
                 'total': total_questions,
                 'answered': answered_questions
@@ -35,6 +37,20 @@ class UserCourseEnrollment:
                 'watched': watched_videos
             }
         }
+
+    @staticmethod
+    def calculate_completion_percentage(total_questions, answered_questions, total_videos, watched_videos):
+        question_percentage = (answered_questions / total_questions) * 100
+        video_percenatge = (watched_videos / total_videos) * 100
+        return (question_percentage + video_percenatge) / 2
+
+    @staticmethod
+    def get_course_completion_percentage(enrollment):
+        total_questions = Question.get_total_questions(enrollment.course.id)
+        answered_questions = QuestionAnswer.get_answered_questions_by_course(enrollment.user.id, enrollment.course.id)
+        total_videos = SubTopic.get_total_videos(enrollment.course.id)
+        watched_videos = UserVideo.get_watched_videos(enrollment.id)
+        return UserCourseEnrollment.calculate_completion_percentage(total_questions, answered_questions, total_videos, watched_videos)
 
     @staticmethod
     def get_user_enrollments(user_id):
