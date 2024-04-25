@@ -50,7 +50,14 @@ def create_sub_topic(request):
     Create a SubTopic.
     """
 
+    import timeit
     response_builder = ResponseBuilder()
+    video = request.data.get('video', None)
+    if video:
+        video_length = SubTopic.get_video_length(video)
+        time_taken = timeit.timeit(lambda: SubTopic.get_video_length(video), number=1)
+        print("Time taken:", time_taken, "seconds")
+        request.data['video_length'] = video_length
     serializer = SubTopicSerializer(data=request.data)
     if not serializer.is_valid():
         return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
