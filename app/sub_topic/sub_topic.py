@@ -1,4 +1,6 @@
 from app.sub_topic.accessor import SubTopicAccessor
+import os
+from moviepy.editor import VideoFileClip
 
 
 class SubTopic:
@@ -29,3 +31,13 @@ class SubTopic:
     @staticmethod
     def delete_sub_topic(sub_topic):
         return sub_topic.delete()
+
+    @staticmethod
+    def get_video_length(video):
+        try:
+            video_path = video.temporary_file_path()
+            if os.path.exists(video_path):
+                clip = VideoFileClip(video_path)
+                return int(clip.duration)
+        except:
+            return None

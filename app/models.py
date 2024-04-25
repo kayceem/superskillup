@@ -178,6 +178,7 @@ class SubTopic(BaseModel):
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
     video = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True, validators=[validators.get_video_extension_validator()])
+    video_length = models.IntegerField(blank=True, null=True)
     file = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True, validators=[validators.get_document_extension_validator()])
 
     def __str__(self):
