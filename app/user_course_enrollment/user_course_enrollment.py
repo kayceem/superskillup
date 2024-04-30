@@ -40,8 +40,15 @@ class UserCourseEnrollment:
 
     @staticmethod
     def calculate_completion_percentage(total_questions, answered_questions, total_videos, watched_videos):
-        question_percentage = (answered_questions / total_questions) * 100
-        video_percenatge = (watched_videos / total_videos) * 100
+        if total_questions == 0:
+            question_percentage = 0
+        else:
+            question_percentage = (answered_questions / total_questions) * 100
+
+        if total_videos == 0:
+            video_percenatge = 0
+        else:
+            video_percenatge = (watched_videos / total_videos) * 100
         return (question_percentage + video_percenatge) / 2
 
     @staticmethod

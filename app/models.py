@@ -181,6 +181,12 @@ class SubTopic(BaseModel):
     video_length = models.IntegerField(blank=True, null=True)
     file = models.FileField(upload_to=sub_topic_file_path, max_length=255, blank=True, null=True, validators=[validators.get_document_extension_validator()])
 
+    def clean(self):
+        filled_fields = sum(1 for field in ['url', 'video', 'file'] if getattr(self, field))
+        if filled_fields > 1:
+            raise ValidationError("Only one of 'url', 'video', or 'file' should be filled.")
+        super().clean()
+
     def __str__(self):
         return f'{self.name}'
 
