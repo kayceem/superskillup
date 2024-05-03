@@ -107,7 +107,7 @@ class CourseAdmin(BaseAdminModel):
             if not request.user.is_superuser:
                 qs = qs.filter(id=request.user.id)
             kwargs["queryset"] = qs
-            return super().formfield_for_foreignkey(db_field, request, **kwargs)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_topics(self, obj):
         return "\n".join([topic.name for topic in obj.topics.all()])
@@ -206,6 +206,14 @@ class AssignmentAdmin(BaseAdminModel):
 @admin.register(UserCourseEnrollment)
 class UserCourseEnrollmentAdmin(BaseAdminModel):
     list_display = ('user', 'course', 'status', 'enrolled_by', 'is_deleted')
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "enrolled_by":
+            qs = User.objects.get_queryset()
+            if not request.user.is_superuser:
+                qs = qs.filter(id=request.user.id)
+            kwargs["queryset"] = qs
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(UserAssignment)
