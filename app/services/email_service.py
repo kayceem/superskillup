@@ -41,10 +41,11 @@ def send_course_enrolled_mail(enrollment):
         log.error(f"Failed sending course enrolled mail to: {enrollment.user.email} - {str(e)}")
 
 
-def send_assignment_submitted_mail(user_assignment):
+def send_assignment_submitted_mail(user_assignment, user_assignment_submission):
     try:
         log.info(f"Sending assignment submitted mail to: {user_assignment.user_course_enrollment.enrolled_by.email}")
-        body = render_to_string("assignment_submitted.html", context={"user": user_assignment.user_course_enrollment.user.name, "admin": user_assignment.user_course_enrollment.enrolled_by.username, "assignment": user_assignment.assignment.title})
+        context = {"user": user_assignment.user_course_enrollment.user.name, "admin": user_assignment.user_course_enrollment.enrolled_by.username, "assignment": user_assignment.assignment.title, "course": user_assignment.assignment.course.name, "description": user_assignment_submission.get('description', None), "url": user_assignment_submission.get('url', None), "file": user_assignment_submission.get('file', None)}
+        body = render_to_string("assignment_submitted.html", context=context)
         subject = f"Assignment Submission - {user_assignment.assignment.title}"
         send_email(subject, body, [user_assignment.user_course_enrollment.enrolled_by.email])
     except Exception as e:
