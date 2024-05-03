@@ -148,42 +148,45 @@
                             border-radius: 16px 16px 0px 0px;
                             ">
                             <h1 style="
-                                margin: 0;
-                                font-size: 32px;
-                                font-weight: 700;
-                                letter-spacing: -1px;
-                                line-height: 48px;
-                                color: #5d5fef;
+                            margin: 0;
+                            font-size: 32px;
+                            font-weight: 700;
+                            letter-spacing: -1px;
+                            line-height: 48px;
+                            color: #5d5fef;
                             ">
-                                Welcome to Super Skill Up!
-                            </h1>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-        <tr>
-            <td align="center" bgcolor="#e9ecef">
-
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
-                    <tr>
-                        <td align="left" bgcolor="#ffffff" style="
-                  padding: 24px;
-                  font-family: 'Roboto', sans-serif;
-                  font-size: 16px;
-                  line-height: 24px;
-                ">
-                            {% comment %} <p style="margin: 0" , align="center">
-                                Hi {{name}}, A new account for
-                                <a href="https://www.ramailotech.com" style="color: #1FC4F4">www.esg.idea2mvp.in</a>,
-                                has been
-                                created for you.
-                            </p> {% endcomment %}
+                            Super Skill Up
+                        </h1>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    
+    <tr>
+        <td align="center" bgcolor="#e9ecef">
+            
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+                <tr>
+                    <td align="left" bgcolor="#ffffff" style="
+                    padding: 24px;
+                    font-family: 'Roboto', sans-serif;
+                    border-radius: 0px 0px 16px 16px;
+                    font-size: 16px;
+                    line-height: 24px;
+                    ">
                             <p style = "font-size: 30px; margin-top: 20px;">
-                                <p>Hi,{{admin}}</p>
-                                <p>{{user}} has submitted assignment for {{assignment}}.</p>
-                                <p>Please check your dashboard for details.</p>
+                                <span>Hi,{{admin}}</span>
+                                <p><b>{{user}}</b> has submitted assignment <b>{{assignment}}</b> of <b>{{course}}</b>.</p>
+                                {% if description %}
+                                <p><b>Description:</b> {{ description }}</p>
+                                {% endif %}
+                                {% if file %}
+                                <p><b>File:</b> <a href="{{ file }}">{{user}}-Assignment</a></p>
+                                {% endif %}
+                                {% if url %}
+                                <p><b>Url:</b> <a href="{{ url }}">{{ url }}</a></p>
+                                {% endif %}
                             </p>
                         </td>
                     </tr>
