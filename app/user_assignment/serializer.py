@@ -2,6 +2,7 @@ from rest_framework import serializers
 from app.assignment.serializers import AssignmentSerializer
 from app.models import UserAssignment
 from django.core.exceptions import ValidationError
+from app.user_assignment_submission.user_assignment_submission import UserAssignmentSubmission
 
 
 class AdminUserAssignmentSerializer(serializers.ModelSerializer):
@@ -21,3 +22,8 @@ class AdminUserAssignmentSerializer(serializers.ModelSerializer):
 
 class UserAssignmentSerializer(AdminUserAssignmentSerializer):
     assignment = AssignmentSerializer()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['submitted'] = True if UserAssignmentSubmission.get_user_assignment_submission_by_user_assignment(instance.id) else False
+        return representation

@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from app.models import UserProfile, QuestionAnswer, Assignment, UserAssignment, UserAssignmentSubmission, UserCourseEnrollment, Question, Course, Topic, SubTopic, GptReview, ManagerFeedback, Tag
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 class AssignmentInline(admin.TabularInline):
@@ -98,7 +99,15 @@ class TagAdmin(BaseAdminModel):
 class CourseAdmin(BaseAdminModel):
     list_display = ('name', 'category', 'get_tags', 'created_by', 'is_deleted')
     inlines = [TopicInline, AssignmentInline]
-    search_fields = ['name']
+    search_fields = ['name', 'created_by']
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "created_by":
+            qs = User.objects.get_queryset()
+            if not request.user.is_superuser:
+                qs = qs.filter(id=request.user.id)
+            kwargs["queryset"] = qs
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_topics(self, obj):
         return "\n".join([topic.name for topic in obj.topics.all()])
@@ -112,6 +121,8 @@ class CourseAdmin(BaseAdminModel):
             return fields
         if obj.is_deleted:
             return fields
+        if not request.user.is_superuser:
+            fields.append('created_by')
         fields.append('get_topics')
         return fields
 
@@ -172,6 +183,20 @@ class QuestionAnswerAdmin(BaseAdminModel):
     list_display = ('user_course_enrollment', 'question', 'answer', 'is_deleted')
     search_fields = ['question']
 
+    def get_readonly_fields(self, request, obj=None):
+        fields = super().get_readonly_fields(request, obj)
+        if fields == []:
+            return fields
+        fields = ([f.name for f in self.model._meta.fields])
+        fields.extend(['gpt_review_remarks', 'gpt_review_score'])
+        return fields
+
+    def gpt_review_remarks(self, obj):
+        return obj.gptreview.remarks if obj.is_reviewed_by_gpt else "No GPT Review"
+
+    def gpt_review_score(self, obj):
+        return obj.gptreview.score if obj.is_reviewed_by_gpt else "No GPT Review"
+
 
 @admin.register(Assignment)
 class AssignmentAdmin(BaseAdminModel):
@@ -181,6 +206,14 @@ class AssignmentAdmin(BaseAdminModel):
 @admin.register(UserCourseEnrollment)
 class UserCourseEnrollmentAdmin(BaseAdminModel):
     list_display = ('user', 'course', 'status', 'enrolled_by', 'is_deleted')
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "enrolled_by":
+            qs = User.objects.get_queryset()
+            if not request.user.is_superuser:
+                qs = qs.filter(id=request.user.id)
+            kwargs["queryset"] = qs
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(UserAssignment)
@@ -200,6 +233,13 @@ class UserAssignmentSubmissionAdmin(BaseAdminModel):
 
     def submitted_at(self, obj):
         return obj.created_at
+
+    def get_readonly_fields(self, request, obj=None):
+        fields = super().get_readonly_fields(request, obj)
+        if fields == []:
+            return fields
+        fields = ([f.name for f in self.model._meta.fields])
+        return fields
 
     submitted_at.short_description = "Submitted at"
 

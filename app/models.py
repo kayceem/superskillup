@@ -138,6 +138,10 @@ class Course(BaseModel):
     WEB_DESING = 'Web Design & User Experience'
     MANAGEMENT = 'Management'
     MARKETING = 'Marketing'
+    ARTIFICIAL_INTELLIGENCE = "Artificial Intelligence"
+    MACHINE_LEARNING = "Machine Learning"
+    TESTTING_AUTOMATION = "Testing & Automation"
+    OTHERS = "Others"
 
     CATEGORY_CHOICES = (
         (WEB_DEV, WEB_DEV),
@@ -147,7 +151,10 @@ class Course(BaseModel):
         (WEB_DESING, WEB_DESING),
         (MANAGEMENT, MANAGEMENT),
         (MARKETING, MARKETING),
-        (MANAGEMENT, MANAGEMENT),
+        (ARTIFICIAL_INTELLIGENCE, ARTIFICIAL_INTELLIGENCE),
+        (MACHINE_LEARNING, MACHINE_LEARNING),
+        (TESTTING_AUTOMATION, TESTTING_AUTOMATION),
+        (OTHERS, OTHERS),
     )
 
     name = models.CharField(max_length=255)

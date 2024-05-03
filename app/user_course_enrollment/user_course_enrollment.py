@@ -49,7 +49,7 @@ class UserCourseEnrollment:
             video_percenatge = 0
         else:
             video_percenatge = (watched_videos / total_videos) * 100
-        return (question_percentage + video_percenatge) / 2
+        return round((question_percentage + video_percenatge) / 2)
 
     @staticmethod
     def get_course_completion_percentage(enrollment):
