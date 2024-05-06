@@ -84,7 +84,7 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-created_at']
+        ordering = ['created_at']
 
 
 class UserProfile(BaseModel):
