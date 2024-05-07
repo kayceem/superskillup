@@ -21,5 +21,9 @@ class SubTopicAccessor:
         return SubTopic.objects.filter(topic__course_id=course_id).exclude(video='').count()
 
     @classmethod
+    def get_total_videos_topic(self, topic_id) -> int | None:
+        return SubTopic.objects.filter(topic=topic_id).exclude(video='').count()
+
+    @classmethod
     def video_exists(cls, id) -> bool | None:
         return SubTopic.objects.filter(id=id).exclude(video='').exists()
