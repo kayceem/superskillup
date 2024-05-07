@@ -19,7 +19,7 @@ def get_all_feedback(request):
         paginated_data, page_info = paginate(data, request)
         serializer = ManagerFeedbackSerializer(paginated_data, many=True)
         return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
-    return response_builder.get_404_not_found_response(api.MANAGER_FEEDBACK_NOT_FOUND)
+    return response_builder.get_200_fail_response(api.MANAGER_FEEDBACK_NOT_FOUND, result=[])
 
 
 @swagger_auto_schema(tags=['user-review', 'admin-review'], method='get', responses={200: ManagerFeedbackSerializer})

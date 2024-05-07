@@ -25,7 +25,7 @@ def get_all_users(request):
     response_builder = ResponseBuilder()
     users = User.get_all_users()
     if not users:
-        return response_builder.get_404_not_found_response(api.USER_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_NOT_FOUND, result=[])
     paginated_users, page_info = paginate(users, request)
     serializer = UserSerializer(paginated_users, many=True)
     return response_builder.get_200_success_response("Users found", serializer.data, page_info)

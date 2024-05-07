@@ -18,7 +18,7 @@ def get_all_user_assignments_by_user(request, user_id):
     response_builder = ResponseBuilder()
     user_assignments = UserAssignment.get_all_user_assignments_by_user(user_id)
     if not user_assignments:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ASSIGNMENT_NOT_FOUND, result=[])
     paginated_data, page_info = paginate(user_assignments, request)
     serializer = AdminUserAssignmentSerializer(paginated_data, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
@@ -34,7 +34,7 @@ def get_all_user_assignments_by_course(request, course_id):
     response_builder = ResponseBuilder()
     user_assignments = UserAssignment.get_all_user_assignments_by_course(course_id)
     if not user_assignments:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ASSIGNMENT_NOT_FOUND, result=[])
     paginated_data, page_info = paginate(user_assignments, request)
     serializer = AdminUserAssignmentSerializer(paginated_data, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
@@ -65,7 +65,7 @@ def get_user_assignments_by_enrollment(request, enrollment_id):
     response_builder = ResponseBuilder()
     user_assignments = UserAssignment.get_user_assignments_by_enrollment(enrollment_id)
     if not user_assignments:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ASSIGNMENT_NOT_FOUND, result=[])
     paginated_data, page_info = paginate(user_assignments, request)
     serializer = AdminUserAssignmentSerializer(paginated_data, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
@@ -81,7 +81,7 @@ def get_user_assignments_by_course(request, user_id, course_id):
     response_builder = ResponseBuilder()
     user_assignments = UserAssignment.get_user_assignments_by_course(user_id, course_id)
     if not user_assignments:
-        return response_builder.get_404_not_found_response(api.USER_ASSIGNMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ASSIGNMENT_NOT_FOUND, result=[])
     paginated_data, page_info = paginate(user_assignments, request)
     serializer = AdminUserAssignmentSerializer(paginated_data, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
