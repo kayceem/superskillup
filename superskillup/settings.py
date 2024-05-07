@@ -213,6 +213,10 @@ S3_ASSIGNMENT_SUBMISSIONS_FOLDER = "submissions"
 S3_USER_FOLDER = "users"
 
 # Logging
+LOG_DIR = 'logs'
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
 LOGGING = {
     # Define the logging version
     'version': 1,
@@ -235,11 +239,18 @@ LOGGING = {
 
     # Define the handlers
     'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'django.log'),
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 300,
+            'backupCount': 5
+        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            # 'filters': ['require_debug_true'],
-            'formatter': 'verbose'
+            'formatter': 'verbose',
         },
         # "mail_admins": {
         #     "level": "ERROR",
@@ -250,7 +261,7 @@ LOGGING = {
     # Define the loggers
     'loggers': {
         'app': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'DEBUG',
         },
     },
