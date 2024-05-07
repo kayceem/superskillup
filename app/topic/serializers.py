@@ -18,6 +18,6 @@ class UserTopicSerializer(TopicSerializer):
     def to_representation(self, instance):
         repesentation = super().to_representation(instance)
         repesentation['total'] = SubTopic.get_total_videos_topic(instance.id)
-        repesentation['completed'] = UserVideo.get_watched_videos(self.context['enrollment_id'])
+        repesentation['completed'] = UserVideo.get_watched_videos_topic(instance.id)
         repesentation['length'] = instance.sub_topics.aggregate(total_length=Sum('video_length'))['total_length'] or 0
         return repesentation
