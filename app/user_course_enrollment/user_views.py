@@ -3,7 +3,7 @@ from app.app_admin.serializers import AdminSerializer
 from app.course.serializers import CourseSerializer
 from app.question.serializer import QuestionSerilizer
 from app.sub_topic.serializers import SubTopicSerializer, UserSubTopicSerializer
-from app.topic.serializers import TopicSerializer
+from app.topic.serializers import TopicSerializer, UserTopicSerializer
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.shared.authentication import UserAuthentication
 from app.api.response_builder import ResponseBuilder
@@ -80,7 +80,7 @@ def get_managers_of_user(request):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
-@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: TopicSerializer(many=True)})
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: UserTopicSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_enrolled_topics(request, id):
@@ -97,7 +97,7 @@ def get_enrolled_topics(request, id):
     topics = UserCourseEnrollment.get_topics_by_enrolled_course(enrollment.course.id)
     if not topics:
         return response_builder.get_404_not_found_response(api.USER_ENROLLED_TOPIC_NOT_FOUND)
-    serializer = TopicSerializer(topics, many=True)
+    serializer = UserTopicSerializer(topics, many=True, context={'enrollment_id': enrollment.id})
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
