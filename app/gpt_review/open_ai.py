@@ -32,7 +32,8 @@ class OpenAI:
             response = requests.post(url, json=data, headers=cls.get_headers())
 
             if response.status_code != 200:
-                log.debug(f'OpenAI api did not send 200 status code: {response.status_code}')
+                log.error(f'OpenAI api did not send 200 status code: {response.status_code}')
+                log.error(f'OpenAI Response: {response.json().get("error", None)}')
                 return None
             data = response.json()
             data_string = data['choices'][0]['message']['content']
@@ -48,6 +49,7 @@ class OpenAI:
                 log.debug(f'OpenAI api sent invalid keys: {json_data.keys()}')
                 return None
 
+            log.info('OpenAI request success')
             return json_data
 
         except Exception as e:
