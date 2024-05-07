@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, authentication_classes
 from app.app_admin.serializers import AdminSerializer
 from app.course.serializers import CourseSerializer
 from app.question.serializer import QuestionSerilizer
-from app.sub_topic.serializers import SubTopicSerializer
+from app.sub_topic.serializers import SubTopicSerializer, UserSubTopicSerializer
 from app.topic.serializers import TopicSerializer
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.shared.authentication import UserAuthentication
@@ -101,7 +101,7 @@ def get_enrolled_topics(request, id):
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
-@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: SubTopicSerializer(many=True)})
+@swagger_auto_schema(tags=['user-enrollment'], method='get', responses={200: UserSubTopicSerializer(many=True)})
 @api_view(["GET"])
 @authentication_classes([UserAuthentication])
 def get_enrolled_sub_topics(request, id, topic_id):
@@ -118,7 +118,7 @@ def get_enrolled_sub_topics(request, id, topic_id):
     sub_topics = UserCourseEnrollment.get_sub_topics_by_enrolled_topic(enrollment.course.id, topic_id)
     if not sub_topics:
         return response_builder.get_404_not_found_response(api.USER_ENROLLED_SUB_TOPIC_NOT_FOUND)
-    serializer = SubTopicSerializer(sub_topics, many=True)
+    serializer = UserSubTopicSerializer(sub_topics, many=True, context={'enrollment_id': enrollment.id})
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
