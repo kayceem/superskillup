@@ -19,7 +19,7 @@ def get_sub_topics_by_topic(request, topic_id):
     response_builder = ResponseBuilder()
     sub_topics = SubTopic.get_sub_topics_by_topic(topic_id=topic_id)
     if not sub_topics:
-        return response_builder.get_404_not_found_response(api.SUB_TOPIC_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.SUB_TOPIC_NOT_FOUND, result=[])
     paginated_sub_topics, page_info = paginate(sub_topics, request)
     serializer = SubTopicSerializer(paginated_sub_topics, many=True)
     return response_builder.get_200_success_response("SubTopics found", serializer.data, page_info)

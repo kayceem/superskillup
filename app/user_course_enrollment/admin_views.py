@@ -26,7 +26,7 @@ def get_all_enrollments(request):
         paginated_data, page_info = paginate(data, request)
         serializer = UserCourseEnrollmentSerializer(paginated_data, many=True)
         return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
-    return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    return response_builder.get_200_fail_response(api.USER_ENROLLMENT_NOT_FOUND, result=[])
 
 
 @swagger_auto_schema(tags=['admin-user-enrollment'], method='get', responses={200: UserCourseEnrollmentSerializer})
@@ -57,7 +57,7 @@ def get_user_enrollments(request, user_id):
         paginated_data, page_info = paginate(data, request)
         serializer = UserCourseEnrollmentSerializer(paginated_data, many=True)
         return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
-    return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+    return response_builder.get_200_fail_response(api.USER_ENROLLMENT_NOT_FOUND, result=[])
 
 
 @swagger_auto_schema(tags=['admin-user-enrollment'], method='get', responses={200: UserSerializer(many=True)})
@@ -71,7 +71,7 @@ def get_enrolled_users(request):
     response_builder = ResponseBuilder()
     users = UserCourseEnrollment.get_enrolled_users(user.id)
     if not users:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLMENT_NOT_FOUND, result=[])
     paginated_data, page_info = paginate(users, request)
     serializer = UserSerializer(paginated_data, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
@@ -90,7 +90,7 @@ def get_user_enrolled_courses(request, user_id):
         return response_builder.get_404_not_found_response(api.USER_NOT_FOUND)
     courses = UserCourseEnrollment.get_user_enrolled_courses(user_id)
     if not courses:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLMENT_NOT_FOUND, result=[])
     serializer = CourseSerializer(courses, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
