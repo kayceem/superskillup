@@ -18,7 +18,7 @@ def get_topics_by_course(request, course_id):
     response_builder = ResponseBuilder()
     topics = Topic.get_topics_by_course(course_id=course_id)
     if not topics:
-        return response_builder.get_404_not_found_response(api.TOPIC_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.TOPIC_NOT_FOUND, result=[])
     paginated_topics, page_info = paginate(topics, request)
     serializer = TopicSerializer(paginated_topics, many=True)
     return response_builder.get_200_success_response("Topics found", serializer.data, page_info)

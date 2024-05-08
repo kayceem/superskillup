@@ -98,8 +98,8 @@ class ResponseBuilder(object):
     def get_400_bad_request_response(self, error_code, errors):
         return self.bad_request_400().set_status_code(error_code).error_object(errors).get_response()
 
-    def get_200_fail_response(self, error_code):
-        return self.ok_200().fail().set_status_code(error_code).get_response()
+    def get_200_fail_response(self, error_code, result={}):
+        return self.ok_200().fail().set_status_code(error_code).result_object(result).get_response()
 
     def get_404_not_found_response(self, error_code):
         return self.not_found_404().fail().set_status_code(error_code).get_response()
