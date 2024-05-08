@@ -1,3 +1,4 @@
+from typing import Any
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from app.models import UserProfile, QuestionAnswer, Assignment, UserAssignment, UserAssignmentSubmission, UserCourseEnrollment, Question, Course, Topic, SubTopic, GptReview, ManagerFeedback, Tag, UserVideoWatched
@@ -206,6 +207,7 @@ class AssignmentAdmin(BaseAdminModel):
 @admin.register(UserCourseEnrollment)
 class UserCourseEnrollmentAdmin(BaseAdminModel):
     list_display = ('user', 'course', 'status', 'enrolled_by', 'is_deleted')
+    exclude = ('next_topic_created_at', 'next_topic_start_time')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "enrolled_by":
@@ -269,3 +271,8 @@ class ManagerFeedbackAdmin(BaseAdminModel):
         return obj.gpt_review.score if obj.gpt_review else "No GPT Review"
     gpt_review_remarks.short_description = 'GPT Review'
     gpt_review_score.short_description = 'GPT Review Score'
+
+
+@admin.register(UserVideoWatched)
+class UserVideoWatchedAdmin(BaseAdminModel):
+    list_display = ('user_course_enrollment', 'sub_topic')

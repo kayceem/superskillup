@@ -3,6 +3,7 @@ from app.api import api
 from drf_yasg.utils import swagger_auto_schema
 from app.api.response_builder import ResponseBuilder
 from app.shared.authentication import UserAuthentication
+from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.user_video_watched.serializer import UserVideoWatchedSerializer
 
 
@@ -21,4 +22,7 @@ def add_user_video(request):
     if user != serializer.validated_data['user_course_enrollment'].user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     serializer.save()
+    user_course_enrollment = serializer.validated_data['user_course_enrollment']
+    sub_topic = serializer.validated_data['sub_topic']
+    UserCourseEnrollment.update_topic_completion(user_course_enrollment, sub_topic.topic)
     return response_builder.get_201_success_response("Video added to watched", serializer.data)

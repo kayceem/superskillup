@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from app.utils.utils import user_profile_image_path, course_thumbnail_path, sub_topic_file_path, assignment_file_path, assignment_submission_file_path
 from django.db import models
 from django.forms import ValidationError
@@ -206,6 +207,20 @@ class UserCourseEnrollment(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, choices=STATUS, default=IN_PROGRESS)
     enrolled_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned')
+    next_topic_created_at = models.DateTimeField(null=True, blank=True)
+    next_topic_start_time = models.DateTimeField(null=True, blank=True)
+    interval_days = models.PositiveIntegerField(null=True, blank=True, default=1)
+
+    def clean(self):
+        if self.course.topics.count() == 0:
+            raise ValidationError("Course must have at least one topic to enroll users.")
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        if not self.next_topic_created_at:
+            self.next_topic_created_at = self.course.topics.first().created_at
+            self.next_topic_start_time = datetime.now(timezone.utc)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user}-{self.course}'

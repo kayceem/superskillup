@@ -15,5 +15,9 @@ class Topic:
         return TopicAccessor.get_topics_by_course(course_id=course_id)
 
     @staticmethod
+    def get_next_topic(topic):
+        return TopicAccessor.get_next_topic(topic)
+
+    @staticmethod
     def delete_topic(topic):
         return topic.delete()
