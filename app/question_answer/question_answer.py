@@ -14,3 +14,7 @@ class QuestionAnswer:
     @staticmethod
     def get_answered_questions_by_course(user_id, course_id):
         return QuestionAnswerAccessor.get_answered_questions_by_course(user_id, course_id)
+
+    @staticmethod
+    def is_question_answered(user_id, question_id):
+        return QuestionAnswerAccessor.is_question_answered(user_id, question_id)

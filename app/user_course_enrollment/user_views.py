@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, authentication_classes
 from app.app_admin.serializers import AdminSerializer
 from app.course.serializers import CourseSerializer
-from app.question.serializer import QuestionSerilizer
+from app.question.serializer import QuestionSerilizer, UserQuestionSerilizer
 from app.sub_topic.serializers import SubTopicSerializer, UserSubTopicSerializer
 from app.topic.serializers import TopicSerializer, UserTopicSerializer
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
@@ -139,7 +139,7 @@ def get_enrolled_questions(request, id, sub_topic_id):
     questions = UserCourseEnrollment.get_questions_by_enrolled_sub_topic(enrollment.course.id, sub_topic_id)
     if not questions:
         return response_builder.get_404_not_found_response(api.USER_ENROLLED_QUESTION_NOT_FOUND)
-    serializer = QuestionSerilizer(questions, many=True)
+    serializer = UserQuestionSerilizer(questions, many=True, context={'user_id': user.id})
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
