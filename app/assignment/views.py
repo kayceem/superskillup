@@ -19,7 +19,7 @@ def get_assignments_by_course(request, course_id):
     response_builder = ResponseBuilder()
     assignments = Assignment.get_assignments_by_course(course_id=course_id)
     if not assignments:
-        return response_builder.get_404_not_found_response(api.ASSIGNMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.ASSIGNMENT_NOT_FOUND, result=[])
     paginated_assignments, page_info = paginate(assignments, request)
     serializer = AssignmentSerializer(paginated_assignments, many=True)
     return response_builder.get_200_success_response("Assignments found", serializer.data, page_info)

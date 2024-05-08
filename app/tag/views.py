@@ -32,6 +32,6 @@ def get_all_tags(request):
     response_builder = ResponseBuilder()
     tags = Tag.get_all_tags()
     if not tags:
-        return response_builder.get_404_not_found_response(api.TAG_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.TAG_NOT_FOUND, result=[])
     serializer = TagSerializer(tags, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)

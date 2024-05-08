@@ -21,7 +21,7 @@ def get_questions_by_course(request, course_id):
         paginated_data, page_info = paginate(data, request)
         serializer = QuestionSerilizer(paginated_data, many=True)
         return response_builder.get_200_success_response("Data fetched", serializer.data, page_info)
-    return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND)
+    return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND, result=[])
 
 
 @swagger_auto_schema(tags=['admin-question'], method='get', responses={200: QuestionSerilizer(many=True)})
@@ -37,7 +37,7 @@ def get_questions_by_sub_topic(request, sub_topic_id):
         paginated_data, page_info = paginate(data, request)
         serializer = QuestionSerilizer(paginated_data, many=True)
         return response_builder.get_200_success_response("Data fetched", serializer.data, page_info)
-    return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND)
+    return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND, result=[])
 
 
 @swagger_auto_schema(tags=['admin-question'], method='get', responses={200: QuestionSerilizer})
@@ -52,7 +52,7 @@ def get_question_by_id(request, id):
     if data:
         serializer = QuestionSerilizer(data)
         return response_builder.get_200_success_response("Data Fetched", serializer.data)
-    return response_builder.get_200_fail_response(api.QUESTION_NOT_FOUND)
+    return response_builder.get_404_not_found_response(api.QUESTION_NOT_FOUND)
 
 
 @swagger_auto_schema(tags=['admin-question'], method='post', request_body=QuestionSerilizer, responses={201: QuestionSerilizer})

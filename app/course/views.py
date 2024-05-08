@@ -19,7 +19,7 @@ def get_all_courses(request):
     response_builder = ResponseBuilder()
     courses = Course.get_all_courses()
     if not courses:
-        return response_builder.get_404_not_found_response(api.COURSE_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.COURSE_NOT_FOUND, result=[])
     paginated_courses, page_info = paginate(courses, request)
     serializer = CourseSerializer(paginated_courses, many=True)
     return response_builder.get_200_success_response("Courses found", serializer.data, page_info)

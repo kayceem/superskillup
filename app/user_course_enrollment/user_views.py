@@ -24,7 +24,7 @@ def get_all_enrollments(request):
     response_builder = ResponseBuilder()
     enrollments = UserCourseEnrollment.get_user_enrollments(user.id)
     if not enrollments:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLMENT_NOT_FOUND, result=[])
     paginated_data, page_info = paginate(enrollments, request)
     serializer = UserCourseEnrollmentSerializer(paginated_data, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data, page_info)
@@ -59,7 +59,7 @@ def get_enrolled_courses(request):
     response_builder = ResponseBuilder()
     courses = UserCourseEnrollment.get_user_enrolled_courses(user.id)
     if not courses:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLED_COURSE_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLED_COURSE_NOT_FOUND, result=[])
     serializer = CourseSerializer(courses, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
@@ -75,7 +75,7 @@ def get_managers_of_user(request):
     response_builder = ResponseBuilder()
     managers = UserCourseEnrollment.get_managers_of_user(user.id)
     if not managers:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLED_MANAGER_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLED_MANAGER_NOT_FOUND, result=[])
     serializer = AdminSerializer(managers, many=True)
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
@@ -96,7 +96,7 @@ def get_enrolled_topics(request, id):
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     topics = UserCourseEnrollment.get_topics_by_enrolled_course(enrollment.course.id)
     if not topics:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLED_TOPIC_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLED_TOPIC_NOT_FOUND, result=[])
     serializer = UserTopicSerializer(topics, many=True, context={'enrollment_id': enrollment.id})
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
@@ -117,7 +117,7 @@ def get_enrolled_sub_topics(request, id, topic_id):
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     sub_topics = UserCourseEnrollment.get_sub_topics_by_enrolled_topic(enrollment.course.id, topic_id)
     if not sub_topics:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLED_SUB_TOPIC_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLED_SUB_TOPIC_NOT_FOUND, result=[])
     serializer = UserSubTopicSerializer(sub_topics, many=True, context={'enrollment_id': enrollment.id})
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
@@ -138,7 +138,7 @@ def get_enrolled_questions(request, id, sub_topic_id):
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
     questions = UserCourseEnrollment.get_questions_by_enrolled_sub_topic(enrollment.course.id, sub_topic_id)
     if not questions:
-        return response_builder.get_404_not_found_response(api.USER_ENROLLED_QUESTION_NOT_FOUND)
+        return response_builder.get_200_fail_response(api.USER_ENROLLED_QUESTION_NOT_FOUND, result=[])
     serializer = UserQuestionSerilizer(questions, many=True, context={'user_id': user.id})
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
