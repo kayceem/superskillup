@@ -219,6 +219,10 @@ class UserCourseEnrollmentAdmin(BaseAdminModel):
             kwargs["queryset"] = qs
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        email_service.send_course_enrolled_mail(obj)
+
 
 @admin.register(UserAssignment)
 class UserAssignmentAdmin(BaseAdminModel):
@@ -232,7 +236,6 @@ class UserAssignmentAdmin(BaseAdminModel):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        breakpoint()
         email_service.send_assignment_assigned_mail(obj)
 
 
