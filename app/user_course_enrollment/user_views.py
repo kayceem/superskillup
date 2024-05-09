@@ -4,6 +4,7 @@ from app.course.serializers import CourseSerializer
 from app.question.serializer import QuestionSerilizer, UserQuestionSerilizer
 from app.sub_topic.serializers import SubTopicSerializer, UserSubTopicSerializer
 from app.topic.serializers import TopicSerializer, UserTopicSerializer
+from app.topic.topic import Topic
 from app.user_course_enrollment.user_course_enrollment import UserCourseEnrollment
 from app.shared.authentication import UserAuthentication
 from app.api.response_builder import ResponseBuilder
@@ -97,7 +98,7 @@ def get_enrolled_topics(request, id):
     topics = UserCourseEnrollment.get_topics_by_enrolled_course(enrollment.course.id)
     if not topics:
         return response_builder.get_200_fail_response(api.USER_ENROLLED_TOPIC_NOT_FOUND, result=[])
-    serializer = UserTopicSerializer(topics, many=True, context={'enrollment_id': enrollment.id})
+    serializer = UserTopicSerializer(topics, many=True, context={'enrollment': enrollment})
     return response_builder.get_200_success_response("Data Fetched", serializer.data)
 
 
@@ -115,6 +116,11 @@ def get_enrolled_sub_topics(request, id, topic_id):
         return response_builder.get_404_not_found_response(api.USER_ENROLLMENT_NOT_FOUND)
     if user != enrollment.user:
         return response_builder.get_400_bad_request_response(api.UNAUTHORIZED, "User not authorized")
+    topic = Topic.get_topic_by_id(topic_id)
+    if not topic:
+        return response_builder.get_400_bad_request_response(api.USER_ENROLLED_TOPIC_NOT_FOUND, "Topic locked")
+    if UserCourseEnrollment.is_topic_locked(enrollment, topic):
+        return response_builder.get_400_bad_request_response(api.USER_ENROLLED_SUB_TOPIC_NOT_FOUND, "Topic locked")
     sub_topics = UserCourseEnrollment.get_sub_topics_by_enrolled_topic(enrollment.course.id, topic_id)
     if not sub_topics:
         return response_builder.get_200_fail_response(api.USER_ENROLLED_SUB_TOPIC_NOT_FOUND, result=[])
