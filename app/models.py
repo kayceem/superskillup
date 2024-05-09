@@ -212,6 +212,9 @@ class UserCourseEnrollment(BaseModel):
     interval_days = models.PositiveIntegerField(null=True, blank=True, default=1)
 
     def clean(self):
+        course = getattr(self, "course", None)
+        if not course:
+            return
         if self.course.topics.count() == 0:
             raise ValidationError("Course must have at least one topic to enroll users.")
         super().clean()
