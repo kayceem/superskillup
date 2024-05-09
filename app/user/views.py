@@ -3,7 +3,7 @@ from app.app_admin.app_admin import Admin
 from app.app_admin.serializers import AdminSerializer
 from rest_framework.decorators import api_view, authentication_classes, parser_classes
 from app.api.response_builder import ResponseBuilder
-from app.user.serializers import ForgotPasswordSerializer, ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer, LoginSerializer
+from app.user.serializers import ForgotPasswordSerializer, ResendOTPSerializer, UserLoginSerializer, UserSerializer, OTPSerializer, LoginSerializer, UserUpdateSerializer
 from app.api import api
 from app.user.swagger import LoginResponse, UserResponse
 from app.utils import utils
@@ -62,11 +62,14 @@ def update_user(request):
     user = request.user
     is_PATCH = request.method == 'PATCH'
     response_builder = ResponseBuilder()
-    serializer = UserSerializer(user, data=request.data, partial=is_PATCH)
-    if not serializer.is_valid():
-        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
-    serializer.save()
-    return response_builder.get_201_success_response("User updated successfully", serializer.data)
+    request_serializer = UserUpdateSerializer(data=request.data)
+    if not request_serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, request_serializer.errors)
+    user_serializer = UserSerializer(user, data=request_serializer.validated_data, partial=is_PATCH)
+    if not user_serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, user_serializer.errors)
+    user_serializer.save()
+    return response_builder.get_201_success_response("User updated successfully", user_serializer.data)
 
 
 @swagger_auto_schema(tags=['user-auth'], method='post', request_body=UserLoginSerializer, responses={200: LoginResponse.response()})

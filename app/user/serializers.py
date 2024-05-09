@@ -17,6 +17,18 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
+class UserUpdateSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255, required=False)
+    profile_image = serializers.FileField(required=False)
+
+    def validate(self, attrs):
+        name = attrs.get('name', None)
+        profile_image = attrs.get('profile_image', None)
+        if not name and not profile_image:
+            raise ValidationError("Either name or profile image must be provided")
+        return super().validate(attrs)
+
+
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
