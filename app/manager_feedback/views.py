@@ -2,6 +2,7 @@ from app.manager_feedback.manager_feedback import ManagerFeedback
 from rest_framework.decorators import api_view, authentication_classes
 from app.api.response_builder import ResponseBuilder
 from app.api import api
+from app.services import email_service
 from app.shared.authentication import AdminAuthentication, CombinedAuthentication
 from app.manager_feedback.serializer import ManagerFeedbackSerializer
 from app.shared.pagination import paginate
@@ -65,7 +66,8 @@ def add_manager_feedback(request):
     response_builder = ResponseBuilder()
     serializer = ManagerFeedbackSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        manager_feedback = serializer.save()
+        email_service.send_question_answer_reviewed_mail(manager_feedback)
         return response_builder.get_201_success_response("Feedback added", serializer.data)
     return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
 
@@ -82,5 +84,6 @@ def update_manager_feedback(request, id):
     serializer = ManagerFeedbackSerializer(manager_feedback, data=request.data, partial=is_PATCH)
     if serializer.is_valid():
         serializer.save()
+        email_service.send_question_answer_reviewed_mail(manager_feedback)
         return response_builder.get_201_success_response("Feedback added", serializer.data)
     return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)

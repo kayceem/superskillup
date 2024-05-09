@@ -282,6 +282,10 @@ class ManagerFeedbackAdmin(BaseAdminModel):
     gpt_review_remarks.short_description = 'GPT Review'
     gpt_review_score.short_description = 'GPT Review Score'
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        email_service.send_question_answer_reviewed_mail(obj)
+
 
 @admin.register(UserVideoWatched)
 class UserVideoWatchedAdmin(BaseAdminModel):
