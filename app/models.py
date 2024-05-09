@@ -250,6 +250,10 @@ class UserAssignment(BaseModel):
     deadline = models.DateTimeField(null=True, blank=True)
 
     def clean(self):
+        user_course_enrollment = getattr(self, "user_course_enrollment", None)
+        assignment = getattr(self, "assignment", None)
+        if not user_course_enrollment or not assignment:
+            return
         if self.user_course_enrollment.course != self.assignment.course:
             raise ValidationError("Assignment course must match with user's enrolled course.")
 
