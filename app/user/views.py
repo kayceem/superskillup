@@ -51,6 +51,24 @@ def register_user(request):
     return response_builder.get_201_success_response("User registered successfully", result)
 
 
+@swagger_auto_schema(tags=['user-auth'], method='patch', request_body=UserSerializer, responses={201: UserSerializer})
+@api_view(['PATCH'])
+@authentication_classes([UserAuthentication])
+@parser_classes([MultiPartParser])
+def update_user(request):
+    """
+    Update User.
+    """
+    user = request.user
+    is_PATCH = request.method == 'PATCH'
+    response_builder = ResponseBuilder()
+    serializer = UserSerializer(user, data=request.data, partial=is_PATCH)
+    if not serializer.is_valid():
+        return response_builder.get_400_bad_request_response(api.INVALID_INPUT, serializer.errors)
+    serializer.save()
+    return response_builder.get_201_success_response("User updated successfully", serializer.data)
+
+
 @swagger_auto_schema(tags=['user-auth'], method='post', request_body=UserLoginSerializer, responses={200: LoginResponse.response()})
 @api_view(['POST'])
 def login_user(request):

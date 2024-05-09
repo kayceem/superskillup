@@ -25,6 +25,7 @@ urlpatterns = [
     path("v1/login/", user_views.login, name='login'),
     path("v1/admin/user/", user_views.get_all_users, name='get-all-users'),
     path("v1/user/register/", user_views.register_user, name='register-user'),
+    path("v1/user/update/", user_views.update_user, name='update-user'),
     path("v1/user/verify-otp/", user_views.check_otp, name='check-otp'),
     path("v1/user/resend-otp/", user_views.resend_otp, name='resend-otp'),
     path("v1/user/verify-otp-forgot-password/", user_views.check_otp_forgot_password, name='check-otp-forgot-password'),
