@@ -5,6 +5,8 @@ from app.models import UserProfile, QuestionAnswer, Assignment, UserAssignment, 
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+from app.services import email_service
+
 
 class AssignmentInline(admin.TabularInline):
     model = Assignment
@@ -227,6 +229,11 @@ class UserAssignmentAdmin(BaseAdminModel):
 
     is_submitted.short_description = "Submitted"
     is_submitted.boolean = True
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        breakpoint()
+        email_service.send_assignment_assigned_mail(obj)
 
 
 @admin.register(UserAssignmentSubmission)

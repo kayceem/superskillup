@@ -241,7 +241,7 @@ class Assignment(BaseModel):
     file = models.FileField(upload_to=assignment_file_path, max_length=255, blank=True, null=True, validators=[validators.get_document_extension_validator()])
 
     def __str__(self):
-        return self.title
+        return f'{self.course}-{self.title}'
 
 
 class UserAssignment(BaseModel):
