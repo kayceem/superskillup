@@ -1,8 +1,11 @@
+from typing import Any
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from app.models import UserProfile, QuestionAnswer, Assignment, UserAssignment, UserAssignmentSubmission, UserCourseEnrollment, Question, Course, Topic, SubTopic, GptReview, ManagerFeedback, Tag, UserVideoWatched
 from django.contrib import messages
 from django.contrib.auth.models import User
+
+from app.services import email_service
 
 
 class AssignmentInline(admin.TabularInline):
@@ -206,6 +209,7 @@ class AssignmentAdmin(BaseAdminModel):
 @admin.register(UserCourseEnrollment)
 class UserCourseEnrollmentAdmin(BaseAdminModel):
     list_display = ('user', 'course', 'status', 'enrolled_by', 'is_deleted')
+    exclude = ('next_topic_created_at', 'next_topic_start_time')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "enrolled_by":
@@ -214,6 +218,10 @@ class UserCourseEnrollmentAdmin(BaseAdminModel):
                 qs = qs.filter(id=request.user.id)
             kwargs["queryset"] = qs
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        email_service.send_course_enrolled_mail(obj)
 
 
 @admin.register(UserAssignment)
@@ -225,6 +233,10 @@ class UserAssignmentAdmin(BaseAdminModel):
 
     is_submitted.short_description = "Submitted"
     is_submitted.boolean = True
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        email_service.send_assignment_assigned_mail(obj)
 
 
 @admin.register(UserAssignmentSubmission)
@@ -269,3 +281,12 @@ class ManagerFeedbackAdmin(BaseAdminModel):
         return obj.gpt_review.score if obj.gpt_review else "No GPT Review"
     gpt_review_remarks.short_description = 'GPT Review'
     gpt_review_score.short_description = 'GPT Review Score'
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        email_service.send_question_answer_reviewed_mail(obj)
+
+
+@admin.register(UserVideoWatched)
+class UserVideoWatchedAdmin(BaseAdminModel):
+    list_display = ('user_course_enrollment', 'sub_topic')

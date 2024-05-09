@@ -50,3 +50,27 @@ def send_assignment_submitted_mail(user_assignment, user_assignment_submission):
         send_email(subject, body, [user_assignment.user_course_enrollment.enrolled_by.email])
     except Exception as e:
         log.error(f"Failed assignment submitted mail to: {user_assignment.user_course_enrollment.enrolled_by.email} - {str(e)}")
+
+
+def send_assignment_assigned_mail(user_assignment):
+    try:
+        log.info(f"Sending assignment assigned mail to: {user_assignment.user_course_enrollment.user.email}")
+        context = {"user": user_assignment.user_course_enrollment.user.name, "admin": user_assignment.user_course_enrollment.enrolled_by.username, "assignment": user_assignment.assignment.title, "course": user_assignment.assignment.course.name}
+        body = render_to_string("assignment_assigned.html", context=context)
+        subject = f"Assignment - {user_assignment.assignment.title}"
+        send_email(subject, body, [user_assignment.user_course_enrollment.user.email])
+    except Exception as e:
+        log.error(f"Failed assignment assigned mail to: {user_assignment.user_course_enrollment.user.email} - {str(e)}")
+
+
+def send_question_answer_reviewed_mail(manager_feedback):
+    try:
+        course_enrollment = manager_feedback.gpt_review.question_answer.user_course_enrollment
+        question = manager_feedback.gpt_review.question_answer.question
+        log.info(f"Sending question answer reviewed mail to: {course_enrollment.user.email}")
+        context = {"user": course_enrollment.user.name, "admin": course_enrollment.enrolled_by.username, "course": course_enrollment.course.name, "question": question.question}
+        body = render_to_string("question_reviewed.html", context=context)
+        subject = f"Question Answer Reviewed - {question.question}"
+        send_email(subject, body, [course_enrollment.user.email])
+    except Exception as e:
+        log.error(f"Failed question answer reviewed mail to: {course_enrollment.user.email} - {str(e)}")

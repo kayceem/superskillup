@@ -7,6 +7,7 @@ from app.topic.topic import Topic
 from app.user.user import User
 from app.user_course_enrollment.accessor import UserCourseEnrollmentAcessor
 from app.user_video_watched.user_video_watched import UserVideo
+from datetime import datetime, timedelta, timezone
 
 
 class UserCourseEnrollment:
@@ -62,6 +63,26 @@ class UserCourseEnrollment:
     @staticmethod
     def get_user_enrollments(user_id):
         return UserCourseEnrollmentAcessor.get_user_enrollments(user_id)
+
+    @staticmethod
+    def is_topic_locked(enrollment, topic):
+        current_date = datetime.now(timezone.utc)
+        if current_date < enrollment.next_topic_start_time:
+            return topic.created_at >= enrollment.next_topic_created_at
+        return topic.created_at > enrollment.next_topic_created_at
+
+    @staticmethod
+    def update_topic_completion(enrollment, topic):
+        total = SubTopic.get_total_videos_topic(topic.id)
+        completed = UserVideo.get_watched_videos_topic(topic.id)
+        if not total == completed:
+            return None
+        next_topic = Topic.get_next_topic(topic)
+        if not next_topic:
+            return
+        enrollment.next_topic_created_at = next_topic.created_at
+        enrollment.next_topic_start_time = datetime.now(timezone.utc) + timedelta(days=enrollment.interval_days)
+        enrollment.save()
 
     @staticmethod
     def get_managers_of_user(user_id):
